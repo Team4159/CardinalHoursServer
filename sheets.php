@@ -1,5 +1,3 @@
-<html>
-<body>
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
@@ -81,10 +79,7 @@ function getName($password){
   }
 }
 
-if (isset($_REQUEST["password"])) {
-   echo getName($_REQUEST["password"]);
+if (isset($_REQUEST["q"])) {
+   echo getName($_REQUEST["q"]);
 }
-
 ?>
-</body>
-</html>

@@ -9,10 +9,10 @@
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-              $("name").text(this.responseText);
+              $("name").text("Welcome, " + this.responseText);
             }
           }
-          xmlhttp.open("GET", "sheets.php?password="+str, true);
+          xmlhttp.open("GET", "sheets.php?q="+str, true);
           xmlhttp.send();
         }
     </script>
