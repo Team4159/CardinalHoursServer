@@ -104,7 +104,10 @@ if (isset($_REQUEST['q'])) {
 }
 
 if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {
-  addUser($_REQUEST['createUser'], $_REQUEST['passcode']);
-  echo $_REQUEST['createUser'];
+  if(getUser($password) == "User not found"){
+    addUser($_REQUEST['createUser'], $_REQUEST['passcode']);
+    echo $_REQUEST['createUser'];
+  } else
+    echo 'User with password already exists';
 }
 ?>
