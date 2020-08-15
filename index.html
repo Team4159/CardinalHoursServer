@@ -23,7 +23,7 @@
               alert("Successfully added user " + this.responseText);
             }
           }
-          xmlhttp.open("GET", "sheets.php?createUser=" + name + "?passcode=" + passcode, true);
+          xmlhttp.open("GET", "sheets.php?createUser=" + name + "&passcode=" + passcode, true);
           xmlhttp.send();
         }
       
@@ -32,7 +32,7 @@
     <button onclick='getName($("#password").val())'>submit</button>
     <br>
     create user: 
-    <br>
+    <br><br>
     name: <input id="name">
     password: <input id="passcode">
     <button onclick='createUser($("#name").val(), $("#passcode").val())'>submit</button>
