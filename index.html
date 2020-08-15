@@ -4,7 +4,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
-    <script>
+     <script>
       function getName(str) {
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
@@ -15,9 +15,27 @@
           xmlhttp.open("GET", "sheets.php?q="+str, true);
           xmlhttp.send();
         }
+
+      function createUser(name, passcode) {
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              alert("Successfully added user " + this.responseText);
+            }
+          }
+          xmlhttp.open("GET", "sheets.php?createUser=" + name + "?passcode=" + passcode, true);
+          xmlhttp.send();
+        }
+      
     </script>
     password: <input id="password">
     <button onclick='getName($("#password").val())'>submit</button>
+    <br>
+    create user: 
+    <br>
+    name: <input id="name">
+    password: <input id="passcode">
+    <button onclick='createUser($("#name").val(), $("#passcode").val())'>submit</button>
     <p id='name'>you are not logged in</p>
   </body>
 </html>

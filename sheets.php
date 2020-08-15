@@ -9,7 +9,7 @@ function getClient()
 {
     $client = new Google_Client();
     $client->setApplicationName('Google Sheets API PHP Quickstart');
-    $client->setScopes(Google_Service_Sheets::SPREADSHEETS_READONLY);
+    $client->setScopes(Google_Service_Sheets::SPREADSHEETS);
     $client->setAuthConfig('credentials.json');
     $client->setAccessType('offline');
     $client->setPrompt('select_account consent');
@@ -77,7 +77,33 @@ function getName($password){
   }
 }
 
+function addUser($name, $password){
+  global $client;
+  global $service;
+  global $spreadsheetId;
+  $range = $service->spreadsheets_values->get($spreadsheetId, "NextRow")->getValues()[0][0]; // Gets the range of the next row
+  $values = [
+    [
+        $name, $password, FALSE, time(), 0
+    ],
+  ];
+
+  $params = [
+    'valueInputOption' => "RAW"
+  ];
+
+  $body = new Google_Service_Sheets_ValueRange([
+    'values' => $values
+  ]);
+
+  $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
+}
+
 if (isset($_REQUEST["q"])) {
    echo getName($_REQUEST["q"]);
+}
+
+if (isset($_REQUEST["createUser"])) {
+  echo $_REQUEST["createUser"];
 }
 ?>
