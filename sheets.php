@@ -60,20 +60,18 @@ $client = getClient();
 $service = new Google_Service_Sheets($client);
 
 $spreadsheetId = '1GHouiwgCqaTOQ5Zy-VgzWdaAptYKhb3rV9k7EwKfI2g';
+$data = $service->spreadsheets_values->get($spreadsheetId, "Data")->getValues(); // Gets all relevant data from sheets
 
-$passwords = $service->spreadsheets_values->get($spreadsheetId, "Passwords")->getValues();
-$names = $service->spreadsheets_values->get($spreadsheetId, "Names")->getValues();
-
+//gets the corresponding name of a user from their password from google sheets
 function getName($password){
-  global $passwords;
-  global $names;
-  if (empty($passwords)) {
+  global $data;
+  if (empty($data)) {
     return "Uh Oh. Something broke.\n";
   } else {
-    $num = count($passwords);
-    for ($i = 0; $i < $num; $i++) {
-      if($passwords[$i][0] == $password)
-        return $names[$i][0];
+    $num = count($data);
+    for ($i = 1; $i < $num; $i++) {
+      if($data[$i][1] == $password)
+        return $data[$i][0];
     }
     return "User not found";
   }
