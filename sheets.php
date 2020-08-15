@@ -104,7 +104,6 @@ if (isset($_REQUEST["q"])) {
 }
 
 if (isset($_REQUEST["createUser"])) {
-  addUser($_REQUEST["createUser"], $_REQUEST["passcode"]);
-  echo $_REQUEST["createUser"];
+  echo $_REQUEST["passcode"];
 }
 ?>
