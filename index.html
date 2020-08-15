@@ -9,10 +9,10 @@
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-              $("#name").text(this.responseText == "User not found" ? this.responseText : "Welcome, " + this.responseText);
+              $("#name").text(this.responseText == "User not found" ? this.responseText : 'Welcome, ' + this.responseText);
             }
           }
-          xmlhttp.open("GET", "sheets.php?q="+str, true);
+          xmlhttp.open("GET", 'sheets.php?q='+str, true);
           xmlhttp.send();
         }
 
@@ -20,10 +20,10 @@
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-              alert("Successfully added user " + this.responseText);
+              alert('Successfully added user ' + this.responseText);
             }
           }
-          xmlhttp.open("GET", "sheets.php?createUser=" + name + "&passcode=" + passcode, true);
+          xmlhttp.open('GET', 'sheets.php?createUser=' + name + '&passcode=' + passcode, true);
           xmlhttp.send();
         }
       
