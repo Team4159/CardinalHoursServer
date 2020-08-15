@@ -81,8 +81,8 @@ function getName($password){
   }
 }
 
-if (isset($_POST['password'])) {
-   echo getName($_POST['password']);
+if (isset($_REQUEST["password"])) {
+   echo getName($_REQUEST["password"]);
 }
 
 ?>

@@ -4,9 +4,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
-    <form action="sheets.php" method="post">
-    password: <input type="text" name="password">
-    <input type="submit">
-    </form>
+    <script>
+      function getName(str) {
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              $("name").text(this.responseText);
+            }
+          }
+          xmlhttp.open("GET", "sheets.php?password="+str, true);
+          xmlhttp.send();
+        }
+    </script>
+    password: <input id="password">
+    <button onclick="getName($(password).val())"></button>
   </body>
 </html>
