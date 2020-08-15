@@ -77,14 +77,6 @@ function getName($password){
   }
 }
 
-//converts numbers to string because numbers dont work properly in sheets for some reason
-function parseString($string){
-  if(is_numeric($string))
-    return strval($string);
-  else
-    return $string;
-}
-
 function addUser($name, $password){
   global $client;
   global $service;
@@ -97,7 +89,7 @@ function addUser($name, $password){
   ];
 
   $params = [
-    'valueInputOption' => 'RAW'
+    'valueInputOption' => 'USER_ENTERED'
   ];
 
   $body = new Google_Service_Sheets_ValueRange([
@@ -112,7 +104,7 @@ if (isset($_REQUEST['q'])) {
 }
 
 if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {
-  addUser(parseString($_REQUEST['createUser']), parseString($_REQUEST['passcode']));
+  addUser($_REQUEST['createUser'], $_REQUEST['passcode']);
   echo $_REQUEST['createUser'];
 }
 ?>
