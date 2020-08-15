@@ -9,7 +9,7 @@
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-              $("name").text("Welcome, " + this.responseText);
+              $("#name").text("Welcome, " + this.responseText);
             }
           }
           xmlhttp.open("GET", "sheets.php?q="+str, true);
@@ -17,7 +17,7 @@
         }
     </script>
     password: <input id="password">
-    <button onclick="getName($(password).val())"></button>
-    <p id='name'></p>
+    <button onclick='getName($("#password").val())'>submit</button>
+    <p id='name'>you are not logged in</p>
   </body>
 </html>
