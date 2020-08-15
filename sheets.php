@@ -97,8 +97,6 @@ function addUser($name, $password){
   ]);
 
   $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
-
-  return $name;
 }
 
 if (isset($_REQUEST["q"])) {
@@ -107,5 +105,6 @@ if (isset($_REQUEST["q"])) {
 
 if (isset($_REQUEST["createUser"]) && isset($_REQUEST["passcode"])) {
   addUser($_REQUEST["createUser"], $_REQUEST["passcode"]);
+  echo $_REQUEST["createUser"];
 }
 ?>
