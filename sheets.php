@@ -60,20 +60,20 @@ $client = getClient();
 $service = new Google_Service_Sheets($client);
 
 $spreadsheetId = '1GHouiwgCqaTOQ5Zy-VgzWdaAptYKhb3rV9k7EwKfI2g';
-$data = $service->spreadsheets_values->get($spreadsheetId, "Data")->getValues(); // Gets all relevant data from sheets
+$data = $service->spreadsheets_values->get($spreadsheetId, 'Data')->getValues(); // Gets all relevant data from sheets
 
 //gets the corresponding name of a user from their password from google sheets
 function getName($password){
   global $data;
   if (empty($data)) {
-    return "Uh Oh. Something broke.\n";
+    return 'Uh Oh. Something broke.\n';
   } else {
     $num = count($data);
     for ($i = 1; $i < $num; $i++) {
       if($data[$i][1] == $password)
         return $data[$i][0];
     }
-    return "User not found";
+    return 'User not found';
   }
 }
 
@@ -81,7 +81,7 @@ function addUser($name, $password){
   global $client;
   global $service;
   global $spreadsheetId;
-  $range = $service->spreadsheets_values->get($spreadsheetId, "NextRow")->getValues()[0][0]; // Gets the range of the next row
+  $range = $service->spreadsheets_values->get($spreadsheetId, 'NextRow')->getValues()[0][0]; // Gets the range of the next row
   $values = [
     [
         $name, $password, FALSE, time(), 0
@@ -89,7 +89,7 @@ function addUser($name, $password){
   ];
 
   $params = [
-    'valueInputOption' => "RAW"
+    'valueInputOption' => 'RAW'
   ];
 
   $body = new Google_Service_Sheets_ValueRange([
@@ -99,12 +99,12 @@ function addUser($name, $password){
   $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
 }
 
-if (isset($_REQUEST["q"])) {
-   echo getName($_REQUEST["q"]);
+if (isset($_REQUEST['q'])) {
+   echo getName($_REQUEST['q']);
 }
 
-if (isset($_REQUEST["createUser"]) && isset($_REQUEST["passcode"])) {
-  addUser($_REQUEST["createUser"], $_REQUEST["passcode"]);
-  echo $_REQUEST["createUser"];
+if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {
+  addUser($_REQUEST['createUser'], $_REQUEST['passcode']);
+  echo $_REQUEST['createUser'];
 }
 ?>

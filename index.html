@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
   </head>
   <body>
      <script>
@@ -9,10 +9,10 @@
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-              $("#name").text(this.responseText == "User not found" ? this.responseText : 'Welcome, ' + this.responseText);
+              $('#name').text(this.responseText == 'User not found' ? this.responseText : 'Welcome, ' + this.responseText);
             }
           }
-          xmlhttp.open("GET", 'sheets.php?q='+str, true);
+          xmlhttp.open('GET', 'sheets.php?q='+str, true);
           xmlhttp.send();
         }
 
@@ -30,14 +30,14 @@
     </script>
     login:
     <br>
-    password: <input id="password">
-    <button onclick='getName($("#password").val())'>submit</button>
+    password: <input id='password'>
+    <button onclick="getName($('#password').val())">submit</button>
     <br><br>
     create user: 
     <br>
-    name: <input id="name">
-    password: <input id="passcode">
-    <button onclick='createUser($("#name").val(), $("#passcode").val())'>submit</button>
+    name: <input id='name'>
+    password: <input id='passcode'>
+    <button onclick="createUser($('#name').val(), $('#passcode').val())">submit</button>
     <p id='name'>you are not logged in</p>
   </body>
 </html>
