@@ -123,6 +123,6 @@ if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {
     addUser($_REQUEST['createUser'], $_REQUEST['passcode']);
     echo $_REQUEST['createUser'];
   } else
-    echo 'User with already exists';
+    echo 'User already exists';
 }
 ?>
