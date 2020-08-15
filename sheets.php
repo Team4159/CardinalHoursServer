@@ -84,7 +84,7 @@ function addUser($name, $password){
   $range = $service->spreadsheets_values->get($spreadsheetId, "NextRow")->getValues()[0][0]; // Gets the range of the next row
   $values = [
     [
-        $name, $password, FALSE, time(), 0
+        $name, $password, FALSE, 0, 0
     ],
   ];
 
@@ -103,7 +103,8 @@ if (isset($_REQUEST["q"])) {
    echo getName($_REQUEST["q"]);
 }
 
-if (isset($_REQUEST["createUser"])) {
-  echo $_REQUEST["passcode"];
+if (isset($_REQUEST["createUser"]) && isset($_REQUEST["passcode"])) {
+  addUser($_REQUEST["createUser"], $_REQUEST["passcode"]);
+  echo $_REQUEST["createUser"];
 }
 ?>
