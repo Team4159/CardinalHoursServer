@@ -5,7 +5,7 @@
   </head>
   <body>
      <script>
-      function getName(str) {
+      function signIn(str) {
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -31,13 +31,13 @@
     login:
     <br>
     password: <input id='password'>
-    <button onclick="getName($('#password').val())">submit</button>
+    <button onclick="signIn($('#password').val())">submit</button>
     <br><br>
-    create user: 
+    add user: 
     <br>
     name: <input id='name'>
     password: <input id='passcode'>
-    <button onclick="createUser($('#name').val(), $('#passcode').val())">submit</button>
+    <button onclick="createUser($('#name').val(), $('#passcode').val())">sign in</button>
     <p id='message'>you are not logged in</p>
   </body>
 </html>

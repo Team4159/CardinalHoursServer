@@ -62,8 +62,8 @@ $service = new Google_Service_Sheets($client);
 $spreadsheetId = '1GHouiwgCqaTOQ5Zy-VgzWdaAptYKhb3rV9k7EwKfI2g';
 $data = $service->spreadsheets_values->get($spreadsheetId, 'Data')->getValues(); // Gets all relevant data from sheets
 
-// gets the corresponding name of a user from their password from google sheets
-function getName($password){
+// gets data of a user from their password from google sheets
+function getData($password){
   global $data;
   if (empty($data)) {
     return 'Uh Oh. Something broke.\n';
@@ -71,22 +71,7 @@ function getName($password){
     $num = count($data);
     for ($i = 1; $i < $num; $i++) {
       if($data[$i][1] == $password)
-        return $data[$i][0];
-    }
-    return 'User not found';
-  }
-}
-
-// same as above but gets password from name
-function getPassword($name){
-  global $data;
-  if (empty($data)) {
-    return 'Uh Oh. Something broke.\n';
-  } else {
-    $num = count($data);
-    for ($i = 1; $i < $num; $i++) {
-      if($data[$i][0] == $name)
-        return $data[$i][1];
+        return $data[$i];
     }
     return 'User not found';
   }
@@ -115,11 +100,11 @@ function addUser($name, $password){
 }
 
 if (isset($_REQUEST['q'])) {
-   echo getName($_REQUEST['q']);
+   echo getData($_REQUEST['q'])[0];
 }
 
 if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {
-  if(getName($_REQUEST['passcode']) == 'User not found' && getPassword($_REQUEST['createUser'] == 'User not found')){
+  if(getData($_REQUEST['passcode'])[0] == 'User not found' && getData($_REQUEST['passcode'])[1] == 'User not found'){
     addUser($_REQUEST['createUser'], $_REQUEST['passcode']);
     echo $_REQUEST['createUser'];
   } else
