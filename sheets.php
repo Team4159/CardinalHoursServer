@@ -107,7 +107,6 @@ function addUser($name, $password){
 }
 
 if (isset($_REQUEST['signIn'])) {
-  echo getData($_REQUEST['signIn']);
 }
 
 if (isset($_REQUEST['q'])) {

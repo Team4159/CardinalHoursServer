@@ -25,7 +25,7 @@
         let xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
-            let user = filterUserData(passcode, this.responseText);
+            let user = filterUserData(passcode, getData(passcode));
             if(user == '')
               $('#message').text("User not found");
             else
@@ -36,7 +36,7 @@
 
         xmlhttp.open('GET', 'sheets.php?signIn='+passcode, true);
         xmlhttp.send();
-        getData(passcode);
+        showData(passcode);
       }
 
       // Gets all the data from the server
@@ -51,6 +51,15 @@
         xmlhttp.send();
       }
 
+      // Shows the signed in users's data
+      function showData(){
+
+      }
+
+      // Shows and updates all users signed in
+      function showUsers(){
+
+      }
       // Sends a request to create a new user
       function createUser(name, passcode) {
           if(name != "" && passcode != ""){
