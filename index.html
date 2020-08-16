@@ -13,7 +13,7 @@
         xmlhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             $('#message').text(this.responseText == 'User not found' ? this.responseText : 'Welcome, ' + this.responseText);
-           Cookies.set('password', str);
+           Cookies.set('password', passcode);
           }
         }
         xmlhttp.open('GET', 'sheets.php?signIn='+passcode, true);
