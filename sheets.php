@@ -99,8 +99,12 @@ function addUser($name, $password){
   $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
 }
 
+if (isset($_REQUEST['signIn'])) {
+   return getData($_REQUEST['signIn'])[0];
+}
+
 if (isset($_REQUEST['q'])) {
-   echo getData($_REQUEST['q']);
+   return json_encode(getData($_REQUEST['q']));
 }
 
 if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {

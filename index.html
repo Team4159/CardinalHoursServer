@@ -8,20 +8,31 @@
      <script>
       if(Cookies.get('password') != undefined)
         signIn(Cookies.get('password'));
-      function signIn(str) {
-          var xmlhttp = new XMLHttpRequest();
-          xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-              $('#message').text(this.responseText == 'User not found' ? this.responseText : 'Welcome, ' + this.responseText[0]);
-              Cookies.set('password', str);
-            }
+      function signIn(passcode){
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            $('#message').text(this.responseText == 'User not found' ? this.responseText : 'Welcome, ' + this.responseText);
+           Cookies.set('password', str);
           }
-          xmlhttp.open('GET', 'sheets.php?q='+str, true);
-          xmlhttp.send();
         }
+        xmlhttp.open('GET', 'sheets.php?signIn='+passcode, true);
+        xmlhttp.send();
+      }
+
+      function getData(passcode) {
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+          }
+        }
+        xmlhttp.open('GET', 'sheets.php?q='+passcode, true);
+        xmlhttp.send();
+      }
 
       function createUser(name, passcode) {
-          var xmlhttp = new XMLHttpRequest();
+          let xmlhttp = new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
               alert(this.responseText == 'User already exists' ? this.responseText : 'Successfully added user ' + this.responseText);
