@@ -12,7 +12,7 @@
           var xmlhttp = new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-              $('#message').text(this.responseText == 'User not found' ? this.responseText : 'Welcome, ' + this.responseText);
+              $('#message').text(this.responseText == 'User not found' ? this.responseText : 'Welcome, ' + this.responseText[0]);
               Cookies.set('password', str);
             }
           }

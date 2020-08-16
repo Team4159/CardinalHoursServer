@@ -100,7 +100,7 @@ function addUser($name, $password){
 }
 
 if (isset($_REQUEST['q'])) {
-   echo getData($_REQUEST['q'])[0];
+   echo getData($_REQUEST['q']);
 }
 
 if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {
