@@ -28,8 +28,8 @@ function addUser($name, $password){
 
 if (isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
   if(getUserData($_REQUEST['password']) === null && $_REQUEST['username'] != '' && $_REQUEST['password'] != ''){
-    addUser($_REQUEST['createUser'], $_REQUEST['password']);
-    echo $_REQUEST['createUser'];
+    addUser($_REQUEST['username'], $_REQUEST['password']);
+    echo $_REQUEST['username'];
   } else
     echo 'User already exists';
 }
