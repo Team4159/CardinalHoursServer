@@ -40,7 +40,7 @@ async function getData() {
         resolve(JSON.parse(this.responseText));
       }
     }
-    xmlhttp.open('GET', 'src/endpoints/getdata.php, true);
+    xmlhttp.open('GET', 'src/endpoints/getdata.php', true);
     xmlhttp.send();
   });
 }
