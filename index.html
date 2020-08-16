@@ -22,10 +22,13 @@
 
       // Triggers the signin call for the server
       function signIn(passcode){
+
         let xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
-            let user = filterUserData(passcode, getData(passcode));
+            getData(passcode).then(function(data){
+              var user = filterUserData(passcode, data);
+            })
             if(user == '')
               $('#message').text("User not found");
             else
@@ -40,15 +43,17 @@
       }
 
       // Gets all the data from the server
-      function getData(passcode) {
-        let xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            return(this.responseText);
+      async function getData(passcode) {
+        return new Promise(function (resolve, reject) {
+          let xmlhttp = new XMLHttpRequest();
+          xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              resolve(this.responseText);
+            }
           }
-        }
-        xmlhttp.open('GET', 'sheets.php?q='+passcode, true);
-        xmlhttp.send();
+          xmlhttp.open('GET', 'sheets.php?q='+passcode, true);
+          xmlhttp.send();
+        });
       }
 
       // Shows the signed in users's data
@@ -60,6 +65,7 @@
       function showUsers(){
 
       }
+
       // Sends a request to create a new user
       function createUser(name, passcode) {
           if(name != "" && passcode != ""){
