@@ -100,11 +100,11 @@ function addUser($name, $password){
 }
 
 if (isset($_REQUEST['signIn'])) {
-   return getData($_REQUEST['signIn'])[0];
+   echo getData($_REQUEST['signIn'])[0];
 }
 
 if (isset($_REQUEST['q'])) {
-   return json_encode(getData($_REQUEST['q']));
+   echo json_encode(getData($_REQUEST['q']));
 }
 
 if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {
