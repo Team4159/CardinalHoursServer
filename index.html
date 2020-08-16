@@ -23,20 +23,20 @@
       // Triggers the signin call for the server
       async function signIn(passcode){
         let xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
+        xmlhttp.onreadystatechange = async function() {
           if (this.readyState == 4 && this.status == 200) {
-            let user = filterUserData(passcode, await getData(passcode));
+            let user = filterUserData(passcode, await getData());
             if(user == '')
               $('#message').text("User not found");
             else
               $('#message').text('Welcome, ' + user[0]);
-           Cookies.set('password', passcode);
+            Cookies.set('password', passcode);
+            showData(passcode);
           }
         }
 
         xmlhttp.open('GET', 'sheets.php?signIn='+passcode, true);
         xmlhttp.send();
-        showData(passcode);
       }
 
       // Gets all the data from the server
