@@ -6,8 +6,16 @@
   </head>
   <body>
      <script>
+
+      // Attempts to sign in with cookie if it exists
       if(Cookies.get('password') != undefined)
         signIn(Cookies.get('password'));
+
+      // Filters user data from all data
+      function getUserData(passcode){
+        
+      }
+
       function signIn(passcode){
         let xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
@@ -18,6 +26,7 @@
         }
         xmlhttp.open('GET', 'sheets.php?signIn='+passcode, true);
         xmlhttp.send();
+        getData(passcode);
       }
 
       function getData(passcode) {
@@ -46,7 +55,7 @@
     login:
     <br>
     password: <input id='password'>
-    <button onclick="signIn($('#password').val())">submit</button>
+    <button id='signIn' onclick="signIn($('#password').val())">submit</button>
     <br><br>
     add user: 
     <br>

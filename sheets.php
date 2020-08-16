@@ -62,8 +62,14 @@ $service = new Google_Service_Sheets($client);
 $spreadsheetId = '1GHouiwgCqaTOQ5Zy-VgzWdaAptYKhb3rV9k7EwKfI2g';
 $data = $service->spreadsheets_values->get($spreadsheetId, 'Data')->getValues(); // Gets all relevant data from sheets
 
-// gets data of a user from their password from google sheets
+// Returns all the data from sheets
 function getData($password){
+  global $data;
+  return json_encode($data);
+}
+
+// Gets data of a single user from sheets
+function getUserData($password){
   global $data;
   if (empty($data)) {
     return 'Uh Oh. Something broke.\n';
@@ -77,6 +83,7 @@ function getData($password){
   }
 }
 
+// Adds a user to sheets
 function addUser($name, $password){
   global $client;
   global $service;
@@ -100,15 +107,15 @@ function addUser($name, $password){
 }
 
 if (isset($_REQUEST['signIn'])) {
-   echo getData($_REQUEST['signIn'])[0];
+  echo getUserData($_REQUEST['signIn']);
 }
 
 if (isset($_REQUEST['q'])) {
-   echo json_encode(getData($_REQUEST['q']));
+   echo getData($_REQUEST['q']);
 }
 
 if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {
-  if(getData($_REQUEST['passcode']) == 'User not found'){
+  if(getUserData($_REQUEST['passcode']) == 'User not found'){
     addUser($_REQUEST['createUser'], $_REQUEST['passcode']);
     echo $_REQUEST['createUser'];
   } else
