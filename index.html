@@ -25,13 +25,15 @@
         let xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = async function() {
           if (this.readyState == 4 && this.status == 200) {
-            let user = filterUserData(passcode, await getData());
+            let data = await getData();
+            let user = filterUserData(passcode, data);
             if(user == '')
               $('#message').text("User not found");
             else
               $('#message').text('Welcome, ' + user[0]);
             Cookies.set('password', passcode);
-            showData(passcode);
+            showData(data);
+            showUsers(data);
           }
         }
 
@@ -54,12 +56,12 @@
       }
 
       // Shows the signed in users's data
-      function showData(){
+      function showData(data){
 
       }
 
       // Shows and updates all users signed in
-      function showUsers(){
+      function showUsers(data){
 
       }
 

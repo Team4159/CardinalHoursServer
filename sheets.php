@@ -106,9 +106,11 @@ function addUser($name, $password){
   $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
 }
 
+// TODO: start tracking time on signin
 if (isset($_REQUEST['signIn'])) {
 }
 
+// returns data on get request
 if (isset($_REQUEST['q'])) {
    echo getData($_REQUEST['q']);
 }
