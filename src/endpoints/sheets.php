@@ -83,7 +83,6 @@ function getUserData($password){
   }
 }
 
-echo ("A". (count($data) + 1)) . (":E" . (count($data) + 1));
 
 // Adds a user to sheets
 function addUser($name, $password){
