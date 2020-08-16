@@ -3,32 +3,31 @@ if(Cookies.get('password') != undefined)
   signIn(Cookies.get('password'));
 
 // Filters user data from all data
-function filterUserData(passcode, data){
+function filterUserData(password, data){
   for(let i = 1; i < data.length; i++){
-    if(data[i][1] == passcode)
+    if(data[i][1] == password)
       return data[i];
   }
-  return '';
 }
 
 // Triggers the signin call for the server
-async function signIn(passcode){
+async function signIn(password){
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = async function() {
     if (this.readyState == 4 && this.status == 200) {
       let data = await getData();
-      let user = filterUserData(passcode, data);
-      if(user == '')
+      let user = filterUserData(password, data);
+      if(user === undefined)
         $('#message').text("User not found");
       else
         $('#message').text('Welcome, ' + user[0]);
-      Cookies.set('password', passcode);
+      Cookies.set('password', password);
       showData(data);
       showUsers(data);
     }
   }
 
-  xmlhttp.open('GET', 'sheets.php?signIn='+passcode, true);
+  xmlhttp.open('GET', 'src/endpoints/signin.php?password=' + password, true);
   xmlhttp.send();
 }
 
@@ -41,7 +40,7 @@ async function getData() {
         resolve(JSON.parse(this.responseText));
       }
     }
-    xmlhttp.open('GET', 'sheets.php?q='+passcode, true);
+    xmlhttp.open('GET', 'src/endpoints/getdata.php, true);
     xmlhttp.send();
   });
 }
@@ -57,15 +56,15 @@ function showUsers(data){
 }
 
 // Sends a request to create a new user
-function createUser(name, passcode) {
-  if(name != "" && passcode != ""){
+function createUser(name, password) {
+  if(name != "" && password != ""){
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         alert(this.responseText == 'User already exists' ? this.responseText : 'Successfully added user ' + this.responseText);
       }
     }
-    xmlhttp.open('GET', 'sheets.php?createUser=' + name + '&passcode=' + passcode, true);
+    xmlhttp.open('GET', 'src/endpoints/adduser.php?username=' + name + '&password=' + password, true);
     xmlhttp.send();
   }
 }
