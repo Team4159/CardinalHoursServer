@@ -27,12 +27,12 @@
         xmlhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             getData(passcode).then(function(data){
-              var user = filterUserData(passcode, data);
+              let user = filterUserData(passcode, data);
+              if(user == '')
+                $('#message').text("User not found");
+              else
+                $('#message').text('Welcome, ' + user[0]);
             })
-            if(user == '')
-              $('#message').text("User not found");
-            else
-              $('#message').text('Welcome, ' + user[0]);
            Cookies.set('password', passcode);
           }
         }
