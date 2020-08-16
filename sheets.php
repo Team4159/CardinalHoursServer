@@ -104,7 +104,7 @@ if (isset($_REQUEST['q'])) {
 }
 
 if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {
-  if(getData($_REQUEST['passcode'])[0] == 'User not found' && getData($_REQUEST['passcode'])[1] == 'User not found'){
+  if(getData($_REQUEST['passcode']) == 'User not found'){
     addUser($_REQUEST['createUser'], $_REQUEST['passcode']);
     echo $_REQUEST['createUser'];
   } else
