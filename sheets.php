@@ -83,13 +83,15 @@ function getUserData($password){
   }
 }
 
+echo ("A". (count($data) + 1)) . (":E" . (count($data) + 1));
+
 // Adds a user to sheets
 function addUser($name, $password){
   global $data;
   global $client;
   global $service;
   global $spreadsheetId;
-  $range = "A" + count($data) + 1 + ":E"+ count($data) + 1;
+  $range = ("A". (count($data) + 1)) . (":E" . (count($data) + 1));
   $values = [
     [
         $name, $password, FALSE, time(), 0
