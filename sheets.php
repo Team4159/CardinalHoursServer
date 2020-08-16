@@ -79,7 +79,7 @@ function getUserData($password){
       if($data[$i][1] == $password)
         return $data[$i];
     }
-    return 'User not found';
+    return '';
   }
 }
 
@@ -115,7 +115,7 @@ if (isset($_REQUEST['q'])) {
 }
 
 if (isset($_REQUEST['createUser']) && isset($_REQUEST['passcode'])) {
-  if(getUserData($_REQUEST['passcode']) == 'User not found'){
+  if(getUserData($_REQUEST['passcode']) == '' && $_REQUEST['createUser'] != '' && $_REQUEST['passcode'] != ''){
     addUser($_REQUEST['createUser'], $_REQUEST['passcode']);
     echo $_REQUEST['createUser'];
   } else
