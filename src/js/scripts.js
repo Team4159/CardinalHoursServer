@@ -27,7 +27,7 @@ async function signIn(password){
     }
   }
 
-  xmlhttp.open('GET', '/src/endpoints/signin.php?password=' + password, true);
+  xmlhttp.open('GET', 'src/endpoints/signin.php?password=' + password, true);
   xmlhttp.send();
 }
 
@@ -40,7 +40,7 @@ async function getData() {
         resolve(JSON.parse(this.responseText));
       }
     }
-    xmlhttp.open('GET', '/src/endpoints/getdata.php, true);
+    xmlhttp.open('GET', 'src/endpoints/getdata.php, true);
     xmlhttp.send();
   });
 }
@@ -64,7 +64,7 @@ function createUser(name, password) {
         alert(this.responseText == 'User already exists' ? this.responseText : 'Successfully added user ' + this.responseText);
       }
     }
-    xmlhttp.open('GET', '/src/endpoints/adduser.php?username=' + name + '&password=' + password, true);
+    xmlhttp.open('GET', 'src/endpoints/adduser.php?username=' + name + '&password=' + password, true);
     xmlhttp.send();
   }
 }
