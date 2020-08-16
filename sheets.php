@@ -85,10 +85,11 @@ function getUserData($password){
 
 // Adds a user to sheets
 function addUser($name, $password){
+  global $data;
   global $client;
   global $service;
   global $spreadsheetId;
-  $range = $service->spreadsheets_values->get($spreadsheetId, 'NextRow')->getValues()[0][0]; // Gets the range of the next row
+  $range = "A" + count($data) + 1 + ":E"+ count($data) + 1;
   $values = [
     [
         $name, $password, FALSE, time(), 0
@@ -106,8 +107,11 @@ function addUser($name, $password){
   $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
 }
 
-// TODO: start tracking time on signin
+// start tracking time on signin
 if (isset($_REQUEST['signIn'])) {
+  if(getUserData($_REQUEST['signIn'])[3] == FALSE){
+    
+  }
 }
 
 // returns data on get request
