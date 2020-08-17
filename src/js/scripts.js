@@ -62,7 +62,7 @@ async function getTime() {
 async function showData(data){
   let message = '';
   if(Cookies.get('password') != undefined){
-    var user = filterUserData(passcode, data);
+    var user = filterUserData(Cookies.get('password'), data);
     message += 'Welcome, ' + user[0] + "\n";
     if(user[2] == "TRUE")
       message += "Signed in \n Session time: " + parseTime(await getTime()) + "\n";
