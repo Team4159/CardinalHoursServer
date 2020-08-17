@@ -14,6 +14,7 @@ if (isset($_REQUEST['password'])) {
       ["TRUE", strval($currentTime), strval($totalTime)]
     ];
     $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
+    echo json_encode($userData);
     changeData($values, $range);
     echo $userData[0];
   } else if($userData[2] == "TRUE"){
