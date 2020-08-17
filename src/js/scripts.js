@@ -2,7 +2,7 @@
 $(document).ready(async function() {
   setInterval(async function(){
     showData(await getData());
-  }, 5000);
+  }, 2000);
   showData(await getData());
 });
 
