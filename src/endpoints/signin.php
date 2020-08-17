@@ -7,8 +7,7 @@ if (isset($_REQUEST['password'])) {
   $userData = getUserData($_REQUEST['password']);
   $lastTime = intval(userData[3]);
   $totalTime = intval(userData[4]);
-  $currentTime = intval(time());
-  $sessionTime = $currentTime - $lastTime;
+  $currentTime = time();
   if($userData[2] == "FALSE"){
     $values = [
       ["TRUE", strval($currentTime), strval($sessionTime)]
@@ -22,7 +21,7 @@ if (isset($_REQUEST['password'])) {
       ["FALSE", strval($currentTime), strval($sessionTime)]
     ];
     $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
-    echo json_encode($userData);
+    echo json_encode($currentTime);
     changeData($values, $range);
     echo $userData[0];
   }
