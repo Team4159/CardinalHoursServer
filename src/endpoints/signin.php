@@ -6,7 +6,7 @@ require('datafuncs.php');
 if (isset($_REQUEST['password'])) {
   $userData = getUserData($_REQUEST['password']);
   $lastTime = intval(userData[3]);
-  $totalTime = intval(userData[4]);
+  $totalTime = 100;
   $currentTime = time();
   $sessionTime = $currentTime - $lastTime;
   if($userData[2] == "FALSE"){
