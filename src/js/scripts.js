@@ -63,18 +63,18 @@ async function showData(data){
   let message = '';
   if(Cookies.get('password') != undefined){
     var user = filterUserData(Cookies.get('password'), data);
-    message += 'Welcome, ' + user[0] + "\n";
+    message += 'Welcome, ' + user[0] + "<br>";
     if(user[2] == "TRUE")
-      message += "Signed in \n Session time: " + parseTime(await getTime()) + "\n";
+      message += "Signed in <br> Session time: " + parseTime(await getTime()) + "<br>";
     else
-      message += "Signed out \n";
+      message += "Signed out <br>";
     message += "Total time: " + user[4];
   } else {
     message = 'Please sign in'
   }
   Cookies.set('password', passcode);
   showUsers(data);
-  $('#message').text(message);
+  $('#message').html(message);
 }
 
 // Shows all users signed in
