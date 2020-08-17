@@ -1,8 +1,6 @@
 // Attempts to sign in with cookie if it exists
 (async () => {
-  if(Cookies.get('password') != undefined){
-    showData(await getData());
-  }
+  showData(await getData());
 })();
 
 // Filters user data from all data
@@ -62,20 +60,21 @@ async function getTime() {
 
 // Shows the signed in users's data
 async function showData(data){
-    let user = filterUserData(passcode, data);
-    let message = '';
-    if(user == '')
-      message += "User not found \n";
-    else
-      message += 'Welcome, ' + user[0] + "\n";
+  let message = '';
+  if(Cookies.get('password') != undefined){
+    var user = filterUserData(passcode, data);
+    message += 'Welcome, ' + user[0] + "\n";
     if(user[2] == "TRUE")
       message += "Signed in \n Session time: " + parseTime(await getTime()) + "\n";
     else
       message += "Signed out \n";
-    
-    Cookies.set('password', passcode);
-    showUsers(data);
-    $('#message').text(message);
+    message += "Total time: " + user[4];
+  } else {
+    message = 'Please sign in'
+  }
+  Cookies.set('password', passcode);
+  showUsers(data);
+  $('#message').text(message);
 }
 
 // Shows all users signed in
@@ -99,57 +98,57 @@ function createUser(name, password) {
 
 // turns the seconds into human readable time
 function parseTime(e, t) {
-    var n = "";
-    e = Math.round(e);
-    if (e < 0)
-        e = 0;
-    if (typeof t == "undefined") {
-        var t = true
+  var n = "";
+  e = Math.round(e);
+  if (e < 0)
+    e = 0;
+  if (typeof t == "undefined") {
+    var t = true
+  }
+  var r = Math.floor(e / (60 * 60 * 24));
+  e -= r * 60 * 60 * 24;
+  var i = Math.floor(e / (60 * 60));
+  e -= i * 60 * 60;
+  var s = Math.floor(e / 60);
+  e -= s * 60;
+  if (r > 0) {
+    n = r + " day" + (r != 1 ? "s" : "");
+    if (i == 0 && s == 0 && e == 0) {
+      return n
     }
-    var r = Math.floor(e / (60 * 60 * 24));
-    e -= r * 60 * 60 * 24;
-    var i = Math.floor(e / (60 * 60));
-    e -= i * 60 * 60;
-    var s = Math.floor(e / 60);
-    e -= s * 60;
-    if (r > 0) {
-        n = r + " day" + (r != 1 ? "s" : "");
-        if (i == 0 && s == 0 && e == 0) {
-            return n
-        }
-        n += ", ";
-        n += i + " hour" + (i != 1 ? "s" : "");
-        if (s == 0 && e == 0) {
-            return n
-        }
-        n += ", ";
-        n += s + " minute" + (s != 1 ? "s" : "");
-        if (e == 0 || !t) {
-            return n
-        }
-        n += ", " + e + " second" + (e != 1 ? "s" : "");
-        return n
+    n += ", ";
+    n += i + " hour" + (i != 1 ? "s" : "");
+    if (s == 0 && e == 0) {
+      return n
     }
-    if (i > 0) {
-        n = i + " hour" + (i != 1 ? "s" : "");
-        if (s == 0 && e == 0) {
-            return n
-        }
-        n += ", ";
-        n += s + " minute" + (s != 1 ? "s" : "");
-        if (e == 0 || !t) {
-            return n
-        }
-        n += ", " + e + " second" + (e != 1 ? "s" : "");
-        return n
+    n += ", ";
+    n += s + " minute" + (s != 1 ? "s" : "");
+    if (e == 0 || !t) {
+      return n
     }
-    if (s > 0) {
-        n = s + " minute" + (s != 1 ? "s" : "");
-        if (e == 0 || !t) {
-            return n
-        }
-        n += ", " + e + " second" + (e != 1 ? "s" : "");
-        return n
+    n += ", " + e + " second" + (e != 1 ? "s" : "");
+    return n
+  }
+  if (i > 0) {
+    n = i + " hour" + (i != 1 ? "s" : "");
+    if (s == 0 && e == 0) {
+      return n
     }
-    return e + " second" + (e != 1 ? "s" : "")
+    n += ", ";
+    n += s + " minute" + (s != 1 ? "s" : "");
+    if (e == 0 || !t) {
+      return n
+    }
+    n += ", " + e + " second" + (e != 1 ? "s" : "");
+    return n
+  }
+  if (s > 0) {
+    n = s + " minute" + (s != 1 ? "s" : "");
+    if (e == 0 || !t) {
+      return n
+    }
+    n += ", " + e + " second" + (e != 1 ? "s" : "");
+    return n
+  }
+  return e + " second" + (e != 1 ? "s" : "")
 }
