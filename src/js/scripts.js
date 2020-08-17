@@ -11,7 +11,7 @@ function filterUserData(password, data){
 }
 
 // Triggers the signin call for the server
-function signIn(password){
+async function signIn(password){
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = async function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -21,6 +21,7 @@ function signIn(password){
       else
         $('#message').text('Welcome, ' + this.responseText);
       Cookies.set('password', password);
+      let data = await getData();
       showData(data);
       showUsers(data);
     }
