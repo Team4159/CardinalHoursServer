@@ -19,7 +19,7 @@ function signIn(password){
       if(this.responseText == undefined)
         $('#message').text("User not found");
       else
-        $('#message').text('Welcome, ' + this.responseText());
+        $('#message').text('Welcome, ' + this.responseText);
       Cookies.set('password', password);
       showData(data);
       showUsers(data);
