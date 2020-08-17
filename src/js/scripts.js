@@ -15,9 +15,8 @@ async function signIn(password){
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = async function() {
     if (this.readyState == 4 && this.status == 200) {
-      let data = await getData();
-      let user = filterUserData(password, data);
-      if(user === undefined)
+      console.log(this.responseText);
+      if(this.responseText == undefined)
         $('#message').text("User not found");
       else
         $('#message').text('Welcome, ' + user[0]);
