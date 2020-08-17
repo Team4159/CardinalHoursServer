@@ -2,7 +2,7 @@
 $(document).ready(async function() {
   setInterval(async function(){
     showData(await getData());
-  }, 1000);
+  }, 5000);
 });
 
 // Filters user data from all data
@@ -67,9 +67,11 @@ async function showData(data){
     var user = filterUserData(Cookies.get('password'), data);
     message += 'Welcome, ' + user[0] + "<br> ";
     if(user[2] == "TRUE"){
+      $('#signIn').text("Sign out");
       message += "Signed in <br> Session time: " + parseTime(await getTime() - parseInt(user[3])) + " <br> ";
       message += "Total time: " + parseTime(await getTime() - parseInt(user[3]) + parseInt(user[4]));
     } else {
+      $('#signIn').text("Sign in");
       message += "Signed out <br> ";
       message += "Total time: " + parseTime(user[4]);
     }
