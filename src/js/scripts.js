@@ -66,11 +66,13 @@ async function showData(data){
   if(Cookies.get('password') != undefined){
     var user = filterUserData(Cookies.get('password'), data);
     message += 'Welcome, ' + user[0] + "<br> ";
-    if(user[2] == "TRUE")
+    if(user[2] == "TRUE"){
       message += "Signed in <br> Session time: " + parseTime(await getTime() - user[3]) + " <br> ";
-    else
+      message += "Total time: " + parseTime(await getTime() - user[3] + user[4]);
+    } else {
       message += "Signed out <br> ";
-    message += "Total time: " + parseTime(await getTime() - user[3] + user[4]);
+      message += "Total time: " + parseTime(user[4]);
+    }
   } else {
     message = 'Please sign in'
   }
@@ -78,7 +80,7 @@ async function showData(data){
   $('#message').html(message);
 }
 
-// Shows all users signed in
+// TODO: Shows all users signed in
 function showUsers(data){
 
 }
