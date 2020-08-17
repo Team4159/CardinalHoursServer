@@ -70,7 +70,7 @@ async function showData(data){
       message += "Signed in <br> Session time: " + parseTime(await getTime() - user[3]) + " <br> ";
     else
       message += "Signed out <br> ";
-    message += "Total time: " + user[4];
+    message += "Total time: " + parseTime(await getTime() - user[3] + user[4]);
   } else {
     message = 'Please sign in'
   }
