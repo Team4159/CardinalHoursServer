@@ -2,6 +2,7 @@
 require('sheets.php');
 require('datafuncs.php');
 
+$data = $service->spreadsheets_values->get($spreadsheetId, 'Data')->getValues(); // Gets all relevant data from sheets
 // Adds a user to sheets
 function addUser($name, $password){
   $range = ("A". (count($data) + 1)) . (":E" . (count($data) + 1));
