@@ -11,15 +11,15 @@ function filterUserData(password, data){
 }
 
 // Triggers the signin call for the server
-async function signIn(password){
+function signIn(password){
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = async function() {
     if (this.readyState == 4 && this.status == 200) {
-      console.log(this.responseText);
+      console.log(this.responseText === undefined);
       if(this.responseText == undefined)
         $('#message').text("User not found");
       else
-        $('#message').text('Welcome, ' + user[0]);
+        $('#message').text('Welcome, ' + this.responseText());
       Cookies.set('password', password);
       showData(data);
       showUsers(data);
