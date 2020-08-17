@@ -11,14 +11,14 @@ if (isset($_REQUEST['password'])) {
   $sessionTime = $currentTime - $lastTime;
   if($userData[2] == "FALSE"){
     $values = [
-      ["TRUE", $currentTime, $totalTime]
+      ["TRUE", $currentTime]
     ];
-    $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
+    $range = ("C" . getUserRow($_REQUEST['password'])) . (":D" . getUserRow($_REQUEST['password']));
     changeData($values, $range);
     echo $userData[0];
   } else if($userData[2] == "TRUE"){
     $values = [
-      ["FALSE", $currentTime, $totalTime + $currentTime - $lastTime]
+      ["FALSE", $currentTime, $sessionTime]
     ];
     $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
     echo $sessionTime;
