@@ -16,14 +16,14 @@ if (isset($_REQUEST['password'])) {
     ];
     $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
     changeData($values, $range);
-    echo json_encode($lastTime);
+    echo json_encode($userData);
     echo $userData[0];
   } else if($userData[2] == "TRUE"){
     $values = [
       ["FALSE", strval($currentTime), strval($sessionTime)]
     ];
     $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
-    echo json_encode($lastTime);
+    echo json_encode($userData);
     changeData($values, $range);
     echo $userData[0];
   }
