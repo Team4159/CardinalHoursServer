@@ -1,5 +1,6 @@
 <?php
 // Functions that require grabbing all data
+$data = $service->spreadsheets_values->get($spreadsheetId, 'Data')->getValues(); // Gets all relevant data from sheets
 // Gets the data of a single user
 function getUserData($password){
   global $data;
