@@ -19,7 +19,8 @@ if (isset($_REQUEST['password'])) {
       ["FALSE", time(), (int) userData[4] + time() - (int) userData[3]]
     ];
     $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
-    echo time() - $lastTime;
+    echo time() + "\n";
+    echo $lastTime;
     changeData($values, $range);
     echo $userData[0];
   }
