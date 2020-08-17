@@ -54,6 +54,23 @@ function getClient()
     return $client;
 }
 
+// Changes a range of data in sheets
+function changeData($values, $range){
+  global $client;
+  global $service;
+  global $spreadsheetId;
+
+  $params = [
+    'valueInputOption' => 'USER_ENTERED'
+  ];
+
+  $body = new Google_Service_Sheets_ValueRange([
+    'values' => $values
+  ]);
+
+  $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
+}
+
 
 // Get the API client and construct the service object.
 $client = getClient();
