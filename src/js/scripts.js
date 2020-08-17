@@ -1,7 +1,7 @@
 // Attempts to sign in with cookie if it exists
-(async () => {
+$(document).ready(async function() {
   showData(await getData());
-})();
+});
 
 // Filters user data from all data
 function filterUserData(password, data){
@@ -65,7 +65,7 @@ async function showData(data){
     var user = filterUserData(Cookies.get('password'), data);
     message += 'Welcome, ' + user[0] + "<br> ";
     if(user[2] == "TRUE")
-      message += "Signed in <br> Session time: " + parseTime(await getTime()) + " <br> ";
+      message += "Signed in <br> Session time: " + parseTime(await getTime() - user[3]) + " <br> ";
     else
       message += "Signed out <br> ";
     message += "Total time: " + user[4];
