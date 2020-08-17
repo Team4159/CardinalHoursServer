@@ -10,7 +10,7 @@ function getUserData($password){
     $num = count($data);
     for ($i = 1; $i < $num; $i++) {
       if($data[$i][1] == $password)
-        return json_encode($data[$i]);
+        return $data[$i];
     }
   }
 }

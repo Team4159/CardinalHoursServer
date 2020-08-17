@@ -1,5 +1,5 @@
 <?php
 require('sheets.php');
 require('datafuncs.php');
-echo getUserData($_REQUEST['password']);
+echo json_encode(getUserData($_REQUEST['password']));
 ?>
