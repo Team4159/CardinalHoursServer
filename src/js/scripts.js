@@ -1,6 +1,8 @@
 // Attempts to sign in with cookie if it exists
 $(document).ready(async function() {
-  showData(await getData());
+  setInterval(async function(){
+    showData(await getData());
+  }, 1000);
 });
 
 // Filters user data from all data
@@ -72,7 +74,6 @@ async function showData(data){
   } else {
     message = 'Please sign in'
   }
-  Cookies.set('password', passcode);
   showUsers(data);
   $('#message').html(message);
 }
