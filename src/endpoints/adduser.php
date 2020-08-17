@@ -5,7 +5,7 @@ require('datafuncs.php');
 // Adds a user to sheets
 function addUser($name, $password){
   global $data;
-  $range = ("A". (count($data) + 1)) . (":E" . (count($data) + 1));
+  $range = ("A" . (count($data) + 1)) . (":E" . (count($data) + 1));
   $values = [
     [
         $name, $password, FALSE, time(), 0

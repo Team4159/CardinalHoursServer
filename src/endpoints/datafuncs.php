@@ -14,4 +14,18 @@ function getUserData($password){
     }
   }
 }
+
+// gets the row a user from their password
+function getUserRow($password){
+  global $data;
+  if (empty($data)) {
+    return 'Uh Oh. Something broke.\n';
+  } else {
+    $num = count($data);
+    for ($i = 1; $i < $num; $i++) {
+      if($data[$i][1] == $password)
+        return $i + 1;
+    }
+  }
+}
 ?>
