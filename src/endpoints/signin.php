@@ -5,8 +5,8 @@ require('datafuncs.php');
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
   $userData = getUserData($_REQUEST['password']);
-  $lastTime = userData[3];
-  $totalTime = userData[4];
+  $lastTime = (int) userData[3];
+  $totalTime = (int) userData[4];
   $currentTime = time();
   $sessionTime = $currentTime - $lastTime;
   if($userData[2] == "FALSE"){
