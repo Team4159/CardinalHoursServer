@@ -7,7 +7,7 @@ if (isset($_REQUEST['password'])) {
   $userData = getUserData($_REQUEST['password']);
   if($userData[2] == "FALSE"){
     $values = [
-      ["TRUE", time(), (int) userData[5]]
+      ["TRUE", time(), userData[5]]
     ];
     $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
     changeData($values, $range);
