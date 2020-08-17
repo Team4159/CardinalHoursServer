@@ -1,6 +1,6 @@
 // Attempts to sign in with cookie if it exists
 (async () => {
-  if(Cookies.get('password') != undefined)
+  if(Cookies.get('password') != undefined){
     showData(await getData());
   }
 })();
