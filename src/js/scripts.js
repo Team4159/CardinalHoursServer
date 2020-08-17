@@ -49,7 +49,7 @@ function showData(data){
 
 }
 
-// Shows and updates all users signed in
+// Shows all users signed in
 function showUsers(data){
 
 }

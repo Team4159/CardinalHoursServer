@@ -2,29 +2,37 @@
 require('sheets.php');
 require('datafuncs.php');
 
+$userData = getUserData("123");
+$lastTime = (int) $userData[3];
+$totalTime = (int) $userData[4];
+$sessionTime = $totalTime+time()-$lastTime;
+echo $sessionTime;
+
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
-  $userData = json_decode(getUserData($_REQUEST['password']));
-  $lastTime = intval(userData[3]);
-  $totalTime = intval(userData[4]);
-  $currentTime = time();
-  $sessionTime = 0;
+  $userData = getUserData($_REQUEST['password']);
+  $lastTime = (int) $userData[3];
+  $totalTime = (int) $userData[4];
+  $sessionTime = time() - $lastTime;
+  echo $sessionTime;
 
   if($userData[2] == "FALSE"){
     $values = [
-      ["TRUE", strval($currentTime), strval($sessionTime)]
+      ["TRUE", time(), $sessionTime]
     ];
     $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
+
     changeData($values, $range);
-    echo json_encode($lastTime);
+
     echo $userData[0];
   } else if($userData[2] == "TRUE"){
     $values = [
-      ["FALSE", strval($currentTime), strval($sessionTime)]
+      ["FALSE", time(), $sessionTime]
     ];
     $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
-    echo json_encode($lastTime);
+
     changeData($values, $range);
+
     echo $userData[0];
   }
 }
