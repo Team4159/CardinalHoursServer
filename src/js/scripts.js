@@ -67,8 +67,8 @@ async function showData(data){
     var user = filterUserData(Cookies.get('password'), data);
     message += 'Welcome, ' + user[0] + "<br> ";
     if(user[2] == "TRUE"){
-      message += "Signed in <br> Session time: " + parseTime(await getTime() - user[3]) + " <br> ";
-      message += "Total time: " + parseTime(await getTime() - user[3] + user[4]);
+      message += "Signed in <br> Session time: " + parseTime(await getTime() - parseInt(user[3])) + " <br> ";
+      message += "Total time: " + parseTime(await getTime() - parseInt(user[3]) + parseInt(user[4]));
     } else {
       message += "Signed out <br> ";
       message += "Total time: " + parseTime(user[4]);
