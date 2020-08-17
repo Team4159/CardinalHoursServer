@@ -2,7 +2,7 @@
 require('sheets.php');
 require('datafuncs.php');
 
-$MAX_TIME = 43200 // 12 hours
+$MAX_TIME = 43200; // 12 hours
 
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
