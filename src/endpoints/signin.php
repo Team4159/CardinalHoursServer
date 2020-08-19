@@ -20,7 +20,7 @@ if (isset($_REQUEST['password'])) {
     echo $userData[0];
   } else if($userData[2] == "TRUE"){
     $values = [
-      ["FALSE", time(), $totalTime + $sessionTime < $MAX_TIME ? $sessionTime : 0]
+      ["FALSE", time(), $totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0)]
     ];
     $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
     changeData($values, $range);
