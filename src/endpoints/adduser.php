@@ -1,6 +1,7 @@
 <?php
 require('sheets.php');
 require('datafuncs.php');
+require('cors.php');
 
 // Adds a user to sheets
 function addUser($name, $password){
@@ -14,6 +15,7 @@ function addUser($name, $password){
   changeData($values, $range);
 }
 
+cors();
 
 if (isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
   if(getUserData($_REQUEST['password']) === null && $_REQUEST['username'] != '' && $_REQUEST['password'] != ''){
