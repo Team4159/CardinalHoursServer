@@ -1,6 +1,5 @@
 <?php
 require('sheets.php');
-require('datafuncs.php');
 require('cors.php');
 
 if (isset($_REQUEST['username']) && isset($_REQUEST['password'])) {

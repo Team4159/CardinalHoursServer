@@ -13,22 +13,41 @@
 
   $tableName = 'Hours';
 
-  $key = $marshaler->marshalJson('
-    {
-        "Password": "123"
-    }
-  ');
+  function getUserData($password){
+    global $marshaler;
+    global $tableName;
+    global $dynamodb;
+    $key = $marshaler->marshalJson('
+      {
+          "Password": "' . $password . '"
+      }
+    ');
+    $params = [
+      'TableName' => $tableName,
+      'Key' => $key
+    ];
 
-  $params = [
-    'TableName' => $tableName,
-    'Key' => $key
-  ];
-
-  try {
     $result = $dynamodb->getItem($params);
-    print_r($result["Item"]);
-  } catch (DynamoDbException $e) {
-      echo "Unable to get item:\n";
-      echo $e->getMessage() . "\n";
+    return json_decode($marshaler->unmarshalJson($result["Item"]), true);
   }
+
+  function addUser($username, $password){
+    global $marshaler;
+    global $tableName;
+    global $dynamodb;
+    $item = $marshaler->marshalJson('
+      {
+        "Password": "' . $password . '",
+        "Username": "' . $username . '",
+        "Sessions": []
+      }
+    ');
+    $params = [
+      'TableName' => $tableName,
+      'Item' => $item
+    ];
+    $dynamodb->putItem($params);
+  }
+  addUser("kai", "kailovespancakes");
+  echo getUserData("123");
 ?>
