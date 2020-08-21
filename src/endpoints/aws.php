@@ -14,13 +14,13 @@
   $tableName = 'Hours';
 
   // Might give you the requested user data if you pleased the god jeff besos
-  function getUserData($password){
+  function getUser($password){
     global $marshaler;
     global $tableName;
     global $dynamodb;
     $key = $marshaler->marshalJson('
       {
-          "Password": "' . $password . '"
+          "password": "' . $password . '"
       }
     ');
     $params = [
@@ -40,14 +40,15 @@
     global $marshaler;
     global $tableName;
     global $dynamodb;
+
     $item = $marshaler->marshalJson('
       {
-        "Password": "' . $password . '",
-        "Username": "' . $username . '",
-        "SignedIn": false,
-        "LastTime": 0,
-        "TotalTime": 0,
-        "Sessions": []
+        "password": "' . $password . '",
+        "username": "' . $username . '",
+        "signedIn": false,
+        "lastTime": 0,
+        "totalTime": 0,
+        "sessions": []
       }
     ');
     $params = [
@@ -56,4 +57,28 @@
     ];
     $dynamodb->putItem($params);
   }
+
+  function updateUser($password, $data){
+    global $marshaler;
+    global $tableName;
+    global $dynamodb;
+
+    $key = $marshaler->marshalJson('
+      {
+          "password": "' . $password . '"
+      }
+    ');
+
+    $params = [
+      'TableName' => $tableName,
+      'Key' => $key,
+      'UpdateExpression' => 
+          'set sessions=:sessions, signedIn=:signedIn, lastTime=:lastTime, totalTime=:totalTime',
+      'ExpressionAttributeValues'=> $data,
+      'ReturnValues' => 'UPDATED_NEW'
+    ];
+    $dynamodb->updateItem($params);
+  }
+
+  addUser("kai", "kaiisawesome");
 ?>
