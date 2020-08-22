@@ -2,7 +2,7 @@
 $(document).ready(async function() {
   setInterval(async function(){
     showData(await getUserData(Cookies.get('password')));
-  }, 2000);
+  }, 1000);
   showData(await getUserData(Cookies.get('password')));
 });
 
@@ -16,7 +16,7 @@ async function signIn(password){
       else
         $('#message').text('Welcome, ' + this.responseText);
       Cookies.set('password', password);
-      showData(data);
+      showData(await getUserData(Cookies.get('password')));
     }
   }
 

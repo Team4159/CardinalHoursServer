@@ -47,10 +47,10 @@
 
     $item = $marshaler->marshalJson('
       {
-        "password": "' . $password . '",
-        "username": "' . $username . '",
+        "password": "'.$password.'",
+        "username": "'.$username.'",
         "signedIn": false,
-        "lastTime": 0,
+        "lastTime": "'.time().'",
         "totalTime": 0,
         "sessions": []
       }
