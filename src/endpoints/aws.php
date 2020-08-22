@@ -2,6 +2,7 @@
   putenv('HOME=/home/ling');
   require '../../vendor/autoload.php';
   use Aws\DynamoDb\Marshaler;
+  use Aws\DynamoDb\Exception\DynamoDbException;
 
   $sdk = new Aws\Sdk([
     'region'   => 'us-east-2',
@@ -34,7 +35,7 @@
     try {
       $result = $dynamodb->getItem($params);
       return json_decode($marshaler->unmarshalJson($result['Item']), true);
-    } catch (TypeError $e) {
+    } catch (DynamoDbException $e) {
       return null;
     }
   }
@@ -82,4 +83,5 @@
     ];
     $dynamodb->updateItem($params);
   }
+  echo getUser("123")==null;
 ?>
