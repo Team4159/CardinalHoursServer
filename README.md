@@ -33,7 +33,7 @@ JSON is in the format of
     {
       "date": <String>, // The date of the session in Month.Day.Year format
       "did": <String>, // What the user reported to have done during that session, is blank if nothing was reported
-      "time": <int>, // The total time of the session
+      "time": <int>, // How long the session lasted
     }
   ]
 }
