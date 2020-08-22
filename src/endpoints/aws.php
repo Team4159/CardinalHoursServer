@@ -49,13 +49,10 @@
       {
         "password": "'.$password.'",
         "username": "'.$username.'",
-        "signedIn": '.json_encode(false).',
+        "signedIn": '.false.',
         "lastTime": '.time().',
         "totalTime": 0,
-        "sessions": {
-          {}
-        }
-      }
+        "sessions": [[]]
     ');
     $params = [
       'TableName' => $tableName,
