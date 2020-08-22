@@ -50,7 +50,7 @@
         "password": "'.$password.'",
         "username": "'.$username.'",
         "signedIn": false,
-        "lastTime": "'.time().'",
+        "lastTime": 0,
         "totalTime": 0,
         "sessions": []
     ');
