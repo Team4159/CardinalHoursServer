@@ -59,8 +59,8 @@ async function showData(data){
     message += 'Welcome, ' + user["username"] + "<br> ";
     if(user["signedIn"] == true){
       $('#signIn').text("Sign out");
-      message += "Signed in <br> Session time: " + parseTime(await getTime() - parseInt(user["lastTime"])) + " <br> ";
-      message += "Total time: " + parseTime(await getTime() - parseInt(user["lastTime"]) + parseInt(user["totalTime"]));
+      message += "Signed in <br> Session time: " + parseTime(await getTime() - user["lastTime"]) + " <br> ";
+      message += "Total time: " + parseTime(await getTime() - user["lastTime"] + user["totalTime"]);
     } else {
       $('#signIn').text("Sign in");
       message += "Signed out <br> ";
