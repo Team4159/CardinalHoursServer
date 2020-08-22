@@ -1,34 +1,57 @@
 <?php
-require('sheets.php');
-require('datafuncs.php');
+require('aws.php');
 require('cors.php');
-
 $MAX_TIME = 43200; // 12 hours
 
-cors();
+# cors();
 
-// start tracking time on signin
-if (isset($_REQUEST['password'])) {
-  $userData = getUserData($_REQUEST['password']);
-  $lastTime = (int) $userData[3];
-  $totalTime = (int) $userData[4];
+function signIn($password, $did = ''){
+  global $MAX_TIME;
+  $userData = getUser($password);
+  $lastTime = $userData["lastTime"]["N"];
+  $totalTime = $userData["totalTime"]["N"];
   $sessionTime = time() - $lastTime;
+  if($userData["signedIn"]["BOOL"]){
+    $data = [
+      ':signedIn' => ['BOOL' => false],
+      ':lastTime' => ['N' => strval(time())],
+      ':totalTime' => ['N' => strval($totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0))]
+    ];
 
-  if($userData[2] == "FALSE"){
-    $values = [
-      ["TRUE", time(), $totalTime]
+    $session = [
+      ':empty_list' => ['L'=>[]],
+      ':session' => [
+        'L' => [
+          [
+            'M' => [
+              'date' => ['S' => date("m.d.Y")],
+              'time' => ['N' => strval($sessionTime)],
+              'did' => ['S' => $did]
+            ]
+          ]
+        ]
+      ]
     ];
-    $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
-    changeData($values, $range);
-    echo $userData[0];
-  } else if($userData[2] == "TRUE"){
-    $values = [
-      ["FALSE", time(), $totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0)]
+
+    updateUser($password, $data);
+    addSession($password, $session);
+    echo $userData["username"]["S"];
+  } else {
+    $data = [
+      ':signedIn' => ['BOOL' => true],
+      ':lastTime' => ['N' => strval(time())],
+      ':totalTime' => ['N' => $userData["totalTime"]["N"]]
     ];
-    $range = ("C" . getUserRow($_REQUEST['password'])) . (":E" . getUserRow($_REQUEST['password']));
-    changeData($values, $range);
-    echo $userData[0];
+    updateUser($password, $data);
+    echo $userData["username"]["S"];
   }
 }
-
+// start tracking time on signin
+if (isset($_REQUEST['password'])) {
+  if(isset($_REQUEST['did']))
+    signIn($_REQUEST['password'], $_REQUEST['did']);
+  else
+    signIn($_REQUEST['password']);
+}
+signIn("123", "nothing")
 ?>

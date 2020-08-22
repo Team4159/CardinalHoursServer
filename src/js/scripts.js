@@ -1,18 +1,10 @@
 // Attempts to sign in with cookie if it exists
 $(document).ready(async function() {
   setInterval(async function(){
-    showData(await getData());
-  }, 2000);
-  showData(await getData());
+    showData(await getUserData(Cookies.get('password')));
+  }, 1000);
+  showData(await getUserData(Cookies.get('password')));
 });
-
-// Filters user data from all data
-function filterUserData(password, data){
-  for(let i = 1; i < data.length; i++){
-    if(data[i][1] == password)
-      return data[i];
-  }
-}
 
 // Triggers the signin call for the server
 async function signIn(password){
@@ -24,9 +16,7 @@ async function signIn(password){
       else
         $('#message').text('Welcome, ' + this.responseText);
       Cookies.set('password', password);
-      let data = await getData();
-      showData(data);
-      showUsers(data);
+      showData(await getUserData(Cookies.get('password')));
     }
   }
 
@@ -35,7 +25,7 @@ async function signIn(password){
 }
 
 // Gets all the data from the server
-async function getData() {
+async function getUserData(password) {
   return new Promise(function (resolve, reject) {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -43,7 +33,7 @@ async function getData() {
         resolve(JSON.parse(this.responseText));
       }
     }
-    xmlhttp.open('GET', 'src/endpoints/getdata.php', true);
+    xmlhttp.open('GET', 'src/endpoints/getuserdata.php?password=' + password, true);
     xmlhttp.send();
   });
 }
@@ -65,27 +55,21 @@ async function getTime() {
 async function showData(data){
   let message = '';
   if(Cookies.get('password') != undefined){
-    var user = filterUserData(Cookies.get('password'), data);
-    message += 'Welcome, ' + user[0] + "<br> ";
-    if(user[2] == "TRUE"){
+    var user = data;
+    message += 'Welcome, ' + user["username"] + "<br> ";
+    if(user["signedIn"] == true){
       $('#signIn').text("Sign out");
-      message += "Signed in <br> Session time: " + parseTime(await getTime() - parseInt(user[3])) + " <br> ";
-      message += "Total time: " + parseTime(await getTime() - parseInt(user[3]) + parseInt(user[4]));
+      message += "Signed in <br> Session time: " + parseTime(await getTime() - user["lastTime"]) + " <br> ";
+      message += "Total time: " + parseTime(await getTime() - user["lastTime"] + user["totalTime"]);
     } else {
       $('#signIn').text("Sign in");
       message += "Signed out <br> ";
-      message += "Total time: " + parseTime(user[4]);
+      message += "Total time: " + parseTime(user["totalTime"]);
     }
   } else {
     message = 'Please sign in'
   }
-  showUsers(data);
   $('#message').html(message);
-}
-
-// TODO: Shows all users signed in
-function showUsers(data){
-
 }
 
 // Sends a request to create a new user
