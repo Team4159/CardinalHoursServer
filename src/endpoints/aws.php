@@ -49,10 +49,12 @@
       {
         "password": "'.$password.'",
         "username": "'.$username.'",
-        "signedIn": false,
-        "lastTime": "'.time().'",
+        "signedIn": '.json_encode(false).',
+        "lastTime": '.time().',
         "totalTime": 0,
-        "sessions": []
+        "sessions": {
+          {}
+        }
       }
     ');
     $params = [
