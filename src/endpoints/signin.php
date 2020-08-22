@@ -22,10 +22,12 @@ function signIn($password, $did = ''){
       ':empty_list' => ['L'=>[]],
       ':session' => [
         'L' => [
-          'M' => [
-            'date' => ['S' => date("m.d.Y")],
-            'time' => ['N' => strval($sessionTime)],
-            'did' => ['S' => $did]
+          [
+            'M' => [
+              'date' => ['S' => date("m.d.Y")],
+              'time' => ['N' => strval($sessionTime)],
+              'did' => ['S' => $did]
+            ]
           ]
         ]
       ]
