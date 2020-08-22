@@ -53,5 +53,4 @@ if (isset($_REQUEST['password'])) {
   else
     signIn($_REQUEST['password']);
 }
-signIn("123", "nothing")
 ?>
