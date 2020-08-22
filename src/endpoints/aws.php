@@ -79,6 +79,4 @@
     ];
     $dynamodb->updateItem($params);
   }
-
-  addUser("kai", "kaiisawesome");
 ?>
