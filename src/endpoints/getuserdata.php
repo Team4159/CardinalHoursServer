@@ -4,5 +4,5 @@ require('cors.php');
 cors();
 use Aws\DynamoDb\Marshaler;
 $marshaler = new Marshaler();
-echo $marshaler->marshalItem(getUser($_REQUEST['password']));
+echo json_encode($marshaler->marshalItem(getUser($_REQUEST['password'])));
 ?>
