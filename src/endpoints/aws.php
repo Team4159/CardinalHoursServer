@@ -49,8 +49,8 @@
       {
         "password": "'.$password.'",
         "username": "'.$username.'",
-        "signedIn": '.false.',
-        "lastTime": '.time().',
+        "signedIn": false,
+        "lastTime": "'.time().'",
         "totalTime": 0,
         "sessions": [[]]
     ');
