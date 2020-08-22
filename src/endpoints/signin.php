@@ -12,26 +12,29 @@ if (isset($_REQUEST['password'])) {
   $userData = getUser($_REQUEST['password']);
   $lastTime = $userData["lastTime"];
   $totalTime = $userData["totalTime"];
+  $sessionTime = time() - $lastTime;
   if($userData["signedIn"]){
     $eav = $marshaler->marshalJson('
       {
           ":sessions": ' . $userData["sessions"] . ',
-          ":lastTime": ' . $lastTime . ',
-          ":totalTime": ' . $totalTime . ',
+          ":lastTime": ' . time() . ',
+          ":totalTime": ' . $totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0) . ',
           ":signedIn": ' . false . '
       }
     ');
     updateUser($_REQUEST['password'], $eav);
+    echo $userData["username"];
   } else {
     $eav = $marshaler->marshalJson('
       {
           ":sessions": ' . $userData["sessions"] . ',
           ":lastTime": ' . $lastTime . ',
           ":totalTime": ' . $totalTime . ',
-          ":signedIn": ' . false . '
+          ":signedIn": ' . true . '
       }
     ');
     updateUser($_REQUEST['password'], $eav);
+    echo $userData["username"];
   }
 }
 
