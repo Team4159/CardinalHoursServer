@@ -6,14 +6,6 @@ $(document).ready(async function() {
   showData(await getData());
 });
 
-// Filters user data from all data
-function filterUserData(password, data){
-  for(let i = 1; i < data.length; i++){
-    if(data[i][1] == password)
-      return data[i];
-  }
-}
-
 // Triggers the signin call for the server
 async function signIn(password){
   let xmlhttp = new XMLHttpRequest();
@@ -24,9 +16,7 @@ async function signIn(password){
       else
         $('#message').text('Welcome, ' + this.responseText);
       Cookies.set('password', password);
-      let data = await getData();
       showData(data);
-      showUsers(data);
     }
   }
 
@@ -43,7 +33,7 @@ async function getData() {
         resolve(JSON.parse(this.responseText));
       }
     }
-    xmlhttp.open('GET', 'src/endpoints/getdata.php', true);
+    xmlhttp.open('GET', 'src/endpoints/getuserdata.php', true);
     xmlhttp.send();
   });
 }
@@ -65,7 +55,7 @@ async function getTime() {
 async function showData(data){
   let message = '';
   if(Cookies.get('password') != undefined){
-    var user = filterUserData(Cookies.get('password'), data);
+    var user = data["username"];
     message += 'Welcome, ' + user[0] + "<br> ";
     if(user[2] == "TRUE"){
       $('#signIn').text("Sign out");
@@ -79,13 +69,7 @@ async function showData(data){
   } else {
     message = 'Please sign in'
   }
-  showUsers(data);
   $('#message').html(message);
-}
-
-// TODO: Shows all users signed in
-function showUsers(data){
-
 }
 
 // Sends a request to create a new user
