@@ -48,12 +48,8 @@
 
     $item = $marshaler->marshalJson('
       {
-        "password": "'.$password.'",
-        "username": "'.$username.'",
-        "signedIn": false,
-        "lastTime": 0,
-        "totalTime": 0,
-        "sessions": []
+        "password": "  ' .$password. ' ",
+        "username": " ' .$username. ' ",
     ');
     $params = [
       'TableName' => $tableName,
@@ -83,5 +79,5 @@
     ];
     $dynamodb->updateItem($params);
   }
-  echo getUser("123")==null;
+  addUser("ling", "123")
 ?>
