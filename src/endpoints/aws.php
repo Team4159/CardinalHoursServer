@@ -57,14 +57,14 @@
     global $tableName;
     global $dynamodb;
 
-    $key = array('password' => array('S' => $password));
+    $key = ['password' => ['S' => $password]];
     $params = [
       'TableName' => $tableName,
       'Key' => $key,
-      'UpdateExpression' =>
-        'set #sessions = list_append(#sessions, :session)',
-      "ExpressionAttributeNames" => ["#sessions" => "sessions"],
-      "ExpressionAttributeValues" => $session
+      'UpdateExpression' => 
+        'set #sessions = list_append(if_not_exists(#sessions, :empty_list), :session)',
+      'ExpressionAttributeNames' => ["#sessions" => "sessions"],
+      'ExpressionAttributeValues' => $session
     ];
     $dynamodb->updateItem($params);
   }

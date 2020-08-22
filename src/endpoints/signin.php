@@ -19,16 +19,20 @@ function signIn($password, $did = ''){
     ];
 
     $session = [
+      ':empty_list' => ['L'=>[]],
       ':session' => [
-        'M' => [
-          'date' => ['S' => date("m.d.Y")],
-          'time' => ['N' => strval($sessionTime)],
-          'did' => ['S' => $did]
+        'L' => [
+          'M' => [
+            'date' => ['S' => date("m.d.Y")],
+            'time' => ['N' => strval($sessionTime)],
+            'did' => ['S' => $did]
+          ]
         ]
       ]
     ];
 
     updateUser($password, $data);
+    addSession($password, $session);
     echo $userData["username"]["S"];
   } else {
     $data = [
