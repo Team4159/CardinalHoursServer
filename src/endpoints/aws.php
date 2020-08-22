@@ -39,12 +39,12 @@
     global $tableName;
     global $dynamodb;
     $item = array(
-        'password' => array('S' => $password),
-        'username' => array('S' => $username),
-        'lastTime' => array('N' => time()),
-        'totalTime' => array('N' => 0),
-        'signedIn' => array('BOOL' => 0),
-        'sessions' => array('SS' => [])
+      'password' => array('S' => strval($password)),
+      'username' => array('S' => strval($username)),
+      'lastTime' => array('N' => strval(time())),
+      'totalTime' => array('N' => "0"),
+      'signedIn' => array('BOOL' => false),
+      'sessions' => array('L' => [])
     );
     $params = [
       'TableName' => $tableName,
@@ -54,7 +54,6 @@
   }
 
   function updateUser($password, $data){
-    global $marshaler;
     global $tableName;
     global $dynamodb;
 
@@ -69,5 +68,4 @@
     ];
     $dynamodb->updateItem($params);
   }
-  addUser("ling", "123")
 ?>

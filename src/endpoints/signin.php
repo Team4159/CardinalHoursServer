@@ -13,25 +13,21 @@ if (isset($_REQUEST['password'])) {
   $totalTime = $userData["totalTime"];
   $sessionTime = time() - $lastTime;
   if($userData["signedIn"]){
-    $eav = $marshaler->marshalJson('
-      {
-        ":sessions": '.json_encode($userData["sessions"]).',
-          ":lastTime": '.time().',
-          ":totalTime": '.$totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0).',
-          ":signedIn": '.false.'
-      }
-    ');
+    $eav = array(
+      'sessions' => array('L' => $userData["sessions"]),
+      'signedIn' => array('BOOL' => false),
+      'lastTime' => array('N' => strval(time())),
+      'totalTime' => array('N' => strval($totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0)))
+    );
     updateUser($_REQUEST['password'], $eav);
     echo $userData["username"];
   } else {
-    $eav = $marshaler->marshalJson('
-      {
-          ":sessions": '.json_encode($userData["sessions"]).',
-          ":lastTime": '.$lastTime.',
-          ":totalTime": '.$totalTime.',
-          ":signedIn": '.true.'
-      }
-    ');
+    $eav = array(
+      'sessions' => array('L' => $userData["sessions"]),
+      'signedIn' => array('BOOL' => true),
+      'lastTime' => array('N' => strval(time())),
+      'totalTime' => array('N' => strval($userData["totalTime"]))
+    );
     updateUser($_REQUEST['password'], $eav);
     echo $userData["username"];
   }
