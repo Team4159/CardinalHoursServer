@@ -64,7 +64,7 @@ async function showData(data){
     } else {
       $('#signIn').text("Sign in");
       message += "Signed out <br> ";
-      message += "Total time: " + parseTime(user[4]);
+      message += "Total time: " + parseTime(user["totalTime"]);
     }
   } else {
     message = 'Please sign in'
