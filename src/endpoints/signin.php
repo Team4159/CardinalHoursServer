@@ -8,6 +8,7 @@ cors();
 
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
+  global $MAX_TIME;
   $userData = getUser($_REQUEST['password']);
   $lastTime = $userData["lastTime"];
   $totalTime = $userData["totalTime"];
@@ -20,7 +21,7 @@ if (isset($_REQUEST['password'])) {
       'totalTime' => array('N' => strval($totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0)))
     );
     updateUser($_REQUEST['password'], $eav);
-    echo $userData["username"];
+    echo $userData["username"]["S"];
   } else {
     $eav = array(
       'sessions' => array('L' => $userData["sessions"]),
@@ -29,8 +30,9 @@ if (isset($_REQUEST['password'])) {
       'totalTime' => array('N' => strval($userData["totalTime"]))
     );
     updateUser($_REQUEST['password'], $eav);
-    echo $userData["username"];
+    echo $userData["username"]["S"];
   }
 }
 
+signIn("123");
 ?>
