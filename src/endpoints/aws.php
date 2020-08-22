@@ -61,7 +61,7 @@
       'TableName' => $tableName,
       'Key' => $key,
       'UpdateExpression' => 
-          'set sessions=:sessions, signedIn=:signedIn, lastTime=:lastTime, totalTime=:totalTime',
+          'set sessions=sessions, signedIn=signedIn, lastTime=lastTime, totalTime=totalTime',
       'ExpressionAttributeValues'=> $data,
       'ReturnValues' => 'UPDATED_NEW'
     ];

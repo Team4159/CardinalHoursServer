@@ -1,37 +1,40 @@
 <?php
 require('aws.php');
 require('cors.php');
-
+use Aws\DynamoDb\Marshaler;
 $MAX_TIME = 43200; // 12 hours
 
-cors();
+# cors();
 
-// start tracking time on signin
-if (isset($_REQUEST['password'])) {
+function signIn($password){
   global $MAX_TIME;
-  $userData = getUser($_REQUEST['password']);
-  $lastTime = $userData["lastTime"];
-  $totalTime = $userData["totalTime"];
+  $marshaler = new Marshaler();
+  $userData = getUser($password);
+  $lastTime = $userData["lastTime"]["N"];
+  $totalTime = $userData["totalTime"]["N"];
   $sessionTime = time() - $lastTime;
   if($userData["signedIn"]){
     $eav = array(
-      'sessions' => array('L' => $userData["sessions"]),
+      'sessions' => array('L' => $marshaler->marshalItem($userData["sessions"]["L"])),
       'signedIn' => array('BOOL' => false),
       'lastTime' => array('N' => strval(time())),
       'totalTime' => array('N' => strval($totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0)))
     );
-    updateUser($_REQUEST['password'], $eav);
+    updateUser($password, $eav);
     echo $userData["username"]["S"];
   } else {
     $eav = array(
-      'sessions' => array('L' => $userData["sessions"]),
+      'sessions' => array('L' => $marshaler->marshalItem($userData["sessions"]["L"])),
       'signedIn' => array('BOOL' => true),
       'lastTime' => array('N' => strval(time())),
-      'totalTime' => array('N' => strval($userData["totalTime"]))
+      'totalTime' => array('N' => $userData["totalTime"])
     );
-    updateUser($_REQUEST['password'], $eav);
+    updateUser($password, $eav);
     echo $userData["username"]["S"];
   }
+}
+// start tracking time on signin
+if (isset($_REQUEST['password'])) {
 }
 
 signIn("123");
