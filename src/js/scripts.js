@@ -25,7 +25,7 @@ async function signIn(password){
 }
 
 // Gets all the data from the server
-async function getData() {
+async function getUserData(password) {
   return new Promise(function (resolve, reject) {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -33,7 +33,7 @@ async function getData() {
         resolve(JSON.parse(this.responseText));
       }
     }
-    xmlhttp.open('GET', 'src/endpoints/getuserdata.php', true);
+    xmlhttp.open('GET', 'src/endpoints/getuserdata.php?password=' + password, true);
     xmlhttp.send();
   });
 }

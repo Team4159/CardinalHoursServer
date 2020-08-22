@@ -1,6 +1,6 @@
 <?php
+  putenv('HOME=/home/ling');
   require '../../vendor/autoload.php';
-  use Aws\DynamoDb\Exception\DynamoDbException;
   use Aws\DynamoDb\Marshaler;
 
   $sdk = new Aws\Sdk([
