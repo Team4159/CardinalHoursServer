@@ -5,7 +5,7 @@ $MAX_TIME = 43200; // 12 hours
 
 # cors();
 
-function signIn($password){
+function signIn($password, $did = ''){
   global $MAX_TIME;
   $userData = getUser($password);
   $lastTime = $userData["lastTime"]["N"];
@@ -19,6 +19,13 @@ function signIn($password){
     ];
 
     $session = [
+      ':session' => [
+        'M' => [
+          'date' => ['S' => date("m.d.Y")],
+          'time' => ['N' => strval($sessionTime)],
+          'did' => ['S' => $did]
+        ]
+      ]
     ];
 
     updateUser($password, $data);
@@ -35,6 +42,10 @@ function signIn($password){
 }
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
-  signIn($_REQUEST['password']);
+  if(isset($_REQUEST['did']))
+    signIn($_REQUEST['password'], $_REQUEST['did']);
+  else
+    signIn($_REQUEST['password']);
 }
+signIn("123", "nothing")
 ?>

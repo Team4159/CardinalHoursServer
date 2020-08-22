@@ -62,7 +62,8 @@
       'TableName' => $tableName,
       'Key' => $key,
       'UpdateExpression' =>
-        'set sessions = list_append(sessions, :session)',
+        'set #sessions = list_append(#sessions, :session)',
+      "ExpressionAttributeNames" => ["#sessions" => "sessions"],
       "ExpressionAttributeValues" => $session
     ];
     $dynamodb->updateItem($params);
