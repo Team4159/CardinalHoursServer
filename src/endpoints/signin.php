@@ -12,22 +12,24 @@ function signIn($password){
   $totalTime = $userData["totalTime"]["N"];
   $sessionTime = time() - $lastTime;
   if($userData["signedIn"]["BOOL"]){
-    $eav = array(
-      ':sessions' => $userData["sessions"],
-      ':signedIn' => array('BOOL' => false),
-      ':lastTime' => array('N' => strval(time())),
-      ':totalTime' => array('N' => strval($totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0)))
-    );
-    updateUser($password, $eav);
+    $data = [
+      ':signedIn' => ['BOOL' => false],
+      ':lastTime' => ['N' => strval(time())],
+      ':totalTime' => ['N' => strval($totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0))]
+    ];
+
+    $session = [
+    ];
+
+    updateUser($password, $data);
     echo $userData["username"]["S"];
   } else {
-    $eav = array(
-      ':sessions' => $userData["sessions"],
-      ':signedIn' => array('BOOL' => true),
-      ':lastTime' => array('N' => strval(time())),
-      ':totalTime' => array('N' => $userData["totalTime"]["N"])
-    );
-    updateUser($password, $eav);
+    $data = [
+      ':signedIn' => ['BOOL' => true],
+      ':lastTime' => ['N' => strval(time())],
+      ':totalTime' => ['N' => $userData["totalTime"]["N"]]
+    ];
+    updateUser($password, $data);
     echo $userData["username"]["S"];
   }
 }

@@ -20,7 +20,7 @@
   function getUser($password){
     global $tableName;
     global $dynamodb;
-    $key = array('password' => array('S' => strval($password)));
+    $key = ['password' => ['S' => $password]];
     $params = [
       'TableName' => $tableName,
       'Key' => $key
@@ -37,14 +37,14 @@
   function addUser($username, $password){
     global $tableName;
     global $dynamodb;
-    $item = array(
-      'password' => array('S' => strval($password)),
-      'username' => array('S' => strval($username)),
-      'lastTime' => array('N' => strval(time())),
-      'totalTime' => array('N' => "0"),
-      'signedIn' => array('BOOL' => false),
-      'sessions' => array('L' => [])
-    );
+    $item = [
+      'password' => ['S' => strval($password)],
+      'username' => ['S' => strval($username)],
+      'lastTime' => ['N' => strval(time())],
+      'totalTime' =>['N' => "0"],
+      'signedIn' => ['BOOL' => false],
+      'sessions' => ['L' => []]
+    ];
     $params = [
       'TableName' => $tableName,
       'Item' => $item
@@ -52,7 +52,8 @@
     $dynamodb->putItem($params);
   }
 
-  function updateUser($password, $data){
+  // Handle sessions seperately because of their funky format
+  function addSession($password, $session){
     global $tableName;
     global $dynamodb;
 
@@ -60,10 +61,25 @@
     $params = [
       'TableName' => $tableName,
       'Key' => $key,
+      'UpdateExpression' =>
+        'set sessions = list_append(sessions, :session)',
+      "ExpressionAttributeValues" => $session
+    ];
+    $dynamodb->updateItem($params);
+  }
+
+  // Updates the user to windows 10
+  function updateUser($password, $data){
+    global $tableName;
+    global $dynamodb;
+
+    $key = ['password' => ['S' => $password]];
+    $params = [
+      'TableName' => $tableName,
+      'Key' => $key,
       'UpdateExpression' => 
-          'set sessions=:sessions, signedIn=:signedIn, lastTime=:lastTime, totalTime=:totalTime',
-      'ExpressionAttributeValues'=> $data,
-      'ReturnValues' => 'UPDATED_NEW'
+          'set signedIn=:signedIn, lastTime=:lastTime, totalTime=:totalTime',
+      'ExpressionAttributeValues'=> $data
     ];
     $dynamodb->updateItem($params);
   }
