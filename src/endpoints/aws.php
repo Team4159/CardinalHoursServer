@@ -2,6 +2,7 @@
   putenv('HOME=/home/ling');
   require '../../vendor/autoload.php';
   use Aws\DynamoDb\Exception\DynamoDbException;
+  use Aws\DynamoDb\Marshaler;
 
   $sdk = new Aws\Sdk([
     'region'   => 'us-east-2',
@@ -18,7 +19,7 @@
 
   // Might give you the requested user data if you pleased the god jeff besos
   function getUser($password){
-    global $marshaler;
+    $marshaler = new Marshaler();
     global $tableName;
     global $dynamodb;
     $key = array('password' => array('S' => $password));
