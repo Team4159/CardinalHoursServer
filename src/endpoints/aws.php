@@ -20,7 +20,7 @@
   function getUser($password){
     global $tableName;
     global $dynamodb;
-    $key = array('password' => array('S' => $password));
+    $key = array('password' => array('S' => strval($password)));
     $params = [
       'TableName' => $tableName,
       'Key' => $key
@@ -61,7 +61,7 @@
       'TableName' => $tableName,
       'Key' => $key,
       'UpdateExpression' => 
-          'set sessions=sessions, signedIn=signedIn, lastTime=lastTime, totalTime=totalTime',
+          'set sessions=:sessions, signedIn=:signedIn, lastTime=:lastTime, totalTime=:totalTime',
       'ExpressionAttributeValues'=> $data,
       'ReturnValues' => 'UPDATED_NEW'
     ];
