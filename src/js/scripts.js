@@ -1,9 +1,9 @@
 // Attempts to sign in with cookie if it exists
 $(document).ready(async function() {
   setInterval(async function(){
-    showData(await getData());
+    showData(await getUserData(Cookies.get('password')));
   }, 2000);
-  showData(await getData());
+  showData(await getUserData(Cookies.get('password')));
 });
 
 // Triggers the signin call for the server
@@ -55,12 +55,12 @@ async function getTime() {
 async function showData(data){
   let message = '';
   if(Cookies.get('password') != undefined){
-    var user = data["username"];
-    message += 'Welcome, ' + user[0] + "<br> ";
-    if(user[2] == "TRUE"){
+    var user = data;
+    message += 'Welcome, ' + user["username"] + "<br> ";
+    if(user["signedIn"] == true){
       $('#signIn').text("Sign out");
-      message += "Signed in <br> Session time: " + parseTime(await getTime() - parseInt(user[3])) + " <br> ";
-      message += "Total time: " + parseTime(await getTime() - parseInt(user[3]) + parseInt(user[4]));
+      message += "Signed in <br> Session time: " + parseTime(await getTime() - parseInt(user["lastTime"])) + " <br> ";
+      message += "Total time: " + parseTime(await getTime() - parseInt(user["lastTime"]) + parseInt(user["totalTime"]));
     } else {
       $('#signIn').text("Sign in");
       message += "Signed out <br> ";
