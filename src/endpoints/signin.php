@@ -1,6 +1,5 @@
 <?php
-require('sheets.php');
-require('datafuncs.php');
+require('aws.php');
 require('cors.php');
 
 $MAX_TIME = 43200; // 12 hours
