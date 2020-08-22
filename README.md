@@ -4,16 +4,22 @@
 
 
 ### Endpoints:
+
+To add a user:
 ```
 src/endpoints/adduser.php
 parameters: username, password
 returns: Username on success and 'User already exists' if a user with the same password already exists
 ```
+
+To get the time:
 ```
 src/endpoints/gettime.php
 parameters: none
 returns: Unix time in seconds
 ```
+
+To get data of a single user:
 ```
 src/endpoints/getuserdata.php
 parameters: password
@@ -32,11 +38,15 @@ JSON is in the format of
   ]
 }
 ```
+
+To sign a user in:
 ```
 src/endpoints/signin.php
 parameters: password
 returns: Username on success, nothing if they're already signed in
 ```
+
+To sign a user out:
 ```
 src/endpoints/signout.php
 parameters: password
