@@ -33,7 +33,7 @@
     ];
     try {
       $result = $dynamodb->getItem($params);
-      return json_decode($marshaler->unmarshalJson($result['Item']));
+      return json_decode($marshaler->unmarshalJson($result['Item']), true);
     } catch (TypeError $e) {
       return null;
     }
