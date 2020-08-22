@@ -1,7 +1,6 @@
 <?php
   putenv('HOME=/home/ling');
   require '../../vendor/autoload.php';
-  use Aws\DynamoDb\Marshaler;
   use Aws\DynamoDb\Exception\DynamoDbException;
 
   $sdk = new Aws\Sdk([
@@ -14,7 +13,6 @@
   ]);
 
   $dynamodb = $sdk->createDynamoDb();
-  $marshaler = new Marshaler();
 
   $tableName = 'Hours';
 
@@ -23,11 +21,7 @@
     global $marshaler;
     global $tableName;
     global $dynamodb;
-    $key = $marshaler->marshalJson('
-      {
-          "password": "' . $password . '"
-      }
-    ');
+    $key = array('password' => array('S' => $password));
     $params = [
       'TableName' => $tableName,
       'Key' => $key
@@ -42,15 +36,16 @@
 
   // Might add a user, might not. 1 in 100000000000 chance to not work
   function addUser($username, $password){
-    global $marshaler;
     global $tableName;
     global $dynamodb;
-
-    $item = $marshaler->marshalJson('
-      {
-        "password": "  ' .$password. ' ",
-        "username": " ' .$username. ' ",
-    ');
+    $item = array(
+        'password' => array('S' => $password),
+        'username' => array('S' => $username),
+        'lastTime' => array('N' => time()),
+        'totalTime' => array('N' => 0),
+        'signedIn' => array('BOOL' => 0),
+        'sessions' => array('SS' => [])
+    );
     $params = [
       'TableName' => $tableName,
       'Item' => $item
@@ -63,12 +58,7 @@
     global $tableName;
     global $dynamodb;
 
-    $key = $marshaler->marshalJson('
-      {
-          "password": "' . $password . '"
-      }
-    ');
-
+    $key = array('password' => array('S' => $password));
     $params = [
       'TableName' => $tableName,
       'Key' => $key,
