@@ -52,7 +52,7 @@
         "signedIn": false,
         "lastTime": '.time().',
         "totalTime": 0,
-        "sessions": '.json_encode([[]]).'
+        "sessions": [[]]
     ');
     $params = [
       'TableName' => $tableName,
