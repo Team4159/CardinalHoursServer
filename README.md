@@ -20,7 +20,7 @@ Path: src/endpoints/adduser.php
 Parameters: username, password
 Returns: 
   Success: Username
-  Failure: 'User already exists' if a user with the same password already exists
+  Failure:  Returns code 404 if a user with the same password already exists
 ```
 
 To get the time:
