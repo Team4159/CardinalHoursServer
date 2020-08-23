@@ -20,7 +20,7 @@ Path: src/endpoints/adduser.php
 Parameters: username, password
 Returns: 
   Success: Username
-  Failure: 'User already exists' if a user with the same password already exists
+  Failure:  Returns code 404 if a user with the same password already exists
 ```
 
 To get the time:
@@ -36,7 +36,7 @@ Path: src/endpoints/getuserdata.php
 Parameters: password
 Returns: 
   Success: Stringified json of all the requested user's data
-  Failure: 'User does not exist' if a user with the same password already exists
+  Failure: Returns code 404 (User does not exist)
   
 JSON is in the format of
 {
@@ -60,7 +60,7 @@ Path: src/endpoints/signin.php
 Parameters: password
 Returns: 
   Success: Username, nothing if they're already signed in
-  Failure: 'User does not exist'
+  Failure: Returns code 404 (User does not exist)
 ```
 
 To sign a user out:
@@ -69,5 +69,5 @@ Path: src/endpoints/signout.php
 Parameters: password
 Returns: 
   Success: Username, nothing if they're already signed out
-  Failure: 'User does not exist'
+  Failure: Returns code 404 (User does not exist)
 ```
