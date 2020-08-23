@@ -18,21 +18,26 @@ To add a user:
 ```
 src/endpoints/adduser.php
 parameters: username, password
-returns: Username on success and 'User already exists' if a user with the same password already exists
+returns: 
+  Success: Username
+  Failure: 'User already exists' if a user with the same password already exists
 ```
 
 To get the time:
 ```
-src/endpoints/gettime.php
-parameters: none
-returns: Unix time in seconds
+Path: src/endpoints/gettime.php
+Parameters: none
+Returns: Unix time in seconds
 ```
 
 To get data of a single user:
 ```
-src/endpoints/getuserdata.php
-parameters: password
-returns: stringified json of all the requested user's data
+Path: src/endpoints/getuserdata.php
+Parameters: password
+Returns: 
+  Success: Stringified json of all the requested user's data
+  Failure: 'User does not exist' if a user with the same password already exists
+  
 JSON is in the format of
 {
   "signedIn": <bool>, // True if the user is signed in and false if they are not
@@ -50,18 +55,18 @@ JSON is in the format of
 
 To sign a user in:
 ```
-src/endpoints/signin.php
-parameters: password
-returns: 
+Path: src/endpoints/signin.php
+Parameters: password
+Returns: 
   Success: Username, nothing if they're already signed in
   Failure: 'User does not exist'
 ```
 
 To sign a user out:
 ```
-src/endpoints/signout.php
-parameters: password
-returns: 
+Path: src/endpoints/signout.php
+Parameters: password
+Returns: 
   Success: Username, nothing if they're already signed out
   Failure: 'User does not exist'
 ```
