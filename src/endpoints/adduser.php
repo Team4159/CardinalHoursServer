@@ -7,7 +7,7 @@ if (isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
     addUser($_REQUEST['username'], $_REQUEST['password']);
     echo $_REQUEST['username'];
   } else
-    echo 'User already exists';
+    http_response_code(404);
 }
 
 ?>
