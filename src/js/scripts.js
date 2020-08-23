@@ -66,11 +66,11 @@ async function showData(data){
       $('#signIn').text("Sign out");
       message += "Signed in <br> Session time: " + parseTime(await getTime() - user["lastTime"]) + " <br> ";
       message += "Total time: " + parseTime(await getTime() - user["lastTime"] + user["totalTime"]);
-      var did = document.getElementById("did");
+      var did = document.getElementById("idk");
       did.style.display = "block";
       } else {
       $('#signIn').text("Sign in");
-      var did = document.getElementById("did");
+      var did = document.getElementById("idk");
       did.style.display = "none";
       message += "Signed out <br> ";
       message += "Total time: " + parseTime(user["totalTime"]);
