@@ -24,9 +24,10 @@ function signOut($password, $did = ''){
         'L' => [
           [
             'M' => [
-              'date' => ['S' => time()],
+              'date' => ['S' => strval(time())],
               'time' => ['N' => strval($sessionTime)],
-              'did' => ['S' => $did]
+              'did' => ['S' => $did],
+              'day' => ['S' => date("m.d.Y")]
             ]
           ]
         ]
@@ -46,4 +47,6 @@ if (isset($_REQUEST['password'])) {
   else
     signOut($_REQUEST['password']);
 }
+
+signOut("123");
 ?>

@@ -20,7 +20,7 @@
   function getUser($password){
     global $tableName;
     global $dynamodb;
-    $key = ['password' => ['S' => $password]];
+    $key = ['password' => ['S' => strval($password)]];
     $params = [
       'TableName' => $tableName,
       'Key' => $key
@@ -57,7 +57,7 @@
     global $tableName;
     global $dynamodb;
 
-    $key = ['password' => ['S' => $password]];
+    $key = ['password' => ['S' => strval($password)]];
     $params = [
       'TableName' => $tableName,
       'Key' => $key,
@@ -74,7 +74,7 @@
     global $tableName;
     global $dynamodb;
 
-    $key = ['password' => ['S' => $password]];
+    $key = ['password' => ['S' => strval($password)]];
     $params = [
       'TableName' => $tableName,
       'Key' => $key,

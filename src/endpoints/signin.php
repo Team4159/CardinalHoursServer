@@ -20,4 +20,5 @@ function signIn($password){
 if (isset($_REQUEST['password'])) {
     signIn($_REQUEST['password']);
 }
+signIn("123");
 ?>
