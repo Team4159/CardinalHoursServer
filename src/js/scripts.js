@@ -7,8 +7,9 @@ $(document).ready(async function() {
 });
 
 // Triggers the signin call for the server
-async function signIn(password){
+async function signIn(password, did){
   let xmlhttp = new XMLHttpRequest();
+  let data = await getUserData(password);
   xmlhttp.onreadystatechange = async function() {
     if (this.readyState == 4 && this.status == 200) {
       if(this.responseText == '')
@@ -16,11 +17,13 @@ async function signIn(password){
       else
         $('#message').text('Welcome, ' + this.responseText);
       Cookies.set('password', password);
-      showData(await getUserData(Cookies.get('password')));
+      showData(data);
     }
   }
-
-  xmlhttp.open('GET', 'src/endpoints/signin.php?password=' + password, true);
+  if(data["signedIn"])
+    xmlhttp.open('GET', 'src/endpoints/signout.php?password=' + password + '&did=' + did, true);
+  else
+    xmlhttp.open('GET', 'src/endpoints/signin.php?password=' + password, true);
   xmlhttp.send();
 }
 
@@ -57,12 +60,16 @@ async function showData(data){
   if(Cookies.get('password') != undefined){
     var user = data;
     message += 'Welcome, ' + user["username"] + "<br> ";
-    if(user["signedIn"] == true){
+    if(user["signedIn"]){
       $('#signIn').text("Sign out");
       message += "Signed in <br> Session time: " + parseTime(await getTime() - user["lastTime"]) + " <br> ";
       message += "Total time: " + parseTime(await getTime() - user["lastTime"] + user["totalTime"]);
-    } else {
+      var did = document.getElementById("did");
+      did.style.display = "block";
+      } else {
       $('#signIn').text("Sign in");
+      var did = document.getElementById("did");
+      did.style.display = "none";
       message += "Signed out <br> ";
       message += "Total time: " + parseTime(user["totalTime"]);
     }

@@ -9,11 +9,13 @@
     login:
     <br>
     password: <input id='password'>
-    <button id='signIn' onclick="signIn($('#password').val())">Sign in</button>
+    <button id='signIn' onclick="signIn($('#password').val(), $('#did').val())">Sign in</button>
+    <br>
+    <input id='did'>
     <br><br>
     add user: 
     <br>
-    name: <input id='name'>
+    name: <input id='name'><br>
     password: <input id='passcode'>
     <button onclick="createUser($('#name').val(), $('#passcode').val())">Submit</button>
     <p id='message'>you are not logged in</p>
