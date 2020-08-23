@@ -1,14 +1,23 @@
 <?php
   putenv('HOME=/home/ling');
   require '../../vendor/autoload.php';
+  require '../../credentials.php';
   use Aws\DynamoDb\Exception\DynamoDbException;
-
+  if($AWS_KEY == null || $AWS_SECRET_KEY == null){
+    if(getenv('AWS_KEY') == null || getenv('AWS_SECRET_KEY') == null){
+      echo 'No credentials found';
+    } else {
+      $AWS_KEY = getenv('AWS_KEY');
+      $AWS_SECRET_KEY = getenv('AWS_SECRET_KEY');
+    }
+  }
+  echo getenv('AWS_KEY');
   $sdk = new Aws\Sdk([
     'region'   => 'us-east-2',
     'version'  => 'latest',
     'credentials' => array(
-      'key'=> getenv('AWS_KEY'),
-      'secret'=> getenv('AWS_SECRET_KEY')
+      'key'=> $AWS_KEY,
+      'secret'=> $AWS_SECRET_KEY
     )
   ]);
 
