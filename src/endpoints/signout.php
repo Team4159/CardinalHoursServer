@@ -42,10 +42,13 @@ function signOut($password, $did = ''){
 
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
-  if(isset($_REQUEST['did']))
-    signOut($_REQUEST['password'], $_REQUEST['did']);
-  else
-    signOut($_REQUEST['password']);
+  if(getUser($_REQUEST['password'] === null)){
+    echo 'User does not exist';
+  } else {
+    if(isset($_REQUEST['did']))
+      signOut($_REQUEST['password'], $_REQUEST['did']);
+    else
+      signOut($_REQUEST['password']);
+  }
 }
-
 ?>
