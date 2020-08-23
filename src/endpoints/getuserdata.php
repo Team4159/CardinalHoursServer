@@ -4,5 +4,10 @@ require('cors.php');
 cors();
 use Aws\DynamoDb\Marshaler;
 $marshaler = new Marshaler();
-echo json_encode($marshaler->unmarshalItem(getUser($_REQUEST['password'])));
+if(isset($_REQUEST['password'])){
+  if(getUser($_REQUEST['password']) === null)
+    echo 'User does not exist';
+  else
+    echo json_encode($marshaler->unmarshalItem(getUser($_REQUEST['password'])));
+}
 ?>
