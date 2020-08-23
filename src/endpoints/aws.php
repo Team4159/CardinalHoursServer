@@ -11,7 +11,6 @@
       $AWS_SECRET_KEY = getenv('AWS_SECRET_KEY');
     }
   }
-  echo getenv('AWS_KEY');
   $sdk = new Aws\Sdk([
     'region'   => 'us-east-2',
     'version'  => 'latest',
