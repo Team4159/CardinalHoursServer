@@ -36,7 +36,7 @@ Path: src/endpoints/getuserdata.php
 Parameters: password
 Returns: 
   Success: Stringified json of all the requested user's data
-  Failure: Returns code 404 (User does not exist)
+  Failure: Returns code 404 if the user does not exist
   
 JSON is in the format of
 {
@@ -60,7 +60,7 @@ Path: src/endpoints/signin.php
 Parameters: password
 Returns: 
   Success: Username, nothing if they're already signed in
-  Failure: Returns code 404 (User does not exist)
+  Failure: Returns code 404 if the user does not exist
 ```
 
 To sign a user out:
@@ -69,5 +69,5 @@ Path: src/endpoints/signout.php
 Parameters: password
 Returns: 
   Success: Username, nothing if they're already signed out
-  Failure: Returns code 404 (User does not exist)
+  Failure: Returns code 404 if the user does not exist
 ```
