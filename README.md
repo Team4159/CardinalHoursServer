@@ -2,17 +2,12 @@
 
 ## How2Run
 
-Export `AWS_KEY` for the Access Key ID and `AWS_SECRET_KEY` for the Secret Access Key.
+Edit the credentials.php file to add your aws Access Key ID and Secret Access Key or export `AWS_KEY` for the Access Key ID and `AWS_SECRET_KEY` for the Secret Access Key.
 
-If running under Apache add the exports to `/etc/apache2/envvars` and install `libapache2-mod-php` and enable the endpoints by adding `/src/endpoints/*.php` to `/etc/apache2/mods-enabled/dir.conf`.
+If running under Apache install `libapache2-mod-php` and enable the endpoints by adding `/src/endpoints/*.php` to `/etc/apache2/mods-enabled/dir.conf`.
+To use exports instead on Apache add the exports to `/etc/apache2/envvars`
 
-For sheets access, in the root folder create a file credentials.json with
-
-```
-{"web":{"client_id":"375372971746-dc790in67f7omi06ao9c6s2eab4gl7m4.apps.googleusercontent.com","project_id":"cardinalhours-1597455660382","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"hAnIzyuOwj2GheEuNjMgNs6x","redirect_uris":["http://ec2-18-221-165-138.us-east-2.compute.amazonaws.com/"]}}
-```
-
-run `php src/endpoints/sheets.php` and paste the resulting authentication token from the redirect url to authenticate the Google Sheets api.
+For sheets access, in the root folder run `php src/endpoints/sheets.php` and paste the resulting authentication token from the redirect url to authenticate the Google Sheets api.
 
 ## Documentation
 
@@ -57,12 +52,16 @@ To sign a user in:
 ```
 src/endpoints/signin.php
 parameters: password
-returns: Username on success, nothing if they're already signed in
+returns: 
+  Success: Username, nothing if they're already signed in
+  Failure: 'User does not exist'
 ```
 
 To sign a user out:
 ```
 src/endpoints/signout.php
 parameters: password
-returns: Username on success, nothing if they're already signed out
+returns: 
+  Success: Username, nothing if they're already signed out
+  Failure: 'User does not exist'
 ```
