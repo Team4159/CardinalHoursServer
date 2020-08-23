@@ -45,7 +45,7 @@ JSON is in the format of
   "password": <String>, // The password of the user
   "sessions": [ // An array containing each session of the user
     {
-      "date": <String>, // The date of the session in Month.Day.Year format
+      "date": <String>, // When the session ended in unix time
       "did": <String>, // What the user reported to have done during that session, is blank if nothing was reported
       "time": <int>, // How long the session lasted
     }
