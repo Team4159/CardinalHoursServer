@@ -48,5 +48,4 @@ if (isset($_REQUEST['password'])) {
     signOut($_REQUEST['password']);
 }
 
-signOut("123");
 ?>
