@@ -16,9 +16,9 @@ For sheets access, in the root folder run `php src/endpoints/sheets.php` and pas
 
 To add a user:
 ```
-src/endpoints/adduser.php
-parameters: username, password
-returns: 
+Path: src/endpoints/adduser.php
+Parameters: username, password
+Returns: 
   Success: Username
   Failure: 'User already exists' if a user with the same password already exists
 ```
