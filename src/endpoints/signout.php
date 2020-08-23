@@ -43,7 +43,7 @@ function signOut($password, $did = ''){
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
   if(getUser($_REQUEST['password'] === null)){
-    echo 'User does not exist';
+    http_response_code(404);
   } else {
     if(isset($_REQUEST['did']))
       signOut($_REQUEST['password'], $_REQUEST['did']);

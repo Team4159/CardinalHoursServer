@@ -6,7 +6,7 @@ use Aws\DynamoDb\Marshaler;
 $marshaler = new Marshaler();
 if(isset($_REQUEST['password'])){
   if(getUser($_REQUEST['password']) === null)
-    echo 'User does not exist';
+    http_response_code(404);
   else
     echo json_encode($marshaler->unmarshalItem(getUser($_REQUEST['password'])));
 }

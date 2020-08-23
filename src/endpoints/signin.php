@@ -19,7 +19,7 @@ function signIn($password){
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
   if(getUser($_REQUEST['password']) === null)
-    echo 'User does not exist';
+    http_response_code(404);
   else
     signIn($_REQUEST['password']);
 }
