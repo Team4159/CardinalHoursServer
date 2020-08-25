@@ -54,6 +54,26 @@ JSON is in the format of
 }
 ```
 
+To get data of all users:
+```
+Path: src/endpoints/getuserdata.php
+Parameters: password
+Returns: 
+  Success: Stringified array of all users' data
+  Failure: Returns code 404 if the user does not exist
+  
+Return data is in the format of
+[
+  user1,
+  user2,
+  user3,
+  ...
+]
+
+Refer to the above example for the format of a single user's data
+```
+
+
 To sign a user in:
 ```
 Path: src/endpoints/signin.php
