@@ -25,6 +25,20 @@
   $tableName = 'Hours';
 
   // Might give you the requested user data if you pleased the god jeff besos
+  function getData(){
+    global $tableName;
+    global $dynamodb;
+    try {
+      $scan_response = $dynamodb->scan(array(
+        'TableName' => $tableName
+      ));
+      return $scan_response;
+    } catch (DynamoDbException $e){
+      return null;
+    }
+  }
+
+  // Might give you the requested user data if you pleased the god jeff besos
   function getUser($password){
     global $tableName;
     global $dynamodb;
