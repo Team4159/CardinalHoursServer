@@ -30,7 +30,8 @@
     global $dynamodb;
     try {
       $scan_response = $dynamodb->scan(array(
-        'TableName' => $tableName
+        'TableName' => $tableName,
+        'ProjectionExpression' => 'signedIn, lastTime, totalTime, username'
       ));
       return $scan_response;
     } catch (DynamoDbException $e){
