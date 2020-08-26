@@ -40,6 +40,7 @@ Returns:
   
 JSON is in the format of
 {
+  "username": <String>, // The username of the user
   "signedIn": <bool>, // True if the user is signed in and false if they are not
   "totalTime": <int>, // Total time in seconds of all the sessions of the user (log in + log out)
   "password": <String>, // The password of the user
