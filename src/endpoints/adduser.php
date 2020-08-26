@@ -2,6 +2,8 @@
 require('aws.php');
 require('cors.php');
 
+cors();
+
 if (isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
   if(getUser($_REQUEST['password']) === null && $_REQUEST['username'] != '' && $_REQUEST['password'] != ''){
     addUser($_REQUEST['username'], $_REQUEST['password']);

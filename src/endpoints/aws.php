@@ -1,5 +1,4 @@
 <?php
-  putenv('HOME=/home/ling');
   require '../../vendor/autoload.php';
   require '../../credentials.php';
   use Aws\DynamoDb\Exception\DynamoDbException;
@@ -90,6 +89,26 @@
       'ExpressionAttributeValues' => $session
     ];
     $dynamodb->updateItem($params);
+  }
+
+  // changes the password and sends the old one to jeff bezos
+  function changePassword($password, $newPassword){
+    global $tableName;
+    global $dynamodb;
+
+    $user = getUser($password);
+    $user['password']['S'] = strval($newPassword);
+    $key = ['password' => ['S' => strval($password)]];
+    $newUser = [
+      'TableName' => $tableName,
+      'Item' => $user
+    ];
+    $oldUser = [
+      'TableName' => $tableName,
+      'Key' => $key
+    ];
+    $dynamodb->putItem($newUser);
+    $dynamodb->deleteItem($oldUser);
   }
 
   // Updates the user to windows 10
