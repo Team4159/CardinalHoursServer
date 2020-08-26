@@ -76,7 +76,7 @@ Refer to the above example for the format of a single user's data, this data exc
 To change the password of a user
 ```
 Path: src/endpoints/changepassword.php
-Parameters: password, newPassword
+Parameters: password, newpassword
 Returns: 
   Success: The new password of the user
   Failure: Returns code 404 if the old password does not exist or the new password is used
