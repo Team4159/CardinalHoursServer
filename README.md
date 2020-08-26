@@ -20,7 +20,7 @@ Path: src/endpoints/adduser.php
 Parameters: username, password
 Returns: 
   Success: Username
-  Failure:  Returns code 404 if a user with the same password already exists
+  Failure:  Returns code 404 if a user with the same password already exists, or the username or password was blank
 ```
 
 To get the time:
@@ -70,9 +70,17 @@ Return data is in the format of
   ...
 ]
 
-Refer to the above example for the format of a single user's data
+Refer to the above example for the format of a single user's data, this data excludes the password and sessions attributes.
 ```
 
+To change the password of a user
+```
+Path: src/endpoints/changepassword.php
+Parameters: password, newPassword
+Returns: 
+  Success: The new password of the user
+  Failure: Returns code 404 if the old password does not exist or the new password is used
+```
 
 To sign a user in:
 ```
