@@ -79,7 +79,7 @@ Path: src/endpoints/changepassword.php
 Parameters: password, newpassword
 Returns: 
   Success: The new password of the user
-  Failure: Returns code 404 if the old password does not exist or the new password is used
+  Failure: Returns code 404 if the old password does not exist, the new password is taken, or the new or old passwords are blank
 ```
 
 To sign a user in:
