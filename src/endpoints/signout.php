@@ -25,7 +25,7 @@ function signOut($password, $did = ''){
           [
             'M' => [
               'date' => ['S' => strval(time())],
-              'time' => ['N' => strval($sessionTime < $MAX_TIME ? $sessionTime : 0)],
+              'time' => ['N' => strval($sessionTime)],
               'did' => ['S' => strval($did)],
               'day' => ['S' => date("m/d/Y")]
             ]
