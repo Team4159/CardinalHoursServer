@@ -18,7 +18,7 @@ function signIn($password){
 }
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
-  if(getUser($_REQUEST['password']) === null)
+  if(getUser(['password' => ['S' => $_REQUEST['password']]]) === null)
     http_response_code(404);
   else
     signIn($_REQUEST['password']);
