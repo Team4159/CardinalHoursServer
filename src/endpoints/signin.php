@@ -5,7 +5,7 @@ require('cors.php');
 cors();
 
 function signIn($password){
-  $userData = getUser($password);
+  $userData = getUser(['password' => ['S' => $password]]);
   if(!$userData["signedIn"]["BOOL"]){
     $data = [
       ':signedIn' => ['BOOL' => true],

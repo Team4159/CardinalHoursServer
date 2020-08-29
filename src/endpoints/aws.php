@@ -39,10 +39,9 @@
   }
 
   // Might give you the requested user data if you pleased the god jeff besos
-  function getUser($password){
+  function getUser($key){
     global $tableName;
     global $dynamodb;
-    $key = ['password' => ['S' => strval($password)]];
     $params = [
       'TableName' => $tableName,
       'Key' => $key

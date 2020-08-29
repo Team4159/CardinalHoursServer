@@ -7,7 +7,7 @@ cors();
 
 function signOut($password, $did = ''){
   global $MAX_TIME;
-  $userData = getUser($password);
+  $userData = getUser(['password' => ['S' => $password]]);
   $lastTime = $userData["lastTime"]["N"];
   $totalTime = $userData["totalTime"]["N"];
   $sessionTime = time() - $lastTime;
@@ -43,7 +43,7 @@ function signOut($password, $did = ''){
 
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
-  if(getUser($_REQUEST['password'] === null)){
+  if(getUser(['password' => ['S' => strval($_REQUEST['password'])]]) === null){
     http_response_code(404);
   } else {
     if(isset($_REQUEST['did']))
