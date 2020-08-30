@@ -7,7 +7,7 @@ cors();
 if (isset($_REQUEST['newpassword']) && isset($_REQUEST['password'])) {
   $userExists = getUser(['password' => ['S' => strval($_REQUEST['newpassword'])]]) !== null;
   if (!$userExists && getUser(['password' => ['S' => strval($_REQUEST['password'])]]) != null && $_REQUEST['newpassword'] != '' && $_REQUEST['password'] != ''){
-    changePassword($_REQUEST['password'], $_REQUEST['newpassword']);
+    changePassword(['password' => ['S' => $_REQUEST['password']]], $_REQUEST['newpassword']);
     echo $_REQUEST['newpassword'];
   } else {
     if ($userExists) {
