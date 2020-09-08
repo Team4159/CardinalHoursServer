@@ -2,11 +2,14 @@
 require('aws.php');
 require('cors.php');
 $MAX_TIME = 43200; // 12 hours
+$MIN_TIME = 1;  // 1 second
 
 cors();
 
 function signOut($password, $did = ''){
   global $MAX_TIME;
+  global $MIN_TIME;
+  
   $userData = getUser(['password' => ['S' => $password]]);
   $lastTime = $userData["lastTime"]["N"];
   $totalTime = $userData["totalTime"]["N"];
@@ -34,10 +37,11 @@ function signOut($password, $did = ''){
         ]
       ]
     ];
-
-    updateUser($password, $data);
-    addSession($password, $session);
-    echo $userData["username"]["S"];
+    if($sessionTime > $MIN_TIME){
+      updateUser($password, $data);
+      addSession($password, $session);
+      echo $userData["username"]["S"];
+    }
   }
 }
 
