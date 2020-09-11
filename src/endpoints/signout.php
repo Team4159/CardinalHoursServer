@@ -1,6 +1,7 @@
 <?php
 require('aws.php');
 require('cors.php');
+require('syncsheets.php');
 $MAX_TIME = 43200; // 12 hours
 
 cors();
@@ -36,6 +37,7 @@ function signOut($password, $did = ''){
 
     updateUser($password, $data);
     addSession($password, $session);
+    syncUser($password);
     echo $userData["username"]["S"];
   }
 }

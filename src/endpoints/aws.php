@@ -2,6 +2,7 @@
   require '../../vendor/autoload.php';
   require '../../credentials.php';
   use Aws\DynamoDb\Exception\DynamoDbException;
+  use Aws\DynamoDb\Marshaler;
   if($AWS_KEY == null || $AWS_SECRET_KEY == null){
     if(getenv('AWS_KEY') == null || getenv('AWS_SECRET_KEY') == null){
       echo 'No credentials found';
@@ -22,6 +23,27 @@
   $dynamodb = $sdk->createDynamoDb();
 
   $tableName = 'Hours';
+
+  function getUserPassword($name){
+    global $tableName;
+    global $dynamodb;
+    try {
+      $scan_response = $dynamodb->scan(array(
+        'TableName' => $tableName,
+        'ProjectionExpression' => 'username, password'
+      ));
+      $data = $scan_response;
+    } catch (DynamoDbException $e){
+      return null;
+    }
+
+    foreach($data["Items"] as $user){
+      if($user["username"]["S"] == $name){
+        return $user["password"]["S"];
+        break;
+      }
+    }
+  }
 
   // Might give you the requested user data if you pleased the god jeff besos
   function getData(){
@@ -125,5 +147,19 @@
       'ExpressionAttributeValues'=> $data
     ];
     $dynamodb->updateItem($params);
+  }
+
+  function isFriday($time){
+    return date('N', $time) == 6;
+  }
+
+  function countFridays($password){
+    $marshaler = new Marshaler();
+    $sessions = $marshaler->unmarshalValue(getUser($password)["sessions"]);
+    $fridays = 0;
+    foreach($sessions as $session)
+      if(isFriday($session["date"]))
+        $fridays ++;
+    return $fridays;
   }
 ?>

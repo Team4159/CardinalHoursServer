@@ -58,9 +58,9 @@ function getClient()
 // Get the API client and construct the service object.
 $client = getClient();
 $service = new Google_Service_Sheets($client);
-$spreadsheetId = '1GHouiwgCqaTOQ5Zy-VgzWdaAptYKhb3rV9k7EwKfI2g';
+$spreadsheetId = '1ljPdrwHR6459GYwbA2beFQ1iDxMZnL58rqgOjeabOJU';
 
-$data = $service->spreadsheets_values->get($spreadsheetId, 'Data')->getValues(); // Gets all relevant data from sheets
+
 // Changes a range of data in sheets
 function changeData($values, $range){
   global $service;
@@ -76,4 +76,5 @@ function changeData($values, $range){
 
   $service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
 }
+
 ?>
