@@ -2,7 +2,7 @@
 require('aws.php');
 require('sheets.php');
 
-$hours = $service->spreadsheets_values->get($spreadsheetId, 'Friday Meetings/Hours')->getValues(); // Gets all relevant data from sheets
+$hours = $service->spreadsheets_values->get($spreadsheetId, 'Hours')->getValues(); // Gets all relevant data from sheets
 
 function getUserRow($first, $last){
   global $hours;
@@ -29,11 +29,11 @@ function syncUser($password){
   $row = getUserRow($first, $last);
 
   // Update the hours
-  $teamHours = ("'Friday Meetings/Hours'!") . ("H" . $row);
+  $teamHours = ("'Hours'!") . ("H" . $row);
   changeData([[round($dbData["totalTime"]["N"]/3600, 2)]], $teamHours);
 
   // Update the meetings
-  $meetings = ("'Friday Meetings/Hours'!") . ("E" . $row);
+  $meetings = ("'Hours'!") . ("E" . $row);
   changeData([[countFridays($password)]], $meetings);
 }
 ?>
