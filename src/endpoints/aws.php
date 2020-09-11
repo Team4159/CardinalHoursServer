@@ -151,7 +151,7 @@
   }
 
   function isFriday($time){
-    return date('N', $time) == 6;
+    return date('N', $time) == 5;
   }
 
   function countFridays($password){
