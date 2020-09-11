@@ -61,10 +61,9 @@
   }
 
   // Might give you the requested user data if you pleased the god jeff besos
-  function getUser($password){
+  function getUser($key){
     global $tableName;
     global $dynamodb;
-    $key = ['password' => ['S' => strval($password)]];
     $params = [
       'TableName' => $tableName,
       'Key' => $key
@@ -114,13 +113,12 @@
   }
 
   // changes the password and sends the old one to jeff bezos
-  function changePassword($password, $newPassword){
+  function changePassword($key, $newPassword){
     global $tableName;
     global $dynamodb;
 
-    $user = getUser($password);
+    $user = getUser($key);
     $user['password']['S'] = strval($newPassword);
-    $key = ['password' => ['S' => strval($password)]];
     $newUser = [
       'TableName' => $tableName,
       'Item' => $user

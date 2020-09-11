@@ -3,12 +3,15 @@ require('aws.php');
 require('cors.php');
 require('syncsheets.php');
 $MAX_TIME = 43200; // 12 hours
+$MIN_TIME = 1;  // 1 second
 
 cors();
 
 function signOut($password, $did = ''){
   global $MAX_TIME;
-  $userData = getUser($password);
+  global $MIN_TIME;
+  
+  $userData = getUser(['password' => ['S' => $password]]);
   $lastTime = $userData["lastTime"]["N"];
   $totalTime = $userData["totalTime"]["N"];
   $sessionTime = time() - $lastTime;
@@ -28,23 +31,25 @@ function signOut($password, $did = ''){
               'date' => ['S' => strval(time())],
               'time' => ['N' => strval($sessionTime)],
               'did' => ['S' => strval($did)],
-              'day' => ['S' => date("m/d/Y")]
+              'day' => ['S' => date("m/d/Y")],
+              'flagged' => ['BOOL' => $sessionTime > $MAX_TIME]
             ]
           ]
         ]
       ]
     ];
-
-    updateUser($password, $data);
-    addSession($password, $session);
-    syncUser($password);
-    echo $userData["username"]["S"];
+    if($sessionTime > $MIN_TIME){
+      updateUser($password, $data);
+      addSession($password, $session);
+      syncUser($password);
+      echo $userData["username"]["S"];
+    }
   }
 }
 
 // start tracking time on signin
 if (isset($_REQUEST['password'])) {
-  if(getUser($_REQUEST['password'] === null)){
+  if(getUser(['password' => ['S' => strval($_REQUEST['password'])]]) === null){
     http_response_code(404);
   } else {
     if(isset($_REQUEST['did']))
