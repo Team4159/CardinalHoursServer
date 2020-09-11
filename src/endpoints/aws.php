@@ -159,7 +159,7 @@
     foreach($sessions as $session){
       if(isFriday($session["date"]) && date('m.d', $session["date"]) != $lastFriday){
         $fridays++;
-        $lastFriday = date('m.d', $session["date"]);
+        $lastFriday = date('m.d.Y', $session["date"]);
       }
     }
     return $fridays;
