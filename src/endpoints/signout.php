@@ -40,8 +40,8 @@ function signOut($password, $did = ''){
     if($sessionTime > $MIN_TIME){
       updateUser($password, $data);
       addSession($password, $session);
-      syncUser($password);
       echo $userData["username"]["S"];
+      syncUser($password);
     }
   }
 }
