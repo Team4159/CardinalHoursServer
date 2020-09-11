@@ -3,7 +3,7 @@
   require '../../credentials.php';
   use Aws\DynamoDb\Exception\DynamoDbException;
   use Aws\DynamoDb\Marshaler;
-  date_default_timezone_set(America/Los_Angeles); // Set the timezone to PST
+  date_default_timezone_set("America/Los_Angeles"); // Set the timezone to PST
 
   if($AWS_KEY == null || $AWS_SECRET_KEY == null){
     if(getenv('AWS_KEY') == null || getenv('AWS_SECRET_KEY') == null){
