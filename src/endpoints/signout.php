@@ -1,5 +1,4 @@
 <?php
-require('aws.php');
 require('cors.php');
 require('syncsheets.php');
 $MAX_TIME = 43200; // 12 hours
@@ -10,7 +9,7 @@ cors();
 function signOut($password, $did = ''){
   global $MAX_TIME;
   global $MIN_TIME;
-  
+
   $userData = getUser(['password' => ['S' => $password]]);
   $lastTime = $userData["lastTime"]["N"];
   $totalTime = $userData["totalTime"]["N"];
@@ -58,4 +57,5 @@ if (isset($_REQUEST['password'])) {
       signOut($_REQUEST['password']);
   }
 }
+
 ?>
