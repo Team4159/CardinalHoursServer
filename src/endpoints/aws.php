@@ -153,7 +153,7 @@
 
   function countFridays($password){
     $marshaler = new Marshaler();
-    $sessions = $marshaler->unmarshalValue(getUser($password)["sessions"]);
+    $sessions = $marshaler->unmarshalValue(getUser(['password' => ['S' => strval($password)]])["sessions"]);
     $fridays = 0;
     foreach($sessions as $session)
       if(isFriday($session["date"]))

@@ -21,20 +21,19 @@ function getUserRow($first, $last){
 }
 
 function syncUser($password){
-  $dbData = getUser($password);
+  // Data of the user from the database
+  $dbData = getUser(['password' => ['S' => strval($password)]]);
   $first = explode(' ', $dbData["username"]["S"], 2)[0];
   $last = explode(' ', $dbData["username"]["S"], 2)[1];
 
   $row = getUserRow($first, $last);
-  // Data of the user from the database
 
   // Update the hours
   $teamHours = ("'Friday Meetings/Hours'!") . ("H" . $row);
-  changeData([[$dbData["totalTime"]["N"]/3600]], $teamHours);
+  changeData([[round($dbData["totalTime"]["N"]/3600, 2)]], $teamHours);
 
   // Update the meetings
   $meetings = ("'Friday Meetings/Hours'!") . ("E" . $row);
   changeData([[countFridays($password)]], $meetings);
 }
-
 ?>
