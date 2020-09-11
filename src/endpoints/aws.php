@@ -155,9 +155,13 @@
     $marshaler = new Marshaler();
     $sessions = $marshaler->unmarshalValue(getUser(['password' => ['S' => strval($password)]])["sessions"]);
     $fridays = 0;
-    foreach($sessions as $session)
-      if(isFriday($session["date"]))
-        $fridays ++;
+    $lastFriday = "";
+    foreach($sessions as $session){
+      if(isFriday($session["date"]) && date('m.d', $session["date"]) != $lastFriday){
+        $fridays++;
+        $lastFriday = date('m.d', $session["date"]);
+      }
+    }
     return $fridays;
   }
 ?>
