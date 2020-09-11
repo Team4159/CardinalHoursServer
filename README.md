@@ -74,6 +74,15 @@ Return data is in the format of
 Refer to the above example for the format of a single user's data, this data excludes the password and sessions attributes.
 ```
 
+To get the password of a user:
+```
+Path: src/endpoints/getpassword.php
+Parameters: name
+Returns:
+  Success: The user's password
+  Failure: Returns code 404 if the user does not exist
+```
+
 To change the password of a user
 ```
 Path: src/endpoints/changepassword.php
