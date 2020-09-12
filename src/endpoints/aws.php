@@ -60,7 +60,7 @@
             'TableName' => $tableName,
             'ProjectionExpression' => 'signedIn, lastTime, totalTime, username'
           ));
-          apcu_store("data", $scan_response);
+          apcu_store("data", "test");
           return $scan_response;
         } catch (DynamoDbException $e){
           return null;
