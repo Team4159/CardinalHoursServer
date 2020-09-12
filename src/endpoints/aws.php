@@ -51,21 +51,22 @@
   // Might give you the requested user data if you pleased the god jeff besos
   function getData(){
     if(apcu_fetch("time") != false){
-        if(apcu_fetch("time") > time() + 5 || apcu_fetch("data") == false ){
-          apcu_store("time", time());
-          global $tableName;
-          global $dynamodb;
-          try {
-            $scan_response = $dynamodb->scan(array(
-              'TableName' => $tableName,
-              'ProjectionExpression' => 'signedIn, lastTime, totalTime, username'
-            ));
-            return $scan_response;
-          } catch (DynamoDbException $e){
-            return null;
-          }
+      if(time() > apcu_fetch("time") + 5 || apcu_fetch("data") == false ){
+        apcu_store("time", time());
+        global $tableName;
+        global $dynamodb;
+        try {
+          $scan_response = $dynamodb->scan(array(
+            'TableName' => $tableName,
+            'ProjectionExpression' => 'signedIn, lastTime, totalTime, username'
+          ));
+          apcu_store("data", $scan_response);
+          return $scan_response;
+        } catch (DynamoDbException $e){
+          return null;
+        }
       } else {
-        return apcu_fetch("data");
+          apcu_fetch("data");
       }
     } else {
       apcu_store("time", time());
