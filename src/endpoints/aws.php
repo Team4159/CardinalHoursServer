@@ -50,16 +50,25 @@
 
   // Might give you the requested user data if you pleased the god jeff besos
   function getData(){
-    global $tableName;
-    global $dynamodb;
-    try {
-      $scan_response = $dynamodb->scan(array(
-        'TableName' => $tableName,
-        'ProjectionExpression' => 'signedIn, lastTime, totalTime, username'
-      ));
-      return $scan_response;
-    } catch (DynamoDbException $e){
-      return null;
+    if(apcu_fetch("time") != false){
+        if(apcu_fetch("time") > time() + 60 || apcu_fetch("data") == false ){
+          global $tableName;
+          global $dynamodb;
+          try {
+            $scan_response = $dynamodb->scan(array(
+              'TableName' => $tableName,
+              'ProjectionExpression' => 'signedIn, lastTime, totalTime, username'
+            ));
+            return $scan_response;
+          } catch (DynamoDbException $e){
+            return null;
+          }
+      } else {
+        return apcu_fetch("data");
+      }
+    } else {
+      apcu_store("time", time());
+      return getData();
     }
   }
 

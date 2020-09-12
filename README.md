@@ -1,6 +1,8 @@
 # CardinalHoursServer
 
 ## How2Run
+Dependencies: php, php-apcu
+Enable the php-acpu extension by uncommenting `extension=apcu.so` in /etc/php/conf.d/apcu.ini. You may also want to add `apc.enable_cli = 1` for debugging.
 
 Edit the credentials.php file to add your aws Access Key ID and Secret Access Key or export `AWS_KEY` for the Access Key ID and `AWS_SECRET_KEY` for the Secret Access Key.
 
