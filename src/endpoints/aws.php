@@ -51,7 +51,8 @@
   // Might give you the requested user data if you pleased the god jeff besos
   function getData(){
     if(apcu_fetch("time") != false){
-        if(apcu_fetch("time") > time() + 60 || apcu_fetch("data") == false ){
+        if(apcu_fetch("time") > time() + 1 || apcu_fetch("data") == false ){
+          apcu_store("time", time());
           global $tableName;
           global $dynamodb;
           try {
