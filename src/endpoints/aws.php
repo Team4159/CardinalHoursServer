@@ -51,7 +51,7 @@
   // Might give you the requested user data if you pleased the god jeff besos
   function getData(){
     if(apcu_fetch("time") != false){
-      if(time() > apcu_fetch("time") + 5 || apcu_fetch("data") == false ){
+      if(time() > apcu_fetch("time") + 5){
         apcu_store("time", time());
         global $tableName;
         global $dynamodb;
@@ -60,17 +60,28 @@
             'TableName' => $tableName,
             'ProjectionExpression' => 'signedIn, lastTime, totalTime, username'
           ));
-          apcu_store("data", "test");
+          apcu_store("data", $scan_response);
           return $scan_response;
         } catch (DynamoDbException $e){
           return null;
         }
       } else {
-          apcu_fetch("data");
+          return apcu_fetch("data");
       }
     } else {
       apcu_store("time", time());
-      return getData();
+      global $tableName;
+      global $dynamodb;
+      try {
+        $scan_response = $dynamodb->scan(array(
+          'TableName' => $tableName,
+          'ProjectionExpression' => 'signedIn, lastTime, totalTime, username'
+        ));
+        apcu_store("data", $scan_response);
+        return $scan_response;
+      } catch (DynamoDbException $e){
+        return null;
+      }
     }
   }
 
