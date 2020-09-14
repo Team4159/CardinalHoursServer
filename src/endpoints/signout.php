@@ -18,7 +18,7 @@ function signOut($password, $did = ''){
     $data = [
       ':signedIn' => ['BOOL' => false],
       ':lastTime' => ['N' => strval(time())],
-      ':totalTime' => ['N' => strval($totalTime + ($sessionTime < $MAX_TIME ? $sessionTime : 0))]
+      ':totalTime' => ['N' => strval($totalTime + ($sessionTime <= $MAX_TIME ? $sessionTime : 0))]
     ];
 
     $session = [
