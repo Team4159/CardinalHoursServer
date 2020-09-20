@@ -1,13 +1,5 @@
-<Directory "src">
-  Require all granted
-</Directory>
-
 <Files "token.json">
   Require all denied
-</Files>
-
-<Files "index.html">
-  Require all granted
 </Files>
 
 <Files "credentials.php">
