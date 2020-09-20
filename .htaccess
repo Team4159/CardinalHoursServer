@@ -1,7 +1,7 @@
 <Files "token.json">
-  deny from all
+  Require all denied
 </Files>
 
 <Files "credentials.php">
-  deny from all
+  Require all denied
 </Files>
