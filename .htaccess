@@ -1,0 +1,3 @@
+<files token.json credentials.php>
+    deny from all
+</files>
