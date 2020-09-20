@@ -1,3 +1,7 @@
-<files token.json credentials.php>
+<files token.json>
+    deny from all
+</files>
+
+<files credentials.php>
     deny from all
 </files>
