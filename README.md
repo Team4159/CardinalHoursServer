@@ -106,7 +106,7 @@ Returns:
 To sign a user out:
 ```
 Path: src/endpoints/signout.php
-Parameters: password
+Parameters: password, sessionTime (optional)
 Returns: 
   Success: Username, nothing if they're already signed out
   Failure: Returns code 404 if the user does not exist
