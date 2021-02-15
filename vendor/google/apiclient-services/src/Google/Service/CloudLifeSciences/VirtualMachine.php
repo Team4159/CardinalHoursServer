@@ -17,7 +17,7 @@
 
 class Google_Service_CloudLifeSciences_VirtualMachine extends Google_Collection
 {
-  protected $collection_key = 'dockerCacheImages';
+  protected $collection_key = 'volumes';
   protected $acceleratorsType = 'Google_Service_CloudLifeSciences_Accelerator';
   protected $acceleratorsDataType = 'array';
   public $bootDiskSizeGb;
@@ -35,16 +35,18 @@ class Google_Service_CloudLifeSciences_VirtualMachine extends Google_Collection
   public $preemptible;
   protected $serviceAccountType = 'Google_Service_CloudLifeSciences_ServiceAccount';
   protected $serviceAccountDataType = '';
+  protected $volumesType = 'Google_Service_CloudLifeSciences_Volume';
+  protected $volumesDataType = 'array';
 
   /**
-   * @param Google_Service_CloudLifeSciences_Accelerator
+   * @param Google_Service_CloudLifeSciences_Accelerator[]
    */
   public function setAccelerators($accelerators)
   {
     $this->accelerators = $accelerators;
   }
   /**
-   * @return Google_Service_CloudLifeSciences_Accelerator
+   * @return Google_Service_CloudLifeSciences_Accelerator[]
    */
   public function getAccelerators()
   {
@@ -75,14 +77,14 @@ class Google_Service_CloudLifeSciences_VirtualMachine extends Google_Collection
     return $this->cpuPlatform;
   }
   /**
-   * @param Google_Service_CloudLifeSciences_Disk
+   * @param Google_Service_CloudLifeSciences_Disk[]
    */
   public function setDisks($disks)
   {
     $this->disks = $disks;
   }
   /**
-   * @return Google_Service_CloudLifeSciences_Disk
+   * @return Google_Service_CloudLifeSciences_Disk[]
    */
   public function getDisks()
   {
@@ -163,5 +165,19 @@ class Google_Service_CloudLifeSciences_VirtualMachine extends Google_Collection
   public function getServiceAccount()
   {
     return $this->serviceAccount;
+  }
+  /**
+   * @param Google_Service_CloudLifeSciences_Volume[]
+   */
+  public function setVolumes($volumes)
+  {
+    $this->volumes = $volumes;
+  }
+  /**
+   * @return Google_Service_CloudLifeSciences_Volume[]
+   */
+  public function getVolumes()
+  {
+    return $this->volumes;
   }
 }

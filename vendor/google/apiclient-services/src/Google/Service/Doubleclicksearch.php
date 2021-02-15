@@ -38,7 +38,7 @@ class Google_Service_Doubleclicksearch extends Google_Service
   public $conversion;
   public $reports;
   public $savedColumns;
-  
+
   /**
    * Constructs the internal representation of the Doubleclicksearch service.
    *
@@ -48,9 +48,9 @@ class Google_Service_Doubleclicksearch extends Google_Service
   public function __construct(Google_Client $client, $rootUrl = null)
   {
     parent::__construct($client);
-    $this->rootUrl = $rootUrl ?: 'https://www.googleapis.com/';
+    $this->rootUrl = $rootUrl ?: 'https://doubleclicksearch.googleapis.com/';
     $this->servicePath = '';
-    $this->batchPath = 'batch/doubleclicksearch/v2';
+    $this->batchPath = 'batch';
     $this->version = 'v2';
     $this->serviceName = 'doubleclicksearch';
 
@@ -103,15 +103,15 @@ class Google_Service_Doubleclicksearch extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
+                'adId' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'campaignId' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
                 'criterionId' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'adId' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),

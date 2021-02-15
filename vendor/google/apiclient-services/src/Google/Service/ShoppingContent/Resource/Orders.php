@@ -226,9 +226,7 @@ class Google_Service_ShoppingContent_Resource_Orders extends Google_Service_Reso
    * response, used for paging. The default value is 25 orders per page, and the
    * maximum allowed value is 250 orders per page.
    * @opt_param string orderBy Order results by placement date in descending or
-   * ascending order.
-   *
-   * Acceptable values are: - placedDateAsc - placedDateDesc
+   * ascending order. Acceptable values are: - placedDateAsc - placedDateDesc
    * @opt_param string pageToken The token returned by the previous request.
    * @opt_param string placedDateEnd Obtains orders placed before this date
    * (exclusively), in ISO 8601 format.

@@ -139,6 +139,8 @@ class Google_Service_Compute_Resource_RegionDisks extends Google_Service_Resourc
    * @param string $region The name of the region for this request.
    * @param string $resource Name or id of the resource for this request.
    * @param array $optParams Optional parameters.
+   *
+   * @opt_param int optionsRequestedPolicyVersion Requested IAM Policy version.
    * @return Google_Service_Compute_Policy
    */
   public function getIamPolicy($project, $region, $resource, $optParams = array())
@@ -168,7 +170,8 @@ class Google_Service_Compute_Resource_RegionDisks extends Google_Service_Resourc
    *
    * The request ID must be a valid UUID with the exception that zero UUID is not
    * supported (00000000-0000-0000-0000-000000000000).
-   * @opt_param string sourceImage Optional. Source image to restore onto a disk.
+   * @opt_param string sourceImage Source image to restore onto a disk. This field
+   * is optional.
    * @return Google_Service_Compute_Operation
    */
   public function insert($project, $region, Google_Service_Compute_Disk $postBody, $optParams = array())
@@ -223,6 +226,9 @@ class Google_Service_Compute_Resource_RegionDisks extends Google_Service_Resourc
    * @opt_param string pageToken Specifies a page token to use. Set `pageToken` to
    * the `nextPageToken` returned by a previous list request to get the next page
    * of results.
+   * @opt_param bool returnPartialSuccess Opt-in for partial success behavior
+   * which provides partial results in case of failure. The default value is false
+   * and the logic is the same as today.
    * @return Google_Service_Compute_DiskList
    */
   public function listRegionDisks($project, $region, $optParams = array())

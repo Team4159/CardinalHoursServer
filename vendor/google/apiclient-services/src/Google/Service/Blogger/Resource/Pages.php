@@ -76,10 +76,10 @@ class Google_Service_Blogger_Resource_Pages extends Google_Service_Resource
    * @param string $blogId
    * @param array $optParams Optional parameters.
    *
-   * @opt_param string status
-   * @opt_param string maxResults
    * @opt_param bool fetchBodies
+   * @opt_param string maxResults
    * @opt_param string pageToken
+   * @opt_param string status
    * @opt_param string view
    * @return Google_Service_Blogger_PageList
    */
@@ -97,8 +97,8 @@ class Google_Service_Blogger_Resource_Pages extends Google_Service_Resource
    * @param Google_Service_Blogger_Page $postBody
    * @param array $optParams Optional parameters.
    *
-   * @opt_param bool revert
    * @opt_param bool publish
+   * @opt_param bool revert
    * @return Google_Service_Blogger_Page
    */
   public function patch($blogId, $pageId, Google_Service_Blogger_Page $postBody, $optParams = array())
@@ -143,8 +143,8 @@ class Google_Service_Blogger_Resource_Pages extends Google_Service_Resource
    * @param Google_Service_Blogger_Page $postBody
    * @param array $optParams Optional parameters.
    *
-   * @opt_param bool revert
    * @opt_param bool publish
+   * @opt_param bool revert
    * @return Google_Service_Blogger_Page
    */
   public function update($blogId, $pageId, Google_Service_Blogger_Page $postBody, $optParams = array())

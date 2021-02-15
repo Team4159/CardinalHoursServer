@@ -22,6 +22,7 @@ class Google_Service_Sasportal_SasPortalDeviceGrant extends Google_Collection
   public $expireTime;
   protected $frequencyRangeType = 'Google_Service_Sasportal_SasPortalFrequencyRange';
   protected $frequencyRangeDataType = '';
+  public $grantId;
   public $maxEirp;
   protected $moveListType = 'Google_Service_Sasportal_SasPortalDpaMoveList';
   protected $moveListDataType = 'array';
@@ -58,6 +59,14 @@ class Google_Service_Sasportal_SasPortalDeviceGrant extends Google_Collection
   {
     return $this->frequencyRange;
   }
+  public function setGrantId($grantId)
+  {
+    $this->grantId = $grantId;
+  }
+  public function getGrantId()
+  {
+    return $this->grantId;
+  }
   public function setMaxEirp($maxEirp)
   {
     $this->maxEirp = $maxEirp;
@@ -67,14 +76,14 @@ class Google_Service_Sasportal_SasPortalDeviceGrant extends Google_Collection
     return $this->maxEirp;
   }
   /**
-   * @param Google_Service_Sasportal_SasPortalDpaMoveList
+   * @param Google_Service_Sasportal_SasPortalDpaMoveList[]
    */
   public function setMoveList($moveList)
   {
     $this->moveList = $moveList;
   }
   /**
-   * @return Google_Service_Sasportal_SasPortalDpaMoveList
+   * @return Google_Service_Sasportal_SasPortalDpaMoveList[]
    */
   public function getMoveList()
   {

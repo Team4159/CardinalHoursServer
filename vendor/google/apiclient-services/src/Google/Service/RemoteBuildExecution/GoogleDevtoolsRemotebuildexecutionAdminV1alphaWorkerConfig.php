@@ -27,6 +27,7 @@ class Google_Service_RemoteBuildExecution_GoogleDevtoolsRemotebuildexecutionAdmi
   public $minCpuPlatform;
   public $networkAccess;
   public $reserved;
+  public $soleTenantNodeType;
   public $vmImage;
 
   /**
@@ -106,6 +107,14 @@ class Google_Service_RemoteBuildExecution_GoogleDevtoolsRemotebuildexecutionAdmi
   public function getReserved()
   {
     return $this->reserved;
+  }
+  public function setSoleTenantNodeType($soleTenantNodeType)
+  {
+    $this->soleTenantNodeType = $soleTenantNodeType;
+  }
+  public function getSoleTenantNodeType()
+  {
+    return $this->soleTenantNodeType;
   }
   public function setVmImage($vmImage)
   {

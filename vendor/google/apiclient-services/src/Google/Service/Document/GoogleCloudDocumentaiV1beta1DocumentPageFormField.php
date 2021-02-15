@@ -26,6 +26,7 @@ class Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageFormField 
   protected $nameDetectedLanguagesDataType = 'array';
   protected $valueDetectedLanguagesType = 'Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageDetectedLanguage';
   protected $valueDetectedLanguagesDataType = 'array';
+  public $valueType;
 
   /**
    * @param Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageLayout
@@ -56,31 +57,39 @@ class Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageFormField 
     return $this->fieldValue;
   }
   /**
-   * @param Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageDetectedLanguage
+   * @param Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageDetectedLanguage[]
    */
   public function setNameDetectedLanguages($nameDetectedLanguages)
   {
     $this->nameDetectedLanguages = $nameDetectedLanguages;
   }
   /**
-   * @return Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageDetectedLanguage
+   * @return Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageDetectedLanguage[]
    */
   public function getNameDetectedLanguages()
   {
     return $this->nameDetectedLanguages;
   }
   /**
-   * @param Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageDetectedLanguage
+   * @param Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageDetectedLanguage[]
    */
   public function setValueDetectedLanguages($valueDetectedLanguages)
   {
     $this->valueDetectedLanguages = $valueDetectedLanguages;
   }
   /**
-   * @return Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageDetectedLanguage
+   * @return Google_Service_Document_GoogleCloudDocumentaiV1beta1DocumentPageDetectedLanguage[]
    */
   public function getValueDetectedLanguages()
   {
     return $this->valueDetectedLanguages;
+  }
+  public function setValueType($valueType)
+  {
+    $this->valueType = $valueType;
+  }
+  public function getValueType()
+  {
+    return $this->valueType;
   }
 }

@@ -31,12 +31,12 @@ class Google_Service_CloudResourceManager_Resource_Folders extends Google_Servic
    * Operation.response field will be populated with the created Folder. In order
    * to succeed, the addition of this new Folder must not violate the Folder
    * naming, height or fanout constraints. + The Folder's display_name must be
-   * distinct from all other Folder's that share its parent. + The addition of the
-   * Folder must not cause the active Folder hierarchy to exceed a height of 4.
+   * distinct from all other Folders that share its parent. + The addition of the
+   * Folder must not cause the active Folder hierarchy to exceed a height of 10.
    * Note, the full active + deleted Folder hierarchy is allowed to reach a height
-   * of 8; this provides additional headroom when moving folders that contain
+   * of 20; this provides additional headroom when moving folders that contain
    * deleted folders. + The addition of the Folder must not cause the total number
-   * of Folders under its parent to exceed 100. If the operation fails due to a
+   * of Folders under its parent to exceed 300. If the operation fails due to a
    * folder constraint violation, some errors may be returned by the CreateFolder
    * request, with status code FAILED_PRECONDITION and an error description. Other
    * folder constraint violations will be communicated in the Operation, with the
@@ -124,11 +124,11 @@ class Google_Service_CloudResourceManager_Resource_Folders extends Google_Servic
    *
    * @param array $optParams Optional parameters.
    *
+   * @opt_param int pageSize Optional. The maximum number of Folders to return in
+   * the response.
    * @opt_param string pageToken Optional. A pagination token returned from a
    * previous call to `ListFolders` that indicates where this listing should
    * continue from.
-   * @opt_param int pageSize Optional. The maximum number of Folders to return in
-   * the response.
    * @opt_param string parent Required. The resource name of the Organization or
    * Folder whose Folders are being listed. Must be of the form
    * `folders/{folder_id}` or `organizations/{org_id}`. Access to this method is
@@ -177,8 +177,8 @@ class Google_Service_CloudResourceManager_Resource_Folders extends Google_Servic
    * formatting rules or naming constraints described in the CreateFolder
    * documentation. The Folder's display name must start and end with a letter or
    * digit, may contain letters, digits, spaces, hyphens and underscores and can
-   * be no longer than 30 characters. This is captured by the regular expression:
-   * [\p{L}\p{N}]([\p{L}\p{N}_- ]{0,28}[\p{L}\p{N}])?. The caller must have
+   * be between 3 and 30 characters. This is captured by the regular expression:
+   * `\p{L}\p{N}{1,28}[\p{L}\p{N}]`. The caller must have
    * `resourcemanager.folders.update` permission on the identified folder. If the
    * update fails due to the unique name constraint then a PreconditionFailure
    * explaining this violation will be returned in the Status.details field.

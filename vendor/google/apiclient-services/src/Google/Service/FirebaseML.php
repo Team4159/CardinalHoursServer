@@ -35,7 +35,7 @@ class Google_Service_FirebaseML extends Google_Service
       "https://www.googleapis.com/auth/cloud-platform";
 
   public $operations;
-  
+
   /**
    * Constructs the internal representation of the FirebaseML service.
    *
@@ -90,13 +90,13 @@ class Google_Service_FirebaseML extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),

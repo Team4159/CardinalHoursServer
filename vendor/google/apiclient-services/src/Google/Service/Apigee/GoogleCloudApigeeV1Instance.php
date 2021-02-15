@@ -25,7 +25,9 @@ class Google_Service_Apigee_GoogleCloudApigeeV1Instance extends Google_Model
   public $lastModifiedAt;
   public $location;
   public $name;
+  public $peeringCidrRange;
   public $port;
+  public $state;
 
   public function setCreatedAt($createdAt)
   {
@@ -91,6 +93,14 @@ class Google_Service_Apigee_GoogleCloudApigeeV1Instance extends Google_Model
   {
     return $this->name;
   }
+  public function setPeeringCidrRange($peeringCidrRange)
+  {
+    $this->peeringCidrRange = $peeringCidrRange;
+  }
+  public function getPeeringCidrRange()
+  {
+    return $this->peeringCidrRange;
+  }
   public function setPort($port)
   {
     $this->port = $port;
@@ -98,5 +108,13 @@ class Google_Service_Apigee_GoogleCloudApigeeV1Instance extends Google_Model
   public function getPort()
   {
     return $this->port;
+  }
+  public function setState($state)
+  {
+    $this->state = $state;
+  }
+  public function getState()
+  {
+    return $this->state;
   }
 }

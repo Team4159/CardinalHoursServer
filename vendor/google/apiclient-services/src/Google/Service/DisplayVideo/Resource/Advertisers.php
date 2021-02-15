@@ -27,9 +27,8 @@ class Google_Service_DisplayVideo_Resource_Advertisers extends Google_Service_Re
 {
   /**
    * Audits an advertiser. Returns the counts of used entities per resource type
-   * under the advertiser provided. Used entities count towards their [respective
-   * resource limit]:
-   * (https://support.google.com/displayvideo/answer/6071450?hl=en)
+   * under the advertiser provided. Used entities count towards their respective
+   * resource limit. See https://support.google.com/displayvideo/answer/6071450.
    * (advertisers.audit)
    *
    * @param string $advertiserId Required. The ID of the advertiser to audit.
@@ -38,7 +37,8 @@ class Google_Service_DisplayVideo_Resource_Advertisers extends Google_Service_Re
    * @opt_param string readMask Optional. The specific fields to return. If no
    * mask is specified, all fields in the response proto will be filled. Valid
    * values are: * usedLineItemsCount * usedInsertionOrdersCount *
-   * usedCampaignsCount
+   * usedCampaignsCount * channelsCount * negativelyTargetedChannelsCount *
+   * negativeKeywordListsCount * adGroupCriteriaCount * campaignCriteriaCount
    * @return Google_Service_DisplayVideo_AuditAdvertiserResponse
    */
   public function audit($advertiserId, $optParams = array())
@@ -74,9 +74,6 @@ class Google_Service_DisplayVideo_Resource_Advertisers extends Google_Service_Re
    * belongs to.
    * @param array $optParams Optional parameters.
    *
-   * @opt_param int pageSize Requested page size. The size must be an integer
-   * between `1` and `5000`. If unspecified, the default is '5000'. Returns error
-   * code `INVALID_ARGUMENT` if an invalid value is specified.
    * @opt_param string filter Allows filtering by assigned targeting option
    * properties. Supported syntax: * Filter expressions are made up of one or more
    * restrictions. * Restrictions can be combined by the logical operator `OR`.. *
@@ -89,6 +86,9 @@ class Google_Service_DisplayVideo_Resource_Advertisers extends Google_Service_Re
    * are: * `targetingType` (default) The default sorting order is ascending. To
    * specify descending order for a field, a suffix "desc" should be added to the
    * field name. Example: `targetingType desc`.
+   * @opt_param int pageSize Requested page size. The size must be an integer
+   * between `1` and `5000`. If unspecified, the default is '5000'. Returns error
+   * code `INVALID_ARGUMENT` if an invalid value is specified.
    * @opt_param string pageToken A token that lets the client fetch the next page
    * of results. Typically, this is the value of next_page_token returned from the
    * previous call to `BulkListAdvertiserAssignedTargetingOptions` method. If not
@@ -150,27 +150,34 @@ class Google_Service_DisplayVideo_Resource_Advertisers extends Google_Service_Re
    *
    * @param array $optParams Optional parameters.
    *
-   * @opt_param int pageSize Requested page size. Must be between `1` and `100`.
-   * If unspecified will default to `100`.
-   * @opt_param string partnerId Required. The ID of the partner that the fetched
-   * advertisers should all belong to. The system only supports listing
-   * advertisers for one partner at a time.
-   * @opt_param string pageToken A token identifying a page of results the server
-   * should return. Typically, this is the value of next_page_token returned from
-   * the previous call to `ListAdvertisers` method. If not specified, the first
-   * page of results will be returned.
-   * @opt_param string orderBy Field by which to sort the list. Acceptable values
-   * are: * `displayName` (default) * `entityStatus` The default sorting order is
-   * ascending. To specify descending order for a field, a suffix "desc" should be
-   * added to the field name. For example, `displayName desc`.
    * @opt_param string filter Allows filtering by advertiser properties. Supported
    * syntax: * Filter expressions are made up of one or more restrictions. *
    * Restrictions can be combined by `AND` or `OR` logical operators. A sequence
    * of restrictions implicitly uses `AND`. * A restriction has the form of
-   * `{field} {operator} {value}`. * The operator must be `EQUALS (=)`. *
-   * Supported fields: - `entityStatus` Examples: * All active advertisers under a
-   * partner: `entityStatus="ENTITY_STATUS_ACTIVE"` The length of this field
-   * should be no more than 500 characters.
+   * `{field} {operator} {value}`. * The operator used on `updateTime` must be
+   * `GREATER THAN OR EQUAL TO (>=)` or `LESS THAN OR EQUAL TO (<=)`. * The
+   * operator must be `EQUALS (=)`. * Supported fields: - `advertiserId` -
+   * `displayName` - `entityStatus` - `updateTime` (input in ISO 8601 format, or
+   * YYYY-MM-DDTHH:MM:SSZ) Examples: * All active advertisers under a partner:
+   * `entityStatus="ENTITY_STATUS_ACTIVE"` * All advertisers with an update time
+   * less than or equal to `2020-11-04T18:54:47Z (format of ISO 8601)`:
+   * `updateTime<="2020-11-04T18:54:47Z"` * All advertisers with an update time
+   * greater than or equal to `2020-11-04T18:54:47Z (format of ISO 8601)`:
+   * `updateTime>="2020-11-04T18:54:47Z"` The length of this field should be no
+   * more than 500 characters.
+   * @opt_param string orderBy Field by which to sort the list. Acceptable values
+   * are: * `displayName` (default) * `entityStatus` * `updateTime` The default
+   * sorting order is ascending. To specify descending order for a field, a suffix
+   * "desc" should be added to the field name. For example, `displayName desc`.
+   * @opt_param int pageSize Requested page size. Must be between `1` and `100`.
+   * If unspecified will default to `100`.
+   * @opt_param string pageToken A token identifying a page of results the server
+   * should return. Typically, this is the value of next_page_token returned from
+   * the previous call to `ListAdvertisers` method. If not specified, the first
+   * page of results will be returned.
+   * @opt_param string partnerId Required. The ID of the partner that the fetched
+   * advertisers should all belong to. The system only supports listing
+   * advertisers for one partner at a time.
    * @return Google_Service_DisplayVideo_ListAdvertisersResponse
    */
   public function listAdvertisers($optParams = array())

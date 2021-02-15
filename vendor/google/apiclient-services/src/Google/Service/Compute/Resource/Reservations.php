@@ -76,6 +76,9 @@ class Google_Service_Compute_Resource_Reservations extends Google_Service_Resour
    * @opt_param string pageToken Specifies a page token to use. Set `pageToken` to
    * the `nextPageToken` returned by a previous list request to get the next page
    * of results.
+   * @opt_param bool returnPartialSuccess Opt-in for partial success behavior
+   * which provides partial results in case of failure. The default value is false
+   * and the logic is the same as today.
    * @return Google_Service_Compute_ReservationAggregatedList
    */
   public function aggregatedList($project, $optParams = array())
@@ -135,6 +138,8 @@ class Google_Service_Compute_Resource_Reservations extends Google_Service_Resour
    * @param string $zone The name of the zone for this request.
    * @param string $resource Name or id of the resource for this request.
    * @param array $optParams Optional parameters.
+   *
+   * @opt_param int optionsRequestedPolicyVersion Requested IAM Policy version.
    * @return Google_Service_Compute_Policy
    */
   public function getIamPolicy($project, $zone, $resource, $optParams = array())
@@ -218,6 +223,9 @@ class Google_Service_Compute_Resource_Reservations extends Google_Service_Resour
    * @opt_param string pageToken Specifies a page token to use. Set `pageToken` to
    * the `nextPageToken` returned by a previous list request to get the next page
    * of results.
+   * @opt_param bool returnPartialSuccess Opt-in for partial success behavior
+   * which provides partial results in case of failure. The default value is false
+   * and the logic is the same as today.
    * @return Google_Service_Compute_ReservationList
    */
   public function listReservations($project, $zone, $optParams = array())

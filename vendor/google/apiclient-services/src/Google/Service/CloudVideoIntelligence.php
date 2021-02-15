@@ -37,10 +37,9 @@ class Google_Service_CloudVideoIntelligence extends Google_Service
       "https://www.googleapis.com/auth/cloud-platform";
 
   public $operations_projects_locations_operations;
-  public $projects_locations_corpura_operations;
   public $projects_locations_operations;
   public $videos;
-  
+
   /**
    * Constructs the internal representation of the CloudVideoIntelligence
    * service.
@@ -85,26 +84,6 @@ class Google_Service_CloudVideoIntelligence extends Google_Service
               ),
             ),'get' => array(
               'path' => 'v1/operations/{+name}',
-              'httpMethod' => 'GET',
-              'parameters' => array(
-                'name' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-              ),
-            ),
-          )
-        )
-    );
-    $this->projects_locations_corpura_operations = new Google_Service_CloudVideoIntelligence_Resource_ProjectsLocationsCorpuraOperations(
-        $this,
-        $this->serviceName,
-        'operations',
-        array(
-          'methods' => array(
-            'get' => array(
-              'path' => 'v1/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -162,13 +141,13 @@ class Google_Service_CloudVideoIntelligence extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
                 'filter' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
                 ),
                 'pageToken' => array(
                   'location' => 'query',

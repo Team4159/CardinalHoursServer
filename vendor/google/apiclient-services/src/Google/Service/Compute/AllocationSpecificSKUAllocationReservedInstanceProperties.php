@@ -23,32 +23,31 @@ class Google_Service_Compute_AllocationSpecificSKUAllocationReservedInstanceProp
   protected $localSsdsType = 'Google_Service_Compute_AllocationSpecificSKUAllocationAllocatedInstancePropertiesReservedDisk';
   protected $localSsdsDataType = 'array';
   public $machineType;
-  public $maintenanceInterval;
   public $minCpuPlatform;
 
   /**
-   * @param Google_Service_Compute_AcceleratorConfig
+   * @param Google_Service_Compute_AcceleratorConfig[]
    */
   public function setGuestAccelerators($guestAccelerators)
   {
     $this->guestAccelerators = $guestAccelerators;
   }
   /**
-   * @return Google_Service_Compute_AcceleratorConfig
+   * @return Google_Service_Compute_AcceleratorConfig[]
    */
   public function getGuestAccelerators()
   {
     return $this->guestAccelerators;
   }
   /**
-   * @param Google_Service_Compute_AllocationSpecificSKUAllocationAllocatedInstancePropertiesReservedDisk
+   * @param Google_Service_Compute_AllocationSpecificSKUAllocationAllocatedInstancePropertiesReservedDisk[]
    */
   public function setLocalSsds($localSsds)
   {
     $this->localSsds = $localSsds;
   }
   /**
-   * @return Google_Service_Compute_AllocationSpecificSKUAllocationAllocatedInstancePropertiesReservedDisk
+   * @return Google_Service_Compute_AllocationSpecificSKUAllocationAllocatedInstancePropertiesReservedDisk[]
    */
   public function getLocalSsds()
   {
@@ -61,14 +60,6 @@ class Google_Service_Compute_AllocationSpecificSKUAllocationReservedInstanceProp
   public function getMachineType()
   {
     return $this->machineType;
-  }
-  public function setMaintenanceInterval($maintenanceInterval)
-  {
-    $this->maintenanceInterval = $maintenanceInterval;
-  }
-  public function getMaintenanceInterval()
-  {
-    return $this->maintenanceInterval;
   }
   public function setMinCpuPlatform($minCpuPlatform)
   {

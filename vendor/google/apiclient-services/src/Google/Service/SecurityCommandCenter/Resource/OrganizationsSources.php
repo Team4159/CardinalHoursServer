@@ -76,7 +76,8 @@ class Google_Service_SecurityCommandCenter_Resource_OrganizationsSources extends
    * (sources.listOrganizationsSources)
    *
    * @param string $parent Required. Resource name of the parent of sources to
-   * list. Its format should be "organizations/[organization_id]".
+   * list. Its format should be "organizations/[organization_id],
+   * folders/[folder_id], or projects/[project_id]".
    * @param array $optParams Optional parameters.
    *
    * @opt_param int pageSize The maximum number of results to return in a single
@@ -102,9 +103,7 @@ class Google_Service_SecurityCommandCenter_Resource_OrganizationsSources extends
    * @param array $optParams Optional parameters.
    *
    * @opt_param string updateMask The FieldMask to use when updating the source
-   * resource.
-   *
-   * If empty all mutable fields will be updated.
+   * resource. If empty all mutable fields will be updated.
    * @return Google_Service_SecurityCommandCenter_Source
    */
   public function patch($name, Google_Service_SecurityCommandCenter_Source $postBody, $optParams = array())

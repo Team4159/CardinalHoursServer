@@ -18,7 +18,9 @@
 class Google_Service_CloudFunctions_CloudFunction extends Google_Model
 {
   public $availableMemoryMb;
+  public $buildEnvironmentVariables;
   public $buildId;
+  public $buildWorkerPool;
   public $description;
   public $entryPoint;
   public $environmentVariables;
@@ -36,6 +38,7 @@ class Google_Service_CloudFunctions_CloudFunction extends Google_Model
   public $sourceArchiveUrl;
   protected $sourceRepositoryType = 'Google_Service_CloudFunctions_SourceRepository';
   protected $sourceRepositoryDataType = '';
+  public $sourceToken;
   public $sourceUploadUrl;
   public $status;
   public $timeout;
@@ -52,6 +55,14 @@ class Google_Service_CloudFunctions_CloudFunction extends Google_Model
   {
     return $this->availableMemoryMb;
   }
+  public function setBuildEnvironmentVariables($buildEnvironmentVariables)
+  {
+    $this->buildEnvironmentVariables = $buildEnvironmentVariables;
+  }
+  public function getBuildEnvironmentVariables()
+  {
+    return $this->buildEnvironmentVariables;
+  }
   public function setBuildId($buildId)
   {
     $this->buildId = $buildId;
@@ -59,6 +70,14 @@ class Google_Service_CloudFunctions_CloudFunction extends Google_Model
   public function getBuildId()
   {
     return $this->buildId;
+  }
+  public function setBuildWorkerPool($buildWorkerPool)
+  {
+    $this->buildWorkerPool = $buildWorkerPool;
+  }
+  public function getBuildWorkerPool()
+  {
+    return $this->buildWorkerPool;
   }
   public function setDescription($description)
   {
@@ -189,6 +208,14 @@ class Google_Service_CloudFunctions_CloudFunction extends Google_Model
   public function getSourceRepository()
   {
     return $this->sourceRepository;
+  }
+  public function setSourceToken($sourceToken)
+  {
+    $this->sourceToken = $sourceToken;
+  }
+  public function getSourceToken()
+  {
+    return $this->sourceToken;
   }
   public function setSourceUploadUrl($sourceUploadUrl)
   {

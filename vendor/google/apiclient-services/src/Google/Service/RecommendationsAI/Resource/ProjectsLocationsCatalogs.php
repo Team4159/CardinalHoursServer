@@ -53,8 +53,9 @@ class Google_Service_RecommendationsAI_Resource_ProjectsLocationsCatalogs extend
    * @param array $optParams Optional parameters.
    *
    * @opt_param string updateMask Optional. Indicates which fields in the provided
-   * 'recommendation_model' to update. If not set, will only update the
-   * catalog_item_level_config field.
+   * 'catalog' to update. If not set, will only update the
+   * catalog_item_level_config field. Currently only fields that can be updated
+   * are catalog_item_level_config.
    * @return Google_Service_RecommendationsAI_GoogleCloudRecommendationengineV1beta1Catalog
    */
   public function patch($name, Google_Service_RecommendationsAI_GoogleCloudRecommendationengineV1beta1Catalog $postBody, $optParams = array())

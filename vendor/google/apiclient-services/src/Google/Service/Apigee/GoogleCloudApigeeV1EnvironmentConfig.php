@@ -41,6 +41,8 @@ class Google_Service_Apigee_GoogleCloudApigeeV1EnvironmentConfig extends Google_
   public $sequenceNumber;
   protected $targetsType = 'Google_Service_Apigee_GoogleCloudApigeeV1TargetServerConfig';
   protected $targetsDataType = 'array';
+  protected $traceConfigType = 'Google_Service_Apigee_GoogleCloudApigeeV1RuntimeTraceConfig';
+  protected $traceConfigDataType = '';
   public $uid;
 
   public function setCreateTime($createTime)
@@ -52,14 +54,14 @@ class Google_Service_Apigee_GoogleCloudApigeeV1EnvironmentConfig extends Google_
     return $this->createTime;
   }
   /**
-   * @param Google_Service_Apigee_GoogleCloudApigeeV1DataCollectorConfig
+   * @param Google_Service_Apigee_GoogleCloudApigeeV1DataCollectorConfig[]
    */
   public function setDataCollectors($dataCollectors)
   {
     $this->dataCollectors = $dataCollectors;
   }
   /**
-   * @return Google_Service_Apigee_GoogleCloudApigeeV1DataCollectorConfig
+   * @return Google_Service_Apigee_GoogleCloudApigeeV1DataCollectorConfig[]
    */
   public function getDataCollectors()
   {
@@ -80,14 +82,14 @@ class Google_Service_Apigee_GoogleCloudApigeeV1EnvironmentConfig extends Google_
     return $this->debugMask;
   }
   /**
-   * @param Google_Service_Apigee_GoogleCloudApigeeV1DeploymentConfig
+   * @param Google_Service_Apigee_GoogleCloudApigeeV1DeploymentConfig[]
    */
   public function setDeployments($deployments)
   {
     $this->deployments = $deployments;
   }
   /**
-   * @return Google_Service_Apigee_GoogleCloudApigeeV1DeploymentConfig
+   * @return Google_Service_Apigee_GoogleCloudApigeeV1DeploymentConfig[]
    */
   public function getDeployments()
   {
@@ -102,28 +104,28 @@ class Google_Service_Apigee_GoogleCloudApigeeV1EnvironmentConfig extends Google_
     return $this->featureFlags;
   }
   /**
-   * @param Google_Service_Apigee_GoogleCloudApigeeV1FlowHookConfig
+   * @param Google_Service_Apigee_GoogleCloudApigeeV1FlowHookConfig[]
    */
   public function setFlowhooks($flowhooks)
   {
     $this->flowhooks = $flowhooks;
   }
   /**
-   * @return Google_Service_Apigee_GoogleCloudApigeeV1FlowHookConfig
+   * @return Google_Service_Apigee_GoogleCloudApigeeV1FlowHookConfig[]
    */
   public function getFlowhooks()
   {
     return $this->flowhooks;
   }
   /**
-   * @param Google_Service_Apigee_GoogleCloudApigeeV1KeystoreConfig
+   * @param Google_Service_Apigee_GoogleCloudApigeeV1KeystoreConfig[]
    */
   public function setKeystores($keystores)
   {
     $this->keystores = $keystores;
   }
   /**
-   * @return Google_Service_Apigee_GoogleCloudApigeeV1KeystoreConfig
+   * @return Google_Service_Apigee_GoogleCloudApigeeV1KeystoreConfig[]
    */
   public function getKeystores()
   {
@@ -154,28 +156,28 @@ class Google_Service_Apigee_GoogleCloudApigeeV1EnvironmentConfig extends Google_
     return $this->pubsubTopic;
   }
   /**
-   * @param Google_Service_Apigee_GoogleCloudApigeeV1ReferenceConfig
+   * @param Google_Service_Apigee_GoogleCloudApigeeV1ReferenceConfig[]
    */
   public function setResourceReferences($resourceReferences)
   {
     $this->resourceReferences = $resourceReferences;
   }
   /**
-   * @return Google_Service_Apigee_GoogleCloudApigeeV1ReferenceConfig
+   * @return Google_Service_Apigee_GoogleCloudApigeeV1ReferenceConfig[]
    */
   public function getResourceReferences()
   {
     return $this->resourceReferences;
   }
   /**
-   * @param Google_Service_Apigee_GoogleCloudApigeeV1ResourceConfig
+   * @param Google_Service_Apigee_GoogleCloudApigeeV1ResourceConfig[]
    */
   public function setResources($resources)
   {
     $this->resources = $resources;
   }
   /**
-   * @return Google_Service_Apigee_GoogleCloudApigeeV1ResourceConfig
+   * @return Google_Service_Apigee_GoogleCloudApigeeV1ResourceConfig[]
    */
   public function getResources()
   {
@@ -198,18 +200,32 @@ class Google_Service_Apigee_GoogleCloudApigeeV1EnvironmentConfig extends Google_
     return $this->sequenceNumber;
   }
   /**
-   * @param Google_Service_Apigee_GoogleCloudApigeeV1TargetServerConfig
+   * @param Google_Service_Apigee_GoogleCloudApigeeV1TargetServerConfig[]
    */
   public function setTargets($targets)
   {
     $this->targets = $targets;
   }
   /**
-   * @return Google_Service_Apigee_GoogleCloudApigeeV1TargetServerConfig
+   * @return Google_Service_Apigee_GoogleCloudApigeeV1TargetServerConfig[]
    */
   public function getTargets()
   {
     return $this->targets;
+  }
+  /**
+   * @param Google_Service_Apigee_GoogleCloudApigeeV1RuntimeTraceConfig
+   */
+  public function setTraceConfig(Google_Service_Apigee_GoogleCloudApigeeV1RuntimeTraceConfig $traceConfig)
+  {
+    $this->traceConfig = $traceConfig;
+  }
+  /**
+   * @return Google_Service_Apigee_GoogleCloudApigeeV1RuntimeTraceConfig
+   */
+  public function getTraceConfig()
+  {
+    return $this->traceConfig;
   }
   public function setUid($uid)
   {

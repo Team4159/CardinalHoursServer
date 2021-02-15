@@ -28,33 +28,21 @@ class Google_Service_FirebaseManagement_Resource_AvailableProjects extends Googl
   /**
    * Lists each [Google Cloud Platform (GCP) `Project`] (https://cloud.google.com
    * /resource-manager/reference/rest/v1/projects) that can have Firebase
-   * resources added to it.
-   *
-   * A Project will only be listed if:
-   *
-   * The caller has sufficient   [Google IAM](https://cloud.google.com/iam)
-   * permissions to call   AddFirebase.
-   *
-   * The Project is not already a FirebaseProject.
-   *
-   * The Project is not in an Organization which has policies   that prevent
-   * Firebase resources from being added.
-   *
-   *  (availableProjects.listAvailableProjects)
+   * resources added to it. A Project will only be listed if: - The caller has
+   * sufficient [Google IAM](https://cloud.google.com/iam) permissions to call
+   * AddFirebase. - The Project is not already a FirebaseProject. - The Project is
+   * not in an Organization which has policies that prevent Firebase resources
+   * from being added.  (availableProjects.listAvailableProjects)
    *
    * @param array $optParams Optional parameters.
    *
+   * @opt_param int pageSize The maximum number of Projects to return in the
+   * response. The server may return fewer than this value at its discretion. If
+   * no value is specified (or too large a value is specified), the server will
+   * impose its own limit. This value cannot be negative.
    * @opt_param string pageToken Token returned from a previous call to
    * `ListAvailableProjects` indicating where in the set of Projects to resume
    * listing.
-   * @opt_param int pageSize The maximum number of Projects to return in the
-   * response.
-   *
-   * The server may return fewer than this value at its discretion. If no value is
-   * specified (or too large a value is specified), the server will impose its own
-   * limit.
-   *
-   * This value cannot be negative.
    * @return Google_Service_FirebaseManagement_ListAvailableProjectsResponse
    */
   public function listAvailableProjects($optParams = array())

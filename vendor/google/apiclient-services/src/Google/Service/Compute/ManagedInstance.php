@@ -26,6 +26,10 @@ class Google_Service_Compute_ManagedInstance extends Google_Collection
   public $instanceStatus;
   protected $lastAttemptType = 'Google_Service_Compute_ManagedInstanceLastAttempt';
   protected $lastAttemptDataType = '';
+  protected $preservedStateFromConfigType = 'Google_Service_Compute_PreservedState';
+  protected $preservedStateFromConfigDataType = '';
+  protected $preservedStateFromPolicyType = 'Google_Service_Compute_PreservedState';
+  protected $preservedStateFromPolicyDataType = '';
   protected $versionType = 'Google_Service_Compute_ManagedInstanceVersion';
   protected $versionDataType = '';
 
@@ -54,14 +58,14 @@ class Google_Service_Compute_ManagedInstance extends Google_Collection
     return $this->instance;
   }
   /**
-   * @param Google_Service_Compute_ManagedInstanceInstanceHealth
+   * @param Google_Service_Compute_ManagedInstanceInstanceHealth[]
    */
   public function setInstanceHealth($instanceHealth)
   {
     $this->instanceHealth = $instanceHealth;
   }
   /**
-   * @return Google_Service_Compute_ManagedInstanceInstanceHealth
+   * @return Google_Service_Compute_ManagedInstanceInstanceHealth[]
    */
   public function getInstanceHealth()
   {
@@ -88,6 +92,34 @@ class Google_Service_Compute_ManagedInstance extends Google_Collection
   public function getLastAttempt()
   {
     return $this->lastAttempt;
+  }
+  /**
+   * @param Google_Service_Compute_PreservedState
+   */
+  public function setPreservedStateFromConfig(Google_Service_Compute_PreservedState $preservedStateFromConfig)
+  {
+    $this->preservedStateFromConfig = $preservedStateFromConfig;
+  }
+  /**
+   * @return Google_Service_Compute_PreservedState
+   */
+  public function getPreservedStateFromConfig()
+  {
+    return $this->preservedStateFromConfig;
+  }
+  /**
+   * @param Google_Service_Compute_PreservedState
+   */
+  public function setPreservedStateFromPolicy(Google_Service_Compute_PreservedState $preservedStateFromPolicy)
+  {
+    $this->preservedStateFromPolicy = $preservedStateFromPolicy;
+  }
+  /**
+   * @return Google_Service_Compute_PreservedState
+   */
+  public function getPreservedStateFromPolicy()
+  {
+    return $this->preservedStateFromPolicy;
   }
   /**
    * @param Google_Service_Compute_ManagedInstanceVersion

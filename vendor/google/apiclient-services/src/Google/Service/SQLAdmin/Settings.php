@@ -17,8 +17,10 @@
 
 class Google_Service_SQLAdmin_Settings extends Google_Collection
 {
-  protected $collection_key = 'databaseFlags';
+  protected $collection_key = 'denyMaintenancePeriods';
   public $activationPolicy;
+  protected $activeDirectoryConfigType = 'Google_Service_SQLAdmin_SqlActiveDirectoryConfig';
+  protected $activeDirectoryConfigDataType = '';
   public $authorizedGaeApplications;
   public $availabilityType;
   protected $backupConfigurationType = 'Google_Service_SQLAdmin_BackupConfiguration';
@@ -30,6 +32,10 @@ class Google_Service_SQLAdmin_Settings extends Google_Collection
   protected $databaseFlagsType = 'Google_Service_SQLAdmin_DatabaseFlags';
   protected $databaseFlagsDataType = 'array';
   public $databaseReplicationEnabled;
+  protected $denyMaintenancePeriodsType = 'Google_Service_SQLAdmin_DenyMaintenancePeriod';
+  protected $denyMaintenancePeriodsDataType = 'array';
+  protected $insightsConfigType = 'Google_Service_SQLAdmin_InsightsConfig';
+  protected $insightsConfigDataType = '';
   protected $ipConfigurationType = 'Google_Service_SQLAdmin_IpConfiguration';
   protected $ipConfigurationDataType = '';
   public $kind;
@@ -52,6 +58,20 @@ class Google_Service_SQLAdmin_Settings extends Google_Collection
   public function getActivationPolicy()
   {
     return $this->activationPolicy;
+  }
+  /**
+   * @param Google_Service_SQLAdmin_SqlActiveDirectoryConfig
+   */
+  public function setActiveDirectoryConfig(Google_Service_SQLAdmin_SqlActiveDirectoryConfig $activeDirectoryConfig)
+  {
+    $this->activeDirectoryConfig = $activeDirectoryConfig;
+  }
+  /**
+   * @return Google_Service_SQLAdmin_SqlActiveDirectoryConfig
+   */
+  public function getActiveDirectoryConfig()
+  {
+    return $this->activeDirectoryConfig;
   }
   public function setAuthorizedGaeApplications($authorizedGaeApplications)
   {
@@ -116,14 +136,14 @@ class Google_Service_SQLAdmin_Settings extends Google_Collection
     return $this->dataDiskType;
   }
   /**
-   * @param Google_Service_SQLAdmin_DatabaseFlags
+   * @param Google_Service_SQLAdmin_DatabaseFlags[]
    */
   public function setDatabaseFlags($databaseFlags)
   {
     $this->databaseFlags = $databaseFlags;
   }
   /**
-   * @return Google_Service_SQLAdmin_DatabaseFlags
+   * @return Google_Service_SQLAdmin_DatabaseFlags[]
    */
   public function getDatabaseFlags()
   {
@@ -136,6 +156,34 @@ class Google_Service_SQLAdmin_Settings extends Google_Collection
   public function getDatabaseReplicationEnabled()
   {
     return $this->databaseReplicationEnabled;
+  }
+  /**
+   * @param Google_Service_SQLAdmin_DenyMaintenancePeriod[]
+   */
+  public function setDenyMaintenancePeriods($denyMaintenancePeriods)
+  {
+    $this->denyMaintenancePeriods = $denyMaintenancePeriods;
+  }
+  /**
+   * @return Google_Service_SQLAdmin_DenyMaintenancePeriod[]
+   */
+  public function getDenyMaintenancePeriods()
+  {
+    return $this->denyMaintenancePeriods;
+  }
+  /**
+   * @param Google_Service_SQLAdmin_InsightsConfig
+   */
+  public function setInsightsConfig(Google_Service_SQLAdmin_InsightsConfig $insightsConfig)
+  {
+    $this->insightsConfig = $insightsConfig;
+  }
+  /**
+   * @return Google_Service_SQLAdmin_InsightsConfig
+   */
+  public function getInsightsConfig()
+  {
+    return $this->insightsConfig;
   }
   /**
    * @param Google_Service_SQLAdmin_IpConfiguration

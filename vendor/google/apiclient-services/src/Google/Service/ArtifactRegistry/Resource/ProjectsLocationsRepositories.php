@@ -82,17 +82,12 @@ class Google_Service_ArtifactRegistry_Resource_ProjectsLocationsRepositories ext
    * @param array $optParams Optional parameters.
    *
    * @opt_param int options.requestedPolicyVersion Optional. The policy format
-   * version to be returned.
-   *
-   * Valid values are 0, 1, and 3. Requests specifying an invalid value will be
-   * rejected.
-   *
-   * Requests for policies with any conditional bindings must specify version 3.
-   * Policies without any conditional bindings may specify any valid value or
-   * leave the field unset.
-   *
-   * To learn which resources support conditions in their IAM policies, see the
-   * [IAM documentation](https://cloud.google.com/iam/help/conditions/resource-
+   * version to be returned. Valid values are 0, 1, and 3. Requests specifying an
+   * invalid value will be rejected. Requests for policies with any conditional
+   * bindings must specify version 3. Policies without any conditional bindings
+   * may specify any valid value or leave the field unset. To learn which
+   * resources support conditions in their IAM policies, see the [IAM
+   * documentation](https://cloud.google.com/iam/help/conditions/resource-
    * policies).
    * @return Google_Service_ArtifactRegistry_Policy
    */
@@ -109,7 +104,8 @@ class Google_Service_ArtifactRegistry_Resource_ProjectsLocationsRepositories ext
    * be listed.
    * @param array $optParams Optional parameters.
    *
-   * @opt_param int pageSize The maximum number of repositories to return.
+   * @opt_param int pageSize The maximum number of repositories to return. Maximum
+   * page size is 10,000.
    * @opt_param string pageToken The next_page_token value returned from a
    * previous list request, if any.
    * @return Google_Service_ArtifactRegistry_ListRepositoriesResponse

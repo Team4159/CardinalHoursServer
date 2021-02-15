@@ -19,8 +19,8 @@
  * The "instances" collection of methods.
  * Typical usage is:
  *  <code>
- *   $sqlService = new Google_Service_SQLAdmin(...);
- *   $instances = $sqlService->instances;
+ *   $sqladminService = new Google_Service_SQLAdmin(...);
+ *   $instances = $sqladminService->instances;
  *  </code>
  */
 class Google_Service_SQLAdmin_Resource_Instances extends Google_Service_Resource
@@ -146,7 +146,7 @@ class Google_Service_SQLAdmin_Resource_Instances extends Google_Service_Resource
     return $this->call('get', array($params), "Google_Service_SQLAdmin_DatabaseInstance");
   }
   /**
-   * Imports data into a Cloud SQL instance from a SQL dump  or CSV file in Cloud
+   * Imports data into a Cloud SQL instance from a SQL dump or CSV file in Cloud
    * Storage. (instances.import)
    *
    * @param string $project Project ID of the project that contains the instance.
@@ -184,18 +184,17 @@ class Google_Service_SQLAdmin_Resource_Instances extends Google_Service_Resource
    * instances.
    * @param array $optParams Optional parameters.
    *
-   * @opt_param string maxResults The maximum number of results to return per
-   * response.
-   * @opt_param string pageToken A previously-returned page token representing
-   * part of the larger set of results to view.
    * @opt_param string filter A filter expression that filters resources listed in
    * the response. The expression is in the form of field:value. For example,
    * 'instanceType:CLOUD_SQL_INSTANCE'. Fields can be nested as needed as per
    * their JSON representation, such as 'settings.userLabels.auto_start:true'.
-   *
    * Multiple filter queries are space-separated. For example. 'state:RUNNABLE
    * instanceType:CLOUD_SQL_INSTANCE'. By default, each expression is an AND
    * expression. However, you can include AND and OR expressions explicitly.
+   * @opt_param string maxResults The maximum number of results to return per
+   * response.
+   * @opt_param string pageToken A previously-returned page token representing
+   * part of the larger set of results to view.
    * @return Google_Service_SQLAdmin_InstancesListResponse
    */
   public function listInstances($project, $optParams = array())

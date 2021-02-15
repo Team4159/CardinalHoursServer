@@ -35,17 +35,26 @@ class Google_Service_Sasportal extends Google_Service
       "https://www.googleapis.com/auth/userinfo.email";
 
   public $customers;
+  public $customers_deployments;
+  public $customers_deployments_devices;
   public $customers_devices;
   public $customers_nodes;
+  public $customers_nodes_deployments;
+  public $customers_nodes_devices;
   public $customers_nodes_nodes;
+  public $deployments;
+  public $deployments_devices;
   public $installer;
   public $nodes;
+  public $nodes_deployments;
+  public $nodes_deployments_devices;
   public $nodes_devices;
   public $nodes_nodes;
+  public $nodes_nodes_deployments;
   public $nodes_nodes_devices;
   public $nodes_nodes_nodes;
   public $policies;
-  
+
   /**
    * Constructs the internal representation of the Sasportal service.
    *
@@ -108,14 +117,14 @@ class Google_Service_Sasportal extends Google_Service
           )
         )
     );
-    $this->customers_devices = new Google_Service_Sasportal_Resource_CustomersDevices(
+    $this->customers_deployments = new Google_Service_Sasportal_Resource_CustomersDeployments(
         $this,
         $this->serviceName,
-        'devices',
+        'deployments',
         array(
           'methods' => array(
-            'bulk' => array(
-              'path' => 'v1alpha1/{+parent}/devices:bulk',
+            'create' => array(
+              'path' => 'v1alpha1/{+parent}/deployments',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -124,7 +133,135 @@ class Google_Service_Sasportal extends Google_Service
                   'required' => true,
                 ),
               ),
-            ),'create' => array(
+            ),'delete' => array(
+              'path' => 'v1alpha1/{+name}',
+              'httpMethod' => 'DELETE',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'get' => array(
+              'path' => 'v1alpha1/{+name}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v1alpha1/{+parent}/deployments',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'move' => array(
+              'path' => 'v1alpha1/{+name}:move',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'patch' => array(
+              'path' => 'v1alpha1/{+name}',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'updateMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->customers_deployments_devices = new Google_Service_Sasportal_Resource_CustomersDeploymentsDevices(
+        $this,
+        $this->serviceName,
+        'devices',
+        array(
+          'methods' => array(
+            'create' => array(
+              'path' => 'v1alpha1/{+parent}/devices',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'createSigned' => array(
+              'path' => 'v1alpha1/{+parent}/devices:createSigned',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v1alpha1/{+parent}/devices',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->customers_devices = new Google_Service_Sasportal_Resource_CustomersDevices(
+        $this,
+        $this->serviceName,
+        'devices',
+        array(
+          'methods' => array(
+            'create' => array(
               'path' => 'v1alpha1/{+parent}/devices',
               'httpMethod' => 'POST',
               'parameters' => array(
@@ -173,15 +310,15 @@ class Google_Service_Sasportal extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
                 'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'filter' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -279,6 +416,10 @@ class Google_Service_Sasportal extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
@@ -316,6 +457,100 @@ class Google_Service_Sasportal extends Google_Service
           )
         )
     );
+    $this->customers_nodes_deployments = new Google_Service_Sasportal_Resource_CustomersNodesDeployments(
+        $this,
+        $this->serviceName,
+        'deployments',
+        array(
+          'methods' => array(
+            'create' => array(
+              'path' => 'v1alpha1/{+parent}/deployments',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v1alpha1/{+parent}/deployments',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->customers_nodes_devices = new Google_Service_Sasportal_Resource_CustomersNodesDevices(
+        $this,
+        $this->serviceName,
+        'devices',
+        array(
+          'methods' => array(
+            'create' => array(
+              'path' => 'v1alpha1/{+parent}/devices',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'createSigned' => array(
+              'path' => 'v1alpha1/{+parent}/devices:createSigned',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v1alpha1/{+parent}/devices',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
     $this->customers_nodes_nodes = new Google_Service_Sasportal_Resource_CustomersNodesNodes(
         $this,
         $this->serviceName,
@@ -341,6 +576,10 @@ class Google_Service_Sasportal extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
@@ -348,6 +587,100 @@ class Google_Service_Sasportal extends Google_Service
                 'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->deployments = new Google_Service_Sasportal_Resource_Deployments(
+        $this,
+        $this->serviceName,
+        'deployments',
+        array(
+          'methods' => array(
+            'get' => array(
+              'path' => 'v1alpha1/{+name}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->deployments_devices = new Google_Service_Sasportal_Resource_DeploymentsDevices(
+        $this,
+        $this->serviceName,
+        'devices',
+        array(
+          'methods' => array(
+            'delete' => array(
+              'path' => 'v1alpha1/{+name}',
+              'httpMethod' => 'DELETE',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'get' => array(
+              'path' => 'v1alpha1/{+name}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'move' => array(
+              'path' => 'v1alpha1/{+name}:move',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'patch' => array(
+              'path' => 'v1alpha1/{+name}',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'updateMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'signDevice' => array(
+              'path' => 'v1alpha1/{+name}:signDevice',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'updateSigned' => array(
+              'path' => 'v1alpha1/{+name}:updateSigned',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
                 ),
               ),
             ),
@@ -392,14 +725,90 @@ class Google_Service_Sasportal extends Google_Service
           )
         )
     );
-    $this->nodes_devices = new Google_Service_Sasportal_Resource_NodesDevices(
+    $this->nodes_deployments = new Google_Service_Sasportal_Resource_NodesDeployments(
+        $this,
+        $this->serviceName,
+        'deployments',
+        array(
+          'methods' => array(
+            'delete' => array(
+              'path' => 'v1alpha1/{+name}',
+              'httpMethod' => 'DELETE',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'get' => array(
+              'path' => 'v1alpha1/{+name}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v1alpha1/{+parent}/deployments',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'move' => array(
+              'path' => 'v1alpha1/{+name}:move',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'patch' => array(
+              'path' => 'v1alpha1/{+name}',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'updateMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->nodes_deployments_devices = new Google_Service_Sasportal_Resource_NodesDeploymentsDevices(
         $this,
         $this->serviceName,
         'devices',
         array(
           'methods' => array(
-            'bulk' => array(
-              'path' => 'v1alpha1/{+parent}/devices:bulk',
+            'create' => array(
+              'path' => 'v1alpha1/{+parent}/devices',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -408,7 +817,49 @@ class Google_Service_Sasportal extends Google_Service
                   'required' => true,
                 ),
               ),
-            ),'create' => array(
+            ),'createSigned' => array(
+              'path' => 'v1alpha1/{+parent}/devices:createSigned',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v1alpha1/{+parent}/devices',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->nodes_devices = new Google_Service_Sasportal_Resource_NodesDevices(
+        $this,
+        $this->serviceName,
+        'devices',
+        array(
+          'methods' => array(
+            'create' => array(
               'path' => 'v1alpha1/{+parent}/devices',
               'httpMethod' => 'POST',
               'parameters' => array(
@@ -563,13 +1014,17 @@ class Google_Service_Sasportal extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
+                'filter' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'move' => array(
@@ -600,14 +1055,14 @@ class Google_Service_Sasportal extends Google_Service
           )
         )
     );
-    $this->nodes_nodes_devices = new Google_Service_Sasportal_Resource_NodesNodesDevices(
+    $this->nodes_nodes_deployments = new Google_Service_Sasportal_Resource_NodesNodesDeployments(
         $this,
         $this->serviceName,
-        'devices',
+        'deployments',
         array(
           'methods' => array(
-            'bulk' => array(
-              'path' => 'v1alpha1/{+parent}/devices:bulk',
+            'create' => array(
+              'path' => 'v1alpha1/{+parent}/deployments',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -616,7 +1071,39 @@ class Google_Service_Sasportal extends Google_Service
                   'required' => true,
                 ),
               ),
-            ),'create' => array(
+            ),'list' => array(
+              'path' => 'v1alpha1/{+parent}/deployments',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->nodes_nodes_devices = new Google_Service_Sasportal_Resource_NodesNodesDevices(
+        $this,
+        $this->serviceName,
+        'devices',
+        array(
+          'methods' => array(
+            'create' => array(
               'path' => 'v1alpha1/{+parent}/devices',
               'httpMethod' => 'POST',
               'parameters' => array(
@@ -645,13 +1132,13 @@ class Google_Service_Sasportal extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
                 'filter' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
                 ),
                 'pageToken' => array(
                   'location' => 'query',
@@ -686,6 +1173,10 @@ class Google_Service_Sasportal extends Google_Service
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
                 'pageSize' => array(
                   'location' => 'query',

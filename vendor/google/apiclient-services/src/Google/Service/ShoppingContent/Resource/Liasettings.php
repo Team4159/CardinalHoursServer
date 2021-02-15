@@ -154,18 +154,18 @@ class Google_Service_ShoppingContent_Resource_Liasettings extends Google_Service
    * account and `accountId` must be the ID of a sub-account of this account.
    * @param string $accountId The ID of the account that manages the order. This
    * cannot be a multi-client account.
-   * @param string $contactEmail The email of the inventory verification contact.
-   * @param string $contactName The name of the inventory verification contact.
    * @param string $country The country for which inventory verification is
    * requested.
    * @param string $language The language for which inventory verification is
    * requested.
+   * @param string $contactName The name of the inventory verification contact.
+   * @param string $contactEmail The email of the inventory verification contact.
    * @param array $optParams Optional parameters.
    * @return Google_Service_ShoppingContent_LiasettingsSetInventoryVerificationContactResponse
    */
-  public function setinventoryverificationcontact($merchantId, $accountId, $contactEmail, $contactName, $country, $language, $optParams = array())
+  public function setinventoryverificationcontact($merchantId, $accountId, $country, $language, $contactName, $contactEmail, $optParams = array())
   {
-    $params = array('merchantId' => $merchantId, 'accountId' => $accountId, 'contactEmail' => $contactEmail, 'contactName' => $contactName, 'country' => $country, 'language' => $language);
+    $params = array('merchantId' => $merchantId, 'accountId' => $accountId, 'country' => $country, 'language' => $language, 'contactName' => $contactName, 'contactEmail' => $contactEmail);
     $params = array_merge($params, $optParams);
     return $this->call('setinventoryverificationcontact', array($params), "Google_Service_ShoppingContent_LiasettingsSetInventoryVerificationContactResponse");
   }

@@ -25,6 +25,7 @@ class Google_Service_TagManager_Client extends Google_Collection
   public $name;
   protected $parameterType = 'Google_Service_TagManager_Parameter';
   protected $parameterDataType = 'array';
+  public $parentFolderId;
   public $path;
   public $priority;
   public $tagManagerUrl;
@@ -72,18 +73,26 @@ class Google_Service_TagManager_Client extends Google_Collection
     return $this->name;
   }
   /**
-   * @param Google_Service_TagManager_Parameter
+   * @param Google_Service_TagManager_Parameter[]
    */
   public function setParameter($parameter)
   {
     $this->parameter = $parameter;
   }
   /**
-   * @return Google_Service_TagManager_Parameter
+   * @return Google_Service_TagManager_Parameter[]
    */
   public function getParameter()
   {
     return $this->parameter;
+  }
+  public function setParentFolderId($parentFolderId)
+  {
+    $this->parentFolderId = $parentFolderId;
+  }
+  public function getParentFolderId()
+  {
+    return $this->parentFolderId;
   }
   public function setPath($path)
   {

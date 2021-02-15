@@ -34,18 +34,13 @@ class Google_Service_Drive_Resource_Permissions extends Google_Service_Resource
    *
    * @opt_param string emailMessage A plain text custom message to include in the
    * notification email.
-   * @opt_param bool enforceSingleParent Set to true to opt in to API behavior
-   * that aims for all items to have exactly one parent. This parameter only takes
-   * effect if the item is not in a shared drive. See moveToNewOwnersRoot for
+   * @opt_param bool enforceSingleParent Deprecated. See moveToNewOwnersRoot for
    * details.
-   * @opt_param bool moveToNewOwnersRoot This parameter only takes effect if the
-   * item is not in a shared drive and the request is attempting to transfer the
-   * ownership of the item. When set to true, the item is moved to the new owner's
-   * My Drive root folder and all prior parents removed. If set to false, when
-   * enforceSingleParent=true, parents are not changed. If set to false, when
-   * enforceSingleParent=false, existing parents are not changed; however, the
-   * file will be added to the new owner's My Drive root folder, unless it is
-   * already in the new owner's My Drive.
+   * @opt_param bool moveToNewOwnersRoot This parameter will only take effect if
+   * the item is not in a shared drive and the request is attempting to transfer
+   * the ownership of the item. If set to true, the item will be moved to the new
+   * owner's My Drive root folder and all prior parents removed. If set to false,
+   * parents are not changed.
    * @opt_param bool sendNotificationEmail Whether to send a notification email
    * when sharing to users or groups. This defaults to true for users and groups,
    * and is not allowed for other requests. It must not be disabled for ownership
@@ -117,6 +112,8 @@ class Google_Service_Drive_Resource_Permissions extends Google_Service_Resource
    * @param string $fileId The ID of the file or shared drive.
    * @param array $optParams Optional parameters.
    *
+   * @opt_param string includePermissionsForView Specifies which additional view's
+   * permissions to include in the response. Only 'published' is supported.
    * @opt_param int pageSize The maximum number of permissions to return per page.
    * When not set for files in a shared drive, at most 100 results will be
    * returned. When not set for files that are not in a shared drive, the entire

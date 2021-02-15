@@ -54,7 +54,7 @@ class Google_Service_Slides extends Google_Service
 
   public $presentations;
   public $presentations_pages;
-  
+
   /**
    * Constructs the internal representation of the Slides service.
    *
@@ -139,11 +139,11 @@ class Google_Service_Slides extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'thumbnailProperties.thumbnailSize' => array(
+                'thumbnailProperties.mimeType' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'thumbnailProperties.mimeType' => array(
+                'thumbnailProperties.thumbnailSize' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),

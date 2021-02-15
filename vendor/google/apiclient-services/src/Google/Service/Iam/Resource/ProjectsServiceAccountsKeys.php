@@ -44,7 +44,9 @@ class Google_Service_Iam_Resource_ProjectsServiceAccountsKeys extends Google_Ser
     return $this->call('create', array($params), "Google_Service_Iam_ServiceAccountKey");
   }
   /**
-   * Deletes a ServiceAccountKey. (keys.delete)
+   * Deletes a ServiceAccountKey. Deleting a service account key does not revoke
+   * short-lived credentials that have been issued based on the service account
+   * key. (keys.delete)
    *
    * @param string $name Required. The resource name of the service account key in
    * the following format:
@@ -66,11 +68,10 @@ class Google_Service_Iam_Resource_ProjectsServiceAccountsKeys extends Google_Ser
    *
    * @param string $name Required. The resource name of the service account key in
    * the following format:
-   * `projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}/keys/{key}`.
-   *
-   * Using `-` as a wildcard for the `PROJECT_ID` will infer the project from the
-   * account. The `ACCOUNT` value can be the `email` address or the `unique_id` of
-   * the service account.
+   * `projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}/keys/{key}`. Using `-` as a
+   * wildcard for the `PROJECT_ID` will infer the project from the account. The
+   * `ACCOUNT` value can be the `email` address or the `unique_id` of the service
+   * account.
    * @param array $optParams Optional parameters.
    *
    * @opt_param string publicKeyType The output format of the public key
@@ -88,9 +89,8 @@ class Google_Service_Iam_Resource_ProjectsServiceAccountsKeys extends Google_Ser
    * (keys.listProjectsServiceAccountsKeys)
    *
    * @param string $name Required. The resource name of the service account in the
-   * following format: `projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}`.
-   *
-   * Using `-` as a wildcard for the `PROJECT_ID`, will infer the project from the
+   * following format: `projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}`. Using
+   * `-` as a wildcard for the `PROJECT_ID`, will infer the project from the
    * account. The `ACCOUNT` value can be the `email` address or the `unique_id` of
    * the service account.
    * @param array $optParams Optional parameters.

@@ -28,6 +28,8 @@ class Google_Service_Compute_AutoscalingPolicy extends Google_Collection
   public $maxNumReplicas;
   public $minNumReplicas;
   public $mode;
+  protected $scaleInControlType = 'Google_Service_Compute_AutoscalingPolicyScaleInControl';
+  protected $scaleInControlDataType = '';
 
   public function setCoolDownPeriodSec($coolDownPeriodSec)
   {
@@ -52,14 +54,14 @@ class Google_Service_Compute_AutoscalingPolicy extends Google_Collection
     return $this->cpuUtilization;
   }
   /**
-   * @param Google_Service_Compute_AutoscalingPolicyCustomMetricUtilization
+   * @param Google_Service_Compute_AutoscalingPolicyCustomMetricUtilization[]
    */
   public function setCustomMetricUtilizations($customMetricUtilizations)
   {
     $this->customMetricUtilizations = $customMetricUtilizations;
   }
   /**
-   * @return Google_Service_Compute_AutoscalingPolicyCustomMetricUtilization
+   * @return Google_Service_Compute_AutoscalingPolicyCustomMetricUtilization[]
    */
   public function getCustomMetricUtilizations()
   {
@@ -102,5 +104,19 @@ class Google_Service_Compute_AutoscalingPolicy extends Google_Collection
   public function getMode()
   {
     return $this->mode;
+  }
+  /**
+   * @param Google_Service_Compute_AutoscalingPolicyScaleInControl
+   */
+  public function setScaleInControl(Google_Service_Compute_AutoscalingPolicyScaleInControl $scaleInControl)
+  {
+    $this->scaleInControl = $scaleInControl;
+  }
+  /**
+   * @return Google_Service_Compute_AutoscalingPolicyScaleInControl
+   */
+  public function getScaleInControl()
+  {
+    return $this->scaleInControl;
   }
 }

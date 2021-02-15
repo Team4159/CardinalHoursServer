@@ -71,6 +71,8 @@ class Google_Service_Container_Cluster extends Google_Collection
   public $nodeIpv4CidrSize;
   protected $nodePoolsType = 'Google_Service_Container_NodePool';
   protected $nodePoolsDataType = 'array';
+  protected $notificationConfigType = 'Google_Service_Container_NotificationConfig';
+  protected $notificationConfigDataType = '';
   protected $privateClusterConfigType = 'Google_Service_Container_PrivateClusterConfig';
   protected $privateClusterConfigDataType = '';
   protected $releaseChannelType = 'Google_Service_Container_ReleaseChannel';
@@ -157,14 +159,14 @@ class Google_Service_Container_Cluster extends Google_Collection
     return $this->clusterIpv4Cidr;
   }
   /**
-   * @param Google_Service_Container_StatusCondition
+   * @param Google_Service_Container_StatusCondition[]
    */
   public function setConditions($conditions)
   {
     $this->conditions = $conditions;
   }
   /**
-   * @return Google_Service_Container_StatusCondition
+   * @return Google_Service_Container_StatusCondition[]
    */
   public function getConditions()
   {
@@ -471,18 +473,32 @@ class Google_Service_Container_Cluster extends Google_Collection
     return $this->nodeIpv4CidrSize;
   }
   /**
-   * @param Google_Service_Container_NodePool
+   * @param Google_Service_Container_NodePool[]
    */
   public function setNodePools($nodePools)
   {
     $this->nodePools = $nodePools;
   }
   /**
-   * @return Google_Service_Container_NodePool
+   * @return Google_Service_Container_NodePool[]
    */
   public function getNodePools()
   {
     return $this->nodePools;
+  }
+  /**
+   * @param Google_Service_Container_NotificationConfig
+   */
+  public function setNotificationConfig(Google_Service_Container_NotificationConfig $notificationConfig)
+  {
+    $this->notificationConfig = $notificationConfig;
+  }
+  /**
+   * @return Google_Service_Container_NotificationConfig
+   */
+  public function getNotificationConfig()
+  {
+    return $this->notificationConfig;
   }
   /**
    * @param Google_Service_Container_PrivateClusterConfig

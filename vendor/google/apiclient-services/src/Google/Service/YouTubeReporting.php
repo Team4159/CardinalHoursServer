@@ -42,7 +42,7 @@ class Google_Service_YouTubeReporting extends Google_Service
   public $jobs_reports;
   public $media;
   public $reportTypes;
-  
+
   /**
    * Constructs the internal representation of the YouTubeReporting service.
    *
@@ -105,19 +105,19 @@ class Google_Service_YouTubeReporting extends Google_Service
               'path' => 'v1/jobs',
               'httpMethod' => 'GET',
               'parameters' => array(
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'includeSystemManaged' => array(
                   'location' => 'query',
                   'type' => 'boolean',
+                ),
+                'onBehalfOfContentOwner' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'onBehalfOfContentOwner' => array(
+                'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -160,11 +160,11 @@ class Google_Service_YouTubeReporting extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'startTimeAtOrAfter' => array(
+                'createdAfter' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'pageToken' => array(
+                'onBehalfOfContentOwner' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -172,15 +172,15 @@ class Google_Service_YouTubeReporting extends Google_Service
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'onBehalfOfContentOwner' => array(
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'startTimeAtOrAfter' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
                 'startTimeBefore' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'createdAfter' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -219,19 +219,19 @@ class Google_Service_YouTubeReporting extends Google_Service
               'path' => 'v1/reportTypes',
               'httpMethod' => 'GET',
               'parameters' => array(
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'includeSystemManaged' => array(
                   'location' => 'query',
                   'type' => 'boolean',
+                ),
+                'onBehalfOfContentOwner' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'onBehalfOfContentOwner' => array(
+                'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),

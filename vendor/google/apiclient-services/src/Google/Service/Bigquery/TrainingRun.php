@@ -22,6 +22,8 @@ class Google_Service_Bigquery_TrainingRun extends Google_Collection
   protected $dataSplitResultDataType = '';
   protected $evaluationMetricsType = 'Google_Service_Bigquery_EvaluationMetrics';
   protected $evaluationMetricsDataType = '';
+  protected $globalExplanationsType = 'Google_Service_Bigquery_GlobalExplanation';
+  protected $globalExplanationsDataType = 'array';
   protected $resultsType = 'Google_Service_Bigquery_IterationResult';
   protected $resultsDataType = 'array';
   public $startTime;
@@ -57,14 +59,28 @@ class Google_Service_Bigquery_TrainingRun extends Google_Collection
     return $this->evaluationMetrics;
   }
   /**
-   * @param Google_Service_Bigquery_IterationResult
+   * @param Google_Service_Bigquery_GlobalExplanation[]
+   */
+  public function setGlobalExplanations($globalExplanations)
+  {
+    $this->globalExplanations = $globalExplanations;
+  }
+  /**
+   * @return Google_Service_Bigquery_GlobalExplanation[]
+   */
+  public function getGlobalExplanations()
+  {
+    return $this->globalExplanations;
+  }
+  /**
+   * @param Google_Service_Bigquery_IterationResult[]
    */
   public function setResults($results)
   {
     $this->results = $results;
   }
   /**
-   * @return Google_Service_Bigquery_IterationResult
+   * @return Google_Service_Bigquery_IterationResult[]
    */
   public function getResults()
   {

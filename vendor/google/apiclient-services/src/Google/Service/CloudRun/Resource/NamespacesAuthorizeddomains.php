@@ -28,8 +28,8 @@ class Google_Service_CloudRun_Resource_NamespacesAuthorizeddomains extends Googl
   /**
    * List authorized domains. (authorizeddomains.listNamespacesAuthorizeddomains)
    *
-   * @param string $parent Name of the parent Application resource. Example:
-   * `apps/myapp`.
+   * @param string $parent Name of the parent Project resource. Example:
+   * `projects/myproject`.
    * @param array $optParams Optional parameters.
    *
    * @opt_param int pageSize Maximum results to return per page.

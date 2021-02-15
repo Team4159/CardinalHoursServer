@@ -50,7 +50,7 @@ class Google_Service_AndroidEnterprise extends Google_Service
   public $storelayoutpages;
   public $users;
   public $webapps;
-  
+
   /**
    * Constructs the internal representation of the AndroidEnterprise service.
    *
@@ -60,9 +60,9 @@ class Google_Service_AndroidEnterprise extends Google_Service
   public function __construct(Google_Client $client, $rootUrl = null)
   {
     parent::__construct($client);
-    $this->rootUrl = $rootUrl ?: 'https://www.googleapis.com/';
+    $this->rootUrl = $rootUrl ?: 'https://androidenterprise.googleapis.com/';
     $this->servicePath = '';
-    $this->batchPath = 'batch/androidenterprise/v1';
+    $this->batchPath = 'batch';
     $this->version = 'v1';
     $this->serviceName = 'androidenterprise';
 
@@ -214,11 +214,11 @@ class Google_Service_AndroidEnterprise extends Google_Service
               'path' => 'androidenterprise/v1/enterprises/completeSignup',
               'httpMethod' => 'POST',
               'parameters' => array(
-                'enterpriseToken' => array(
+                'completionToken' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'completionToken' => array(
+                'enterpriseToken' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -948,19 +948,19 @@ class Google_Service_AndroidEnterprise extends Google_Service
                   'location' => 'query',
                   'type' => 'boolean',
                 ),
-                'maxResults' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
-                'token' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'language' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
+                'maxResults' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
                 'query' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'token' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),

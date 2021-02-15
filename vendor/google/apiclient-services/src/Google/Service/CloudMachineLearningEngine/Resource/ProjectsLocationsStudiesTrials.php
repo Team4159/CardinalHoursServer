@@ -42,7 +42,7 @@ class Google_Service_CloudMachineLearningEngine_Resource_ProjectsLocationsStudie
     return $this->call('addMeasurement', array($params), "Google_Service_CloudMachineLearningEngine_GoogleCloudMlV1Trial");
   }
   /**
-   * Checks  whether a trial should stop or not. Returns a long-running operation.
+   * Checks whether a trial should stop or not. Returns a long-running operation.
    * When the operation is successful, it will contain a
    * CheckTrialEarlyStoppingStateResponse. (trials.checkEarlyStoppingState)
    *
@@ -128,6 +128,24 @@ class Google_Service_CloudMachineLearningEngine_Resource_ProjectsLocationsStudie
     return $this->call('list', array($params), "Google_Service_CloudMachineLearningEngine_GoogleCloudMlV1ListTrialsResponse");
   }
   /**
+   * Lists the pareto-optimal trials for multi-objective study or the optimal
+   * trials for single-objective study. The definition of pareto-optimal can be
+   * checked in wiki page. https://en.wikipedia.org/wiki/Pareto_efficiency
+   * (trials.listOptimalTrials)
+   *
+   * @param string $parent Required. The name of the study that the pareto-optimal
+   * trial belongs to.
+   * @param Google_Service_CloudMachineLearningEngine_GoogleCloudMlV1ListOptimalTrialsRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_CloudMachineLearningEngine_GoogleCloudMlV1ListOptimalTrialsResponse
+   */
+  public function listOptimalTrials($parent, Google_Service_CloudMachineLearningEngine_GoogleCloudMlV1ListOptimalTrialsRequest $postBody, $optParams = array())
+  {
+    $params = array('parent' => $parent, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('listOptimalTrials', array($params), "Google_Service_CloudMachineLearningEngine_GoogleCloudMlV1ListOptimalTrialsResponse");
+  }
+  /**
    * Stops a trial. (trials.stop)
    *
    * @param string $name Required. The trial name.
@@ -143,7 +161,7 @@ class Google_Service_CloudMachineLearningEngine_Resource_ProjectsLocationsStudie
   }
   /**
    * Adds one or more trials to a study, with parameter values suggested by AI
-   * Platform Optimizer. Returns a long-running operation associated with the
+   * Platform Vizier. Returns a long-running operation associated with the
    * generation of trial suggestions. When this long-running operation succeeds,
    * it will contain a SuggestTrialsResponse. (trials.suggest)
    *

@@ -16,10 +16,10 @@
  */
 
 /**
- * Service definition for PostmasterTools (v1beta1).
+ * Service definition for PostmasterTools (v1).
  *
  * <p>
- * The Gmail Postmaster API is a RESTful API that provides programmatic access
+ * The Postmaster Tools API is a RESTful API that provides programmatic access
  * to email traffic metrics (like spam reports, delivery errors etc) otherwise
  * available through the Gmail Postmaster Tools UI currently.</p>
  *
@@ -38,7 +38,7 @@ class Google_Service_PostmasterTools extends Google_Service
 
   public $domains;
   public $domains_trafficStats;
-  
+
   /**
    * Constructs the internal representation of the PostmasterTools service.
    *
@@ -51,7 +51,7 @@ class Google_Service_PostmasterTools extends Google_Service
     $this->rootUrl = $rootUrl ?: 'https://gmailpostmastertools.googleapis.com/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
-    $this->version = 'v1beta1';
+    $this->version = 'v1';
     $this->serviceName = 'gmailpostmastertools';
 
     $this->domains = new Google_Service_PostmasterTools_Resource_Domains(
@@ -61,7 +61,7 @@ class Google_Service_PostmasterTools extends Google_Service
         array(
           'methods' => array(
             'get' => array(
-              'path' => 'v1beta1/{+name}',
+              'path' => 'v1/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -71,16 +71,16 @@ class Google_Service_PostmasterTools extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1beta1/domains',
+              'path' => 'v1/domains',
               'httpMethod' => 'GET',
               'parameters' => array(
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),
@@ -94,7 +94,7 @@ class Google_Service_PostmasterTools extends Google_Service
         array(
           'methods' => array(
             'get' => array(
-              'path' => 'v1beta1/{+name}',
+              'path' => 'v1/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -104,7 +104,7 @@ class Google_Service_PostmasterTools extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1beta1/{+parent}/trafficStats',
+              'path' => 'v1/{+parent}/trafficStats',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'parent' => array(
@@ -112,11 +112,11 @@ class Google_Service_PostmasterTools extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'endDate.month' => array(
+                'endDate.day' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'endDate.day' => array(
+                'endDate.month' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
@@ -124,7 +124,7 @@ class Google_Service_PostmasterTools extends Google_Service
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'startDate.day' => array(
+                'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
@@ -132,15 +132,15 @@ class Google_Service_PostmasterTools extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
+                'startDate.day' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
                 'startDate.month' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
                 'startDate.year' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
-                'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),

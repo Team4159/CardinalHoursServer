@@ -41,7 +41,7 @@ class Google_Service_Datastore extends Google_Service
   public $projects;
   public $projects_indexes;
   public $projects_operations;
-  
+
   /**
    * Constructs the internal representation of the Datastore service.
    *
@@ -212,7 +212,7 @@ class Google_Service_Datastore extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
+                'filter' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -220,7 +220,7 @@ class Google_Service_Datastore extends Google_Service
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'filter' => array(
+                'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -274,7 +274,7 @@ class Google_Service_Datastore extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
+                'filter' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -282,7 +282,7 @@ class Google_Service_Datastore extends Google_Service
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'filter' => array(
+                'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),

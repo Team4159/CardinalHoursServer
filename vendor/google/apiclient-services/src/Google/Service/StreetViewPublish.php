@@ -38,7 +38,7 @@ class Google_Service_StreetViewPublish extends Google_Service
 
   public $photo;
   public $photos;
-  
+
   /**
    * Constructs the internal representation of the StreetViewPublish service.
    *
@@ -83,11 +83,11 @@ class Google_Service_StreetViewPublish extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'view' => array(
+                'languageCode' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'languageCode' => array(
+                'view' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -158,13 +158,13 @@ class Google_Service_StreetViewPublish extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
                 'view' => array(
                   'location' => 'query',

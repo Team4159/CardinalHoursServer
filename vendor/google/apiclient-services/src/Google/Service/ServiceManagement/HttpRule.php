@@ -20,7 +20,6 @@ class Google_Service_ServiceManagement_HttpRule extends Google_Collection
   protected $collection_key = 'additionalBindings';
   protected $additionalBindingsType = 'Google_Service_ServiceManagement_HttpRule';
   protected $additionalBindingsDataType = 'array';
-  public $allowHalfDuplex;
   public $body;
   protected $customType = 'Google_Service_ServiceManagement_CustomHttpPattern';
   protected $customDataType = '';
@@ -33,26 +32,18 @@ class Google_Service_ServiceManagement_HttpRule extends Google_Collection
   public $selector;
 
   /**
-   * @param Google_Service_ServiceManagement_HttpRule
+   * @param Google_Service_ServiceManagement_HttpRule[]
    */
   public function setAdditionalBindings($additionalBindings)
   {
     $this->additionalBindings = $additionalBindings;
   }
   /**
-   * @return Google_Service_ServiceManagement_HttpRule
+   * @return Google_Service_ServiceManagement_HttpRule[]
    */
   public function getAdditionalBindings()
   {
     return $this->additionalBindings;
-  }
-  public function setAllowHalfDuplex($allowHalfDuplex)
-  {
-    $this->allowHalfDuplex = $allowHalfDuplex;
-  }
-  public function getAllowHalfDuplex()
-  {
-    return $this->allowHalfDuplex;
   }
   public function setBody($body)
   {

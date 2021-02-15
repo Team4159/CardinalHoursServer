@@ -28,9 +28,9 @@ class Google_Service_DisplayVideo_Resource_Partners extends Google_Service_Resou
   /**
    * Bulk edits targeting options under a single partner. The operation will
    * delete the assigned targeting options provided in
-   * BulkEditPartnerAssignedTargetingOptionsRequest.delete_requests and then
-   * create the assigned targeting options provided in
-   * BulkEditPartnerAssignedTargetingOptionsRequest.create_requests .
+   * BulkEditPartnerAssignedTargetingOptionsRequest.deleteRequests and then create
+   * the assigned targeting options provided in
+   * BulkEditPartnerAssignedTargetingOptionsRequest.createRequests .
    * (partners.bulkEditPartnerAssignedTargetingOptions)
    *
    * @param string $partnerId Required. The ID of the partner.
@@ -63,10 +63,6 @@ class Google_Service_DisplayVideo_Resource_Partners extends Google_Service_Resou
    *
    * @param array $optParams Optional parameters.
    *
-   * @opt_param string pageToken A token identifying a page of results the server
-   * should return. Typically, this is the value of next_page_token returned from
-   * the previous call to `ListPartners` method. If not specified, the first page
-   * of results will be returned.
    * @opt_param string filter Allows filtering by partner properties. Supported
    * syntax: * Filter expressions are made up of one or more restrictions. *
    * Restrictions can be combined by `AND` or `OR` logical operators. A sequence
@@ -81,6 +77,10 @@ class Google_Service_DisplayVideo_Resource_Partners extends Google_Service_Resou
    * name. For example, `displayName desc`.
    * @opt_param int pageSize Requested page size. Must be between `1` and `100`.
    * If unspecified will default to `100`.
+   * @opt_param string pageToken A token identifying a page of results the server
+   * should return. Typically, this is the value of next_page_token returned from
+   * the previous call to `ListPartners` method. If not specified, the first page
+   * of results will be returned.
    * @return Google_Service_DisplayVideo_ListPartnersResponse
    */
   public function listPartners($optParams = array())
