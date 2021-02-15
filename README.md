@@ -85,6 +85,15 @@ Returns:
   Failure: Returns code 404 if the user does not exist
 ```
 
+To change a session's time:
+```
+Path: src/endpoints/changesessiontime.php
+Parameters: password, endtime, newtime
+Returns:
+  Success: The new session time
+  Failure: Returns code 404 if the session cannot be found
+```
+
 To change the password of a user
 ```
 Path: src/endpoints/changepassword.php
