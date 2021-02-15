@@ -120,6 +120,40 @@
     $dynamodb->putItem($params);
   }
 
+  // Updates the user to windows 10
+  function updateSession($password, $data){
+    global $tableName;
+    global $dynamodb;
+
+    $key = ['password' => ['S' => strval($password)]];
+    $params = [
+      'TableName' => $tableName,
+      'Key' => $key,
+      'UpdateExpression' => 
+          'set sessions=:sessions',
+      'ExpressionAttributeValues'=> $data
+    ];
+    $dynamodb->updateItem($params);
+  }
+
+  function findSession($password, $endtime){
+  $sessions = getUser(['password' => ['S' => strval($password)]])['sessions']['L'];
+  for($i = 0; $i < count($sessions); $i++){
+    if($sessions[$i]['M']['date']['S'] == $endtime)
+      return $i;
+    }
+  }
+
+  function updateSessionTime($password, $endtime, $newtime){
+    $sessionnum = findSession($password, $endtime);
+    $session = getUser(['password' => ['S' => strval($password)]])['sessions'];
+    $session['L'][$sessionnum]['M']['time'] = ['N' => strval($newtime)];
+    $data = [
+        ':sessions' => $session
+    ];
+    updateSession($password, $data);
+  }
+
   // Handle sessions seperately because of their funky format
   function addSession($password, $session){
     global $tableName;
