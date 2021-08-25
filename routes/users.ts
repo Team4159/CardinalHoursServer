@@ -5,28 +5,66 @@ import Database from 'better-sqlite3';
 // parse application/json
 const db = new Database('foobar.db', { verbose: console.log });
 
-const createTable = "CREATE TABLE IF NOT EXISTS users(name TEXT NOT NULL, password TEXT NOT NULL)"
-db.exec(createTable)
+const createTables = `
+  CREATE TABLE IF NOT EXISTS users(
+    name TEXT NOT NULL,
+    password TEXT NOT NULL PRIMARY KEY,
+    signedIn BOOL DEFAULT false,
+    lastTime INT NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS sessions(
+    password TEXT NOT NULL PRIMARY KEY,
+    startTime INT NOT NULL,
+    endTime INT NOT NULL,
+    did TEXT NOT NULL
+  )
+`;
+
+db.exec(createTables)
 
 /* GET users listing. */
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   res.send('respond with a resource');
 });
 
-router.post('/add', (req, res, next) => {
-  const { username } = req.body, { password } = req.body;
+router.post('/adduser', (req, res) => {
+  const { username, password } = req.body;
   if( username === '' || password === '' ){
-    res.status(400)
-    res.error("Bad request")
-    console.log("Not a string")
+    res.status(400).send({
+      message: "Username and password cannot be empty"
+    }); 
   } else {
-    const stmnt = db.prepare("INSERT INTO users(name, password) VALUES(?, ?)")
-    stmnt.run(username, password);
+    const stmnt = db.prepare("INSERT INTO users(name, password, signedIn, lastTime) VALUES(?, ?, ?, ?)")
+    stmnt.run(username, password, 0, Date.now());
     res.send({msg: `added new user:${username}`});
   }
 });
 
-router.get('/all', (req,res) => {
+router.post('/signin', (req, res) => {
+  const getUser = db.prepare(`SELECT name, signedIn FROM users WHERE password = ?`);
+  const signIn = db.prepare("UPDATE users SET lastTime = ?, signedIn = 1 WHERE password = ?")
+  let user: boolean = getUser.get(req.body.password);
+  if( user['signedIn'] ){
+    res.status(400).send({
+      message: "User already signed in"
+    });
+  } else {
+    signIn.run(Date.now(), req.body.password);
+    res.send({msg: `signed in user: ${user['name']}`});
+  }
+});
+
+router.post('/signout', (req, res) => {
+  const stmnt = db.prepare("SELECT signedIn FROM users WHERE password = ?");
+  let signedIn: boolean = stmnt.get(req.body.password)['signedIn'];
+  if( signedIn ){
+    res.status(400);
+    res.error("User already signed in")
+  }
+  res.json(signedIn);
+});
+
+router.get('/all', (req, res) => {
   const stmnt = db.prepare("SELECT * FROM users")
   const users = stmnt.all()
   res.send(users)
@@ -38,6 +76,7 @@ router.get('/user/:username', (req, res) => {
   const userData = stmnt.get(username)
   res.send(userData)
 })
+
 router.get('/delete/:username', (req,res) => {
   const stmnt = db.prepare("DELETE FROM users WHERE name = ?"), {username} = req.params
   stmnt.run(username)
