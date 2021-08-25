@@ -2,9 +2,10 @@ var express = require('express');
 var router = express.Router();
 import Database from 'better-sqlite3';
 
+// parse application/json
 const db = new Database('foobar.db', { verbose: console.log });
 
-const createTable = "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, name TEXT)"
+const createTable = "CREATE TABLE IF NOT EXISTS users(name TEXT, password TEXT)"
 db.exec(createTable)
 
 /* GET users listing. */
@@ -12,9 +13,9 @@ router.get('/', (req, res, next) => {
   res.send('respond with a resource');
 });
 
-router.get('/add/:username', (req, res, next) => {
+router.post('/add/:username', (req, res, next) => {
   const stmnt = db.prepare("INSERT INTO users(name) VALUES(?)")
-  const { username } = req.params;
+  const username = req.body.username;
   if((typeof username) === "string") stmnt.run(username)
   else {
     res.status(400)
