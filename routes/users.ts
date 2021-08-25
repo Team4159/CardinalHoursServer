@@ -5,7 +5,7 @@ import Database from 'better-sqlite3';
 // parse application/json
 const db = new Database('foobar.db', { verbose: console.log });
 
-const createTable = "CREATE TABLE IF NOT EXISTS users(name TEXT, password TEXT)"
+const createTable = "CREATE TABLE IF NOT EXISTS users(name TEXT NOT NULL, password TEXT NOT NULL)"
 db.exec(createTable)
 
 /* GET users listing. */
@@ -13,16 +13,17 @@ router.get('/', (req, res, next) => {
   res.send('respond with a resource');
 });
 
-router.post('/add/:username', (req, res, next) => {
-  const stmnt = db.prepare("INSERT INTO users(name) VALUES(?)")
-  const username = req.body.username;
-  if((typeof username) === "string") stmnt.run(username)
-  else {
+router.post('/add', (req, res, next) => {
+  const { username } = req.body, { password } = req.body;
+  if( username === '' || password === '' ){
     res.status(400)
     res.error("Bad request")
     console.log("Not a string")
+  } else {
+    const stmnt = db.prepare("INSERT INTO users(name, password) VALUES(?, ?)")
+    stmnt.run(username, password);
+    res.send({msg: `added new user:${username}`});
   }
-  res.send({msg: `added new user:${username}`});
 });
 
 router.get('/all', (req,res) => {
@@ -30,6 +31,7 @@ router.get('/all', (req,res) => {
   const users = stmnt.all()
   res.send(users)
 })
+
 router.get('/user/:username', (req, res) => {
   const stmnt = db.prepare("SELECT * FROM users WHERE name = ?")
   const { username } = req.params
