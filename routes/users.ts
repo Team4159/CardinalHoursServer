@@ -16,11 +16,10 @@ const createTables = `
     password TEXT NOT NULL PRIMARY KEY,
     startTime INT NOT NULL,
     endTime INT NOT NULL,
-    did TEXT NOT NULL
   )
 `;
 
-db.exec(createTables)
+db.exec(createTables);
 
 /* GET users listing. */
 router.get('/', (req, res) => {
@@ -42,7 +41,7 @@ router.post('/adduser', (req, res) => {
 
 router.post('/signin', (req, res) => {
   const getUser = db.prepare(`SELECT name, signedIn FROM users WHERE password = ?`);
-  const signIn = db.prepare("UPDATE users SET lastTime = ?, signedIn = 1 WHERE password = ?")
+  const signIn = db.prepare("UPDATE users SET lastTime = ?, signedIn = 1 WHERE password = ?");
   let user: boolean = getUser.get(req.body.password);
   if( user['signedIn'] ){
     res.status(400).send({
@@ -56,10 +55,17 @@ router.post('/signin', (req, res) => {
 
 router.post('/signout', (req, res) => {
   const stmnt = db.prepare("SELECT signedIn FROM users WHERE password = ?");
+  const signOut = db.prepare("UPDATE users, signedIn = 0 WHERE password = ?");
+  const addSession = db.prepare("UPDATE users SET password = ?, startTime = ?, endTime = ?");
   let signedIn: boolean = stmnt.get(req.body.password)['signedIn'];
   if( signedIn ){
+    signOut.run(req.body.password);
+
+
+
+  } else {
     res.status(400);
-    res.error("User already signed in")
+    res.error("User not signed in")
   }
   res.json(signedIn);
 });
