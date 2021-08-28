@@ -4,8 +4,6 @@ var bodyParser = require('body-parser')
 const app = express();
 const port = 8080; // default port to listen
 
-app.use(bodyParser.urlencoded());
-
 app.use(bodyParser.json()); //And so on.
 
 // define a route handler for the default home page

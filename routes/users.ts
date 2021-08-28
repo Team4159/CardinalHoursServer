@@ -1,9 +1,16 @@
-var express = require('express');
-var router = express.Router();
-import Database from 'better-sqlite3';
+import express from 'express';
+import mysql from 'mysql';
 
-// parse application/json
-const db = new Database('foobar.db', { verbose: console.log });
+require('dotenv').config();
+const router = express.Router();
+const con = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
+});
+
+con.connect();
 
 const createTables = `
   CREATE TABLE IF NOT EXISTS users(
@@ -13,9 +20,9 @@ const createTables = `
     lastTime INT NOT NULL
   );
   CREATE TABLE IF NOT EXISTS sessions(
-    password TEXT NOT NULL PRIMARY KEY,
+    password TEXT NOT NULL,
     startTime INT NOT NULL,
-    endTime INT NOT NULL,
+    endTime INT NOT NULL
   )
 `;
 
@@ -49,25 +56,28 @@ router.post('/signin', (req, res) => {
     });
   } else {
     signIn.run(Date.now(), req.body.password);
-    res.send({msg: `signed in user: ${user['name']}`});
+    res.status(200).send({
+      msg: `signed in user: ${user['name']}`
+    });
   }
 });
 
 router.post('/signout', (req, res) => {
-  const stmnt = db.prepare("SELECT signedIn FROM users WHERE password = ?");
-  const signOut = db.prepare("UPDATE users, signedIn = 0 WHERE password = ?");
-  const addSession = db.prepare("UPDATE users SET password = ?, startTime = ?, endTime = ?");
-  let signedIn: boolean = stmnt.get(req.body.password)['signedIn'];
-  if( signedIn ){
-    signOut.run(req.body.password);
-
-
-
+  const getUser = db.prepare("SELECT signedIn, lastTime FROM users WHERE password = ?");
+  const signOut = db.prepare("UPDATE users SET signedIn = 0 WHERE password = ?");
+  const addSession = db.prepare("INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)");
+  let user = getUser.get(req.body.password);
+  if( user['signedIn'] ){
+    signOut.run(req.body.password, );
+    addSession.run(req.body.password, user['lastTime'], Date.now());
+    res.status(200).send({
+      msg: `signed in user: ${user['name']}`
+    });
   } else {
-    res.status(400);
-    res.error("User not signed in")
+    res.status(400).send({
+      message: "User not signed in"
+    });
   }
-  res.json(signedIn);
 });
 
 router.get('/all', (req, res) => {
