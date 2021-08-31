@@ -65,15 +65,15 @@ router.post('/adduser', async (req, res, next) => {
   }
 
   const addUser: string = "INSERT INTO users(name, password, signedIn, lastTime) VALUES(?, ?, ?, ?)";
-  con.query(mysql.format(addUser, [username, password, 0, Date.now()]), function (err) {
-    if (err) {
-      if(err.errno === 1062){
+  con.query(mysql.format(addUser, [username, password, 0, Date.now()]), function (error, response) {
+    if (error) {
+      if(error.errno === 1062){
         con.awaitRollback();
         res.status(400).send('User already exists');
       }
       else {
         con.awaitRollback();
-        console.log(err);
+        console.log(error);
         res.status(500).send('Something went wrong');
       }
     } else {
@@ -104,10 +104,10 @@ router.post('/signin', async (req, res, next) => {
     return;
   }
 
-  con.query(mysql.format(signIn, [Date.now(), req.body.password]), function (err, res) {
-    if (err) {
+  con.query(mysql.format(signIn, [Date.now(), req.body.password]), function (error, response) {
+    if (error) {
       con.awaitRollback();
-      console.log(err);
+      console.log(error);
       res.status(500).send('Something went wrong');
     } else {
       con.awaitCommit();
