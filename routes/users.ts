@@ -1,39 +1,39 @@
-import express from 'express';
-import mysql from 'mysql';
+import mysql from 'mysql-await';
+import Router from "express-promise-router";
+const router = Router();
 
 require('dotenv').config();
-const router = express.Router();
 
-const con = mysql.createPool({
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME
 });
 
-con.getConnection(function(err, connection) {
+db.getConnection(function(err, connection) {
   if (err) throw err;
   console.log('connected as id ' + connection.threadId);
 })
 
-const createUserTable = `
+const createUserTable: string = `
   CREATE TABLE IF NOT EXISTS users(
     name TEXT NOT NULL,
-    password TEXT NOT NULL,
+    password TEXT NOT NULL UNIQUE,
     signedIn BOOL DEFAULT false,
-    lastTime INT NOT NULL
+    lastTime BIGINT NOT NULL
   )
 `;
 
-const createSessionTable = `
+const createSessionTable: string = `
   CREATE TABLE IF NOT EXISTS sessions(
     password TEXT NOT NULL,
-    startTime INT NOT NULL,
-    endTime INT NOT NULL
+    startTime BIGINT NOT NULL,
+    endTime BIGINT NOT NULL
   )
 `;
 
-con.query(createUserTable, function (err, res) {
+db.query(createUserTable, function (err, res) {
   if (err) throw err;
   if(res.warningCount !== 0)
     console.log("User table already exists");
@@ -41,7 +41,7 @@ con.query(createUserTable, function (err, res) {
     console.log("Created new user table");
 });
 
-con.query(createSessionTable, function (err, res) {
+db.query(createSessionTable, function (err, res) {
   if (err) throw err;
   if(res.warningCount !== 0)
     console.log("Session table already exists");
@@ -54,46 +54,68 @@ router.get('/', (req, res) => {
   res.send('respond with a resource');
 });
 
-router.post('/adduser', (req, res) => {
-  const { username, password } = req.body;
+router.post('/adduser', async (req, res, next) => {
+  const con = await db.awaitGetConnection();
+  await con.awaitBeginTransaction();
+  const { username, password }: { username: string, password: string } = req.body;
+
   if( username === '' || password === '' ){
-    res.status(400).send({
-      message: "Username and password cannot be empty"
-    }); 
-  } else {
-    const addUser = "INSERT INTO users(name, password, signedIn, lastTime) VALUES(?, ?, ?, ?)";
-    con.query(mysql.format(addUser, [username, password, 0, Date.now()]), function (err, res) {
-      if (err) throw err;
-      return res;
-    });
-    res.send({msg: `added new user:${username}`});
+    res.status(400).send("Username or password cannot be empty"); 
+    return;
   }
+
+  const addUser: string = "INSERT INTO users(name, password, signedIn, lastTime) VALUES(?, ?, ?, ?)";
+  con.query(mysql.format(addUser, [username, password, 0, Date.now()]), function (err) {
+    if (err) {
+      if(err.errno === 1062){
+        con.awaitRollback();
+        res.status(400).send('User already exists');
+      }
+      else {
+        con.awaitRollback();
+        console.log(err);
+        res.status(500).send('Something went wrong');
+      }
+    } else {
+      con.awaitCommit();
+      console.log(`Added new user: ${username}, ${password}`);
+      res.status(200).send(`Added new user: ${username}, password: ${password}`);
+    }
+  });
+
+  con.release();
 });
 
-router.post('/signin', (req, res) => {
+router.post('/signin', async (req, res, next) => {
+  const con = await db.awaitGetConnection();
+  await con.awaitBeginTransaction();
   const getUser = "SELECT name, signedIn FROM users WHERE password = ?";
   const signIn = "UPDATE users SET lastTime = ?, signedIn = 1 WHERE password = ?";
 
-  var user;
-  con.query(mysql.format(getUser, [req.body.password]), function (err, res) {
-    if (err) throw err;
-    user = res;
+  var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
+  if( user.length === 0 ){
+    con.awaitRollback();
+    res.status(404).send(`User not found`);
+    return;
+  }
+
+  if( user[0]['signedIn'] === 1 ){
+    res.status(400).send("User already signed in");
+    return;
+  }
+
+  con.query(mysql.format(signIn, [Date.now(), req.body.password]), function (err, res) {
+    if (err) {
+      con.awaitRollback();
+      console.log(err);
+      res.status(500).send('Something went wrong');
+    } else {
+      con.awaitCommit();
+      res.status(200).send(`signed in user: ${user[0]['name']}`);
+    }
   });
 
-  return user;
-  if( user['signedIn'] ){
-    res.status(400).send({
-      message: "User already signed in"
-    });
-  } else {
-    con.query(mysql.format(signIn, [req.body.password]), function (err, res) {
-      if (err) return err;
-      user = res;
-    });
-    res.status(200).send({
-      msg: `signed in user: ${user['name']}`
-    });
-  }
+  con.release();
 });
 
 /*
