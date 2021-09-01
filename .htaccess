@@ -1,7 +1,0 @@
-<Files "token.json">
-  Require all denied
-</Files>
-
-<Files "credentials.php">
-  Require all denied
-</Files>
