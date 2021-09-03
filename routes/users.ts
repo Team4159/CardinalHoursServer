@@ -18,6 +18,7 @@ db.getConnection(function(err, connection) {
 
 const createUserTable: string = `
   CREATE TABLE IF NOT EXISTS users(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name TEXT NOT NULL,
     password TEXT NOT NULL UNIQUE,
     signedIn BOOL DEFAULT false,
@@ -27,6 +28,7 @@ const createUserTable: string = `
 
 const createSessionTable: string = `
   CREATE TABLE IF NOT EXISTS sessions(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     password TEXT NOT NULL,
     startTime BIGINT NOT NULL,
     endTime BIGINT NOT NULL
@@ -115,7 +117,7 @@ router.post('/signin', async (req, res, next) => {
       return;
     } else {
       con.awaitCommit();
-      res.status(200).send(`Signed out user: ${user[0]['name']}`);
+      res.status(200).send(`Signed in user: ${user[0]['name']}`);
     }
   });
 
@@ -166,9 +168,12 @@ router.post('/signout', async (req, res, next) => {
   con.release();
 });
 
+router.post('/changeSessionTime', async (req, res, next) => {
+  
+});
 
 router.get('/getusersessions', async (req, res, next) => {
-  const getUserSessions = "SELECT startTime, endTime FROM sessions WHERE password = ?";
+  const getUserSessions = "SELECT id, startTime, endTime FROM sessions WHERE password = ?";
   db.query(mysql.format(getUserSessions, [req.body.password]), function (error, response) {
     if (error) {
       console.log(error);
@@ -177,25 +182,49 @@ router.get('/getusersessions', async (req, res, next) => {
     var formatted = [];
     response.forEach( session => {
       formatted.push(
-        [
-          new Date(session['startTime']).toTimeString(),
-          new Date(session['endTime']).toTimeString(),
-        ]
+        {
+          "id": session['id'],
+          "startTime": new Date(session['startTime']).toLocaleString('en-US', {
+            timeZone: 'America/Los_Angeles'
+          }),
+          "endTime": new Date(session['endTime']).toLocaleString('en-US', {
+            timeZone: 'America/Los_Angeles'
+          }),
+        }
       )
     });
     res.json(formatted);
   });
 });
 
-
 router.get('/getusertime', async (req, res, next) => {
-  const getUserTime = "SELECT SUM(endTime - startTime) AS DIFF FROM sessions";
+  const getUserTime = "SELECT SUM(endTime - startTime) AS DIFF FROM sessions WHERE password = ?";
   db.query(mysql.format(getUserTime, [req.body.password]), function (error, response) {
     if (error) {
       console.log(error);
       res.status(500).send('Something went wrong');
     }
     res.json(response[0]['DIFF']);
+  });
+});
+
+router.get('/getsignedin', async (req, res, next) => {
+  const getSignedIn = "SELECT id, name, signedIn, lastTime FROM users WHERE signedIn = 1";
+  var users = [];
+  db.query(mysql.format(getSignedIn), function (error, response) {
+    if (error) {
+      console.log(error);
+      res.status(500).send('Something went wrong');
+    }
+
+    response.forEach( session => {
+      users.push({
+        "name": session['name'],
+        "timeIn": Date.now() - session['lastTime']
+      })
+    });
+
+    res.json(users);
   });
 });
 
