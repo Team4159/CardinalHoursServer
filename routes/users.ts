@@ -70,11 +70,13 @@ router.post('/adduser', async (req, res, next) => {
       if(error.errno === 1062){
         con.awaitRollback();
         res.status(400).send('User already exists');
+        return;
       }
       else {
         con.awaitRollback();
         console.log(error);
         res.status(500).send('Something went wrong');
+        return;
       }
     } else {
       con.awaitCommit();
@@ -100,6 +102,7 @@ router.post('/signin', async (req, res, next) => {
   }
 
   if( user[0]['signedIn'] === 1 ){
+    con.awaitRollback();
     res.status(400).send("User already signed in");
     return;
   }
@@ -109,69 +112,91 @@ router.post('/signin', async (req, res, next) => {
       con.awaitRollback();
       console.log(error);
       res.status(500).send('Something went wrong');
+      return;
     } else {
       con.awaitCommit();
-      res.status(200).send(`signed in user: ${user[0]['name']}`);
+      res.status(200).send(`Signed out user: ${user[0]['name']}`);
     }
   });
 
   con.release();
 });
 
-/*
-router.post('/signout', (req, res) => {
-  const getUser = db.prepare("SELECT signedIn, lastTime FROM users WHERE password = ?");
-  const signOut = db.prepare("UPDATE users SET signedIn = 0 WHERE password = ?");
-  const addSession = db.prepare("INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)");
-  let user = getUser.get(req.body.password);
-  if( user['signedIn'] ){
-    signOut.run(req.body.password, );
-    addSession.run(req.body.password, user['lastTime'], Date.now());
-    res.status(200).send({
-      msg: `signed in user: ${user['name']}`
-    });
-  } else {
-    res.status(400).send({
-      message: "User not signed in"
-    });
+router.post('/signout', async (req, res, next) => {
+  const con = await db.awaitGetConnection();
+  await con.awaitBeginTransaction();
+  const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = ?";
+  const signOut = "UPDATE users SET signedIn = 0 WHERE password = ?";
+  const addSession = "INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)";
+
+  var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
+  if( user.length === 0 ){
+    con.awaitRollback();
+    res.status(404).send(`User not found`);
+    return;
   }
+
+  if( user[0]['signedIn'] === 0 ){
+    con.awaitRollback();
+    res.status(400).send("User not signed in");
+    return;
+  }
+
+  con.query(mysql.format(signOut, [req.body.password]), function (error, response) {
+    if (error) {
+      con.awaitRollback();
+      console.log(error);
+      res.status(500).send('Something went wrong');
+      return;
+    }
+  });
+
+  con.query(mysql.format(addSession, [req.body.password, user[0]['lastTime'], Date.now()]), function (error, response) {
+    if (error) {
+      con.awaitRollback();
+      console.log(error);
+      res.status(500).send('Something went wrong');
+      return;
+    } else {
+      con.awaitCommit();
+      res.status(200).send(`Signed out user: ${user[0]['name']}`);
+    }
+  });
+
+  con.release();
 });
-*/
 
-/*
-router.get('/all', (req, res) => {
-  const stmnt = db.prepare("SELECT * FROM users")
-  const users = stmnt.all()
-  res.send(users)
-})
 
-router.get('/user/:username', (req, res) => {
-  const stmnt = db.prepare("SELECT * FROM users WHERE name = ?")
-  const { username } = req.params
-  const userData = stmnt.get(username)
-  res.send(userData)
-})
+router.get('/getusersessions', async (req, res, next) => {
+  const getUserSessions = "SELECT startTime, endTime FROM sessions WHERE password = ?";
+  db.query(mysql.format(getUserSessions, [req.body.password]), function (error, response) {
+    if (error) {
+      console.log(error);
+      res.status(500).send('Something went wrong');
+    }
+    var formatted = [];
+    response.forEach( session => {
+      formatted.push(
+        [
+          new Date(session['startTime']).toTimeString(),
+          new Date(session['endTime']).toTimeString(),
+        ]
+      )
+    });
+    res.json(formatted);
+  });
+});
 
-router.get('/delete/:username', (req,res) => {
-  const stmnt = db.prepare("DELETE FROM users WHERE name = ?"), {username} = req.params
-  stmnt.run(username)
-  res.send(`Deleted user: ${username}`)
-})
-router.get('/update/:username', (req,res) => {
-  const sql:string = "UPDATE users SET name = ? WHERE name = ?"
-  const stmnt = db.prepare(sql)
-  stmnt.get()
-  res.send(`Updated user ${req.params.username}`)
-})
-router.get('/update/:password', (req, res, next) => {
 
-})
+router.get('/getusertime', async (req, res, next) => {
+  const getUserTime = "SELECT SUM(endTime - startTime) AS DIFF FROM sessions";
+  db.query(mysql.format(getUserTime, [req.body.password]), function (error, response) {
+    if (error) {
+      console.log(error);
+      res.status(500).send('Something went wrong');
+    }
+    res.json(response[0]['DIFF']);
+  });
+});
 
-const isDuplicateUsername = (username) => {
-  const stmnt = db.prepare("SELECT name FROM users"), usernames = stmnt.all()
-  for(let i = 0; i<usernames.length; i++) 
-    if(username === usernames[i]) return true
-  return false
-}
-*/
 module.exports = router;
