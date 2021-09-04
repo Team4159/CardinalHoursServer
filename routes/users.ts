@@ -173,6 +173,14 @@ router.post('/changeSessionTime', async (req, res, next) => {
 });
 
 router.get('/getusersessions', async (req, res, next) => {
+  const getUser = "SELECT name FROM users WHERE password = ?";
+
+  var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
+  if( user.length === 0 ){
+    res.status(404).send(`User not found`);
+    return;
+  }
+
   const getUserSessions = "SELECT id, startTime, endTime FROM sessions WHERE password = ?";
   db.query(mysql.format(getUserSessions, [req.body.password]), function (error, response) {
     if (error) {
@@ -198,6 +206,14 @@ router.get('/getusersessions', async (req, res, next) => {
 });
 
 router.get('/getusertime', async (req, res, next) => {
+  const getUser = "SELECT name FROM users WHERE password = ?";
+
+  var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
+  if( user.length === 0 ){
+    res.status(404).send(`User not found`);
+    return;
+  }
+
   const getUserTime = "SELECT SUM(endTime - startTime) AS DIFF FROM sessions WHERE password = ?";
   db.query(mysql.format(getUserTime, [req.body.password]), function (error, response) {
     if (error) {
@@ -219,6 +235,7 @@ router.get('/getsignedin', async (req, res, next) => {
 
     response.forEach( session => {
       users.push({
+        "id": session['id'],
         "name": session['name'],
         "timeIn": Date.now() - session['lastTime']
       })
