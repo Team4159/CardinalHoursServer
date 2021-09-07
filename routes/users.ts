@@ -124,6 +124,33 @@ router.post('/signin', async (req, res, next) => {
   con.release();
 });
 
+router.post('/addsession', async (req, res, next) => {
+  const con = await db.awaitGetConnection();
+  await con.awaitBeginTransaction();
+  const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = ?";
+  const addSession = "INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)";
+
+  var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
+  if( user.length === 0 ){
+    con.awaitRollback();
+    res.status(404).send(`User not found`);
+    return;
+  }
+
+  con.query(mysql.format(addSession, [req.body.password, req.body.startTime, req.body.endTime]), function (error, response) {
+    if (error) {
+      con.awaitRollback();
+      console.log(error);
+      res.status(500).send('Something went wrong');
+      return;
+    } else {
+      con.awaitCommit();
+      res.status(200).send(`Added session for user: ${user[0]['name']}`);
+    }
+  });
+  con.release();
+});
+
 router.post('/signout', async (req, res, next) => {
   const con = await db.awaitGetConnection();
   await con.awaitBeginTransaction();
