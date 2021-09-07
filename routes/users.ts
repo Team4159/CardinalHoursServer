@@ -20,7 +20,7 @@ const createUserTable: string = `
   CREATE TABLE IF NOT EXISTS users(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name TEXT NOT NULL,
-    password TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL UNIQUE ( problemtextfield(300) ),
     signedIn BOOL DEFAULT false,
     lastTime BIGINT NOT NULL
   )
