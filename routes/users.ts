@@ -20,7 +20,7 @@ const createUserTable: string = `
   CREATE TABLE IF NOT EXISTS users(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name TEXT NOT NULL,
-    password TEXT NOT NULL UNIQUE ( problemtextfield(300) ),
+    password VARCHAR(300) NOT NULL UNIQUE,
     signedIn BOOL DEFAULT false,
     lastTime BIGINT NOT NULL
   )
@@ -29,7 +29,7 @@ const createUserTable: string = `
 const createSessionTable: string = `
   CREATE TABLE IF NOT EXISTS sessions(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    password TEXT NOT NULL,
+    password VARCHAR(300) NOT NULL,
     startTime BIGINT NOT NULL,
     endTime BIGINT NOT NULL
   )
