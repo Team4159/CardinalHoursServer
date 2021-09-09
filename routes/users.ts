@@ -251,23 +251,22 @@ router.get('/getusertime', async (req, res, next) => {
   });
 });
 
-router.get('/getsignedin', async (req, res, next) => {
-  const getSignedIn = "SELECT id, name, signedIn, lastTime FROM users WHERE signedIn = 1";
+router.get('/getusers', async (req, res, next) => {
+  const getSignedIn = "SELECT id, name, signedIn, lastTime FROM users";
   var users = [];
   db.query(mysql.format(getSignedIn), function (error, response) {
     if (error) {
       console.log(error);
       res.status(500).send('Something went wrong');
     }
-
     response.forEach( session => {
       users.push({
         "id": session['id'],
         "name": session['name'],
+        "signedIn": session['signedIn'],
         "timeIn": Date.now() - session['lastTime']
       })
     });
-
     res.json(users);
   });
 });
