@@ -1,8 +1,11 @@
-import express from "express";
+import express from 'express';
+import cors from 'cors';
 const app = express();
 require('dotenv').config();
 const port = process.env.PORT; // default port to listen
 
+app.use(cors());
+app.options('*', cors());
 // define a route handler for the default home page
 app.get( "/", ( req, res ) => {
     res.send( "Hello world!" );

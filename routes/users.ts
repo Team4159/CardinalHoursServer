@@ -1,6 +1,6 @@
 import mysql from 'mysql-await';
 import Router from 'express-promise-router';
-var database = require("../db");
+var database = require('../db');
 const router = Router();
 
 const db = database.db;
