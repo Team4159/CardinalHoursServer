@@ -1,20 +1,9 @@
 import mysql from 'mysql-await';
-import Router from "express-promise-router";
+import Router from 'express-promise-router';
+var database = require("../db");
 const router = Router();
 
-require('dotenv').config();
-
-const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME
-});
-
-db.getConnection(function(err, connection) {
-  if (err) throw err;
-  console.log('connected as id ' + connection.threadId);
-})
+const db = database.db;
 
 const createUserTable: string = `
   CREATE TABLE IF NOT EXISTS users(
@@ -259,6 +248,7 @@ router.get('/getusers', async (req, res, next) => {
       console.log(error);
       res.status(500).send('Something went wrong');
     }
+
     response.forEach( session => {
       users.push({
         "id": session['id'],
@@ -267,6 +257,7 @@ router.get('/getusers', async (req, res, next) => {
         "timeIn": Date.now() - session['lastTime']
       })
     });
+
     res.json(users);
   });
 });
