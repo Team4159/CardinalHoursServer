@@ -50,7 +50,7 @@ router.post('/adduser', async (req, res, next) => {
   await con.awaitBeginTransaction();
   const { username, password }: { username: string, password: string } = req.body;
 
-  if( username === '' || password === '' ){
+  if( username === undefined || password === undefined || username == "" || password == "" ){
     res.status(400).send("Username or password cannot be empty"); 
     return;
   }
