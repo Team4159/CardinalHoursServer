@@ -221,8 +221,8 @@ router.get('/getusersessions', async (req, res, next) => {
   });
 });
 
-router.get('/getusertime', async (req, res, next) => {
-  const getUser = "SELECT name FROM users WHERE password = ?";
+router.get('/getuserdata', async (req, res, next) => {
+  const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = ?";
 
   var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
   if( user.length === 0 ){
@@ -236,7 +236,11 @@ router.get('/getusertime', async (req, res, next) => {
       console.log(error);
       res.status(500).send('Something went wrong');
     }
-    res.json(response[0]['DIFF']);
+    res.json({
+      "name": user[0]['name'],
+      "signedIn": user[0]['signedIn'],
+      "totalTime": response[0]['DIFF'] ?? 0
+    });
   });
 });
 
