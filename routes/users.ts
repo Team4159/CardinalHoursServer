@@ -191,14 +191,14 @@ router.post('/changeSessionTime', async (req, res, next) => {
 router.get('/getusersessions', async (req, res, next) => {
   const getUser = "SELECT name FROM users WHERE password = ?";
 
-  var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
+  var user = await db.awaitQuery(mysql.format(getUser, [req.query.password]));
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
   }
 
   const getUserSessions = "SELECT id, startTime, endTime FROM sessions WHERE password = ?";
-  db.query(mysql.format(getUserSessions, [req.body.password]), function (error, response) {
+  db.query(mysql.format(getUserSessions, [req.query.password]), function (error, response) {
     if (error) {
       console.log(error);
       res.status(500).send('Something went wrong');
@@ -220,7 +220,7 @@ router.get('/getusersessions', async (req, res, next) => {
 router.get('/getuserdata', async (req, res, next) => {
   const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = ?";
 
-  var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
+  var user = await db.awaitQuery(mysql.format(getUser, [req.query.password]));
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
