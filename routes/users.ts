@@ -208,12 +208,8 @@ router.get('/getusersessions', async (req, res, next) => {
       formatted.push(
         {
           "id": session['id'],
-          "startTime": new Date(session['startTime']).toLocaleString('en-US', {
-            timeZone: 'America/Los_Angeles'
-          }),
-          "endTime": new Date(session['endTime']).toLocaleString('en-US', {
-            timeZone: 'America/Los_Angeles'
-          }),
+          "startTime": session['startTime'],
+          "endTime": session['endTime']
         }
       )
     });
