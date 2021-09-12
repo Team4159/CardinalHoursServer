@@ -249,12 +249,12 @@ router.get('/getusers', async (req, res, next) => {
       res.status(500).send('Something went wrong');
     }
 
-    response.forEach( session => {
+    response.forEach( user => {
       users.push({
-        "id": session['id'],
-        "name": session['name'],
-        "signedIn": session['signedIn'],
-        "timeIn": Date.now() - session['lastTime']
+        "id": user['id'],
+        "name": user['name'],
+        "signedIn": user['signedIn'],
+        "timeIn": user['signedIn'] === 1 ? Date.now() - user['lastTime'] : 0
       })
     });
 
