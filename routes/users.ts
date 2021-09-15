@@ -226,7 +226,7 @@ router.get('/getuserdata', async (req, res, next) => {
     return;
   }
 
-  const getUserTime = "SELECT SUM(endTime - startTime) AS DIFF FROM sessions WHERE password = ?";
+  const getUserTime = "SELECT startTime, endTime FROM sessions WHERE password = ?";
   db.query(mysql.format(getUserTime, [req.body.password]), function (error, response) {
     if (error) {
       console.log(error);
@@ -241,9 +241,22 @@ router.get('/getuserdata', async (req, res, next) => {
 });
 
 router.get('/getusers', async (req, res, next) => {
-  const getSignedIn = "SELECT id, name, signedIn, lastTime FROM users";
+  const getUsers = "SELECT id, name, password, signedIn, lastTime FROM users";
+  const getSessions = "SELECT password, startTime, endTime FROM sessions";
   var users = [];
-  db.query(mysql.format(getSignedIn), function (error, response) {
+  var userTimes = new Map();
+  var sessions = await db.awaitQuery(getSessions);
+  for( const session of sessions ){
+    if(session['endTime'] - session['startTime'] < parseInt(process.env.MAXTIME)){
+      userTimes.set(
+        session['password'], 
+        userTimes.has(session['password']) ?
+          session['endTime'] - session['startTime'] :
+          userTimes.get(session['startTime']) + session['endTime'] - session['startTime']);
+    }
+  }
+
+  db.query(mysql.format(getUsers), function (error, response) {
     if (error) {
       console.log(error);
       res.status(500).send('Something went wrong');
@@ -254,7 +267,8 @@ router.get('/getusers', async (req, res, next) => {
         "id": user['id'],
         "name": user['name'],
         "signedIn": user['signedIn'],
-        "timeIn": user['signedIn'] === 1 ? Date.now() - user['lastTime'] : 0
+        "timeIn": user['signedIn'] === 1 ? Date.now() - user['lastTime'] : 0,
+        "totalTime": userTimes.get(user['password']) ?? 0
       })
     });
 
