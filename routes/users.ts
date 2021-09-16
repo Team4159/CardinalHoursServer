@@ -251,14 +251,14 @@ router.get('/getusers', async (req, res, next) => {
   const getSessions = "SELECT password, startTime, endTime FROM sessions";
   var users = [];
   var userTimes = new Map();
+
   var sessions = await db.awaitQuery(getSessions);
   for( const session of sessions ){
     if(session['endTime'] - session['startTime'] < parseInt(process.env.MAXTIME)){
-      userTimes.set(
-        session['password'], 
-        userTimes.has(session['password']) ?
-          session['endTime'] - session['startTime'] :
-          userTimes.get(session['startTime']) + session['endTime'] - session['startTime']);
+      if(userTimes.has(session['password']))
+        userTimes.set(session['password'], userTimes.get(session['password']) + session['endTime'] - session['startTime']);
+      else
+        userTimes.set(session['password'], session['endTime'] - session['startTime']);
     }
   }
 
@@ -274,7 +274,7 @@ router.get('/getusers', async (req, res, next) => {
         "name": user['name'],
         "signedIn": user['signedIn'],
         "timeIn": user['signedIn'] === 1 ? Date.now() - user['lastTime'] : 0,
-        "totalTime": userTimes.get(user['password']) ?? 0
+        "totalTime": userTimes.has(user['password']) ? userTimes.get(user['password']) : 0
       })
     });
 
