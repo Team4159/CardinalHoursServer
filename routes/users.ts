@@ -219,23 +219,29 @@ router.get('/getusersessions', async (req, res, next) => {
 
 router.get('/getuserdata', async (req, res, next) => {
   const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = ?";
-
   var user = await db.awaitQuery(mysql.format(getUser, [req.query.password]));
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
   }
 
-  const getUserTime = "SELECT startTime, endTime FROM sessions WHERE password = ?";
-  db.query(mysql.format(getUserTime, [req.body.password]), function (error, response) {
+  const getUserSessions = "SELECT startTime, endTime FROM sessions WHERE password = ?";
+  db.query(mysql.format(getUserSessions, [req.query.password]), function (error, response) {
     if (error) {
       console.log(error);
       res.status(500).send('Something went wrong');
     }
+
+    var totalTime = 0;
+    for( const session of response ){
+      if(session['endTime'] - session['startTime'] < parseInt(process.env.MAXTIME))
+        totalTime += session['endTime'] - session['startTime'];
+    }
+
     res.json({
       "name": user[0]['name'],
       "signedIn": user[0]['signedIn'],
-      "totalTime": response[0]['DIFF'] ?? 0
+      "totalTime": totalTime
     });
   });
 });
