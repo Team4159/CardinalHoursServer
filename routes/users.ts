@@ -233,15 +233,20 @@ router.get('/getuserdata', async (req, res, next) => {
     }
 
     var totalTime = 0;
+    var meetings = 0;
     for( const session of response ){
-      if(session['endTime'] - session['startTime'] < parseInt(process.env.MAXTIME))
+      if(session['endTime'] - session['startTime'] < parseInt(process.env.MAX_TIME)){
         totalTime += session['endTime'] - session['startTime'];
+        if(new Date(session['startTime']).getDay() === parseInt(process.env.MEETING_DAY))
+          meetings ++;
+      }
     }
 
     res.json({
       "name": user[0]['name'],
       "signedIn": user[0]['signedIn'],
-      "totalTime": totalTime
+      "totalTime": totalTime,
+      "meetings": meetings
     });
   });
 });
@@ -250,15 +255,19 @@ router.get('/getusers', async (req, res, next) => {
   const getUsers = "SELECT id, name, password, signedIn, lastTime FROM users";
   const getSessions = "SELECT password, startTime, endTime FROM sessions";
   var users = [];
-  var userTimes = new Map();
+  var userData = new Map();
 
   var sessions = await db.awaitQuery(getSessions);
   for( const session of sessions ){
-    if(session['endTime'] - session['startTime'] < parseInt(process.env.MAXTIME)){
-      if(userTimes.has(session['password']))
-        userTimes.set(session['password'], userTimes.get(session['password']) + session['endTime'] - session['startTime']);
-      else
-        userTimes.set(session['password'], session['endTime'] - session['startTime']);
+    if(session['endTime'] - session['startTime'] < parseInt(process.env.MAX_TIME)){
+      if(!userData.has(session['password']))
+        userData.set(session['password'], {"totalTime": 0, "meetings": 0});
+      userData.set(session['password'], {
+        "totalTime": userData.get(session['password'])['totalTime'] + session['endTime'] - session['startTime'],
+        "meetings": new Date(session['startTime']).getDay() === parseInt(process.env.MEETING_DAY) 
+          ? userData.get(session['password'])['meetings'] + 1
+          : userData.get(session['password'])['meetings']
+      });
     }
   }
 
@@ -274,7 +283,8 @@ router.get('/getusers', async (req, res, next) => {
         "name": user['name'],
         "signedIn": user['signedIn'],
         "timeIn": user['signedIn'] === 1 ? Date.now() - user['lastTime'] : 0,
-        "totalTime": userTimes.has(user['password']) ? userTimes.get(user['password']) : 0
+        "totalTime": userData.has(user['password']) ? userData.get(user['password'])['totalTime'] : 0,
+        "meetings": userData.has(user['password']) ? userData.get(user['password'])['meetings'] : 0
       })
     });
 
