@@ -82,8 +82,8 @@ router.post('/adduser', async (req, res, next) => {
 router.post('/signin', async (req, res, next) => {
   const con = await db.awaitGetConnection();
   await con.awaitBeginTransaction();
-  const getUser = "SELECT name, signedIn FROM users WHERE password = ?";
-  const signIn = "UPDATE users SET lastTime = ?, signedIn = 1 WHERE password = ?";
+  const getUser = "SELECT name, signedIn FROM users WHERE password = BINARY ?";
+  const signIn = "UPDATE users SET lastTime = ?, signedIn = 1 WHERE password = BINARY ?";
 
   var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
   if( user.length === 0 ){
@@ -116,7 +116,7 @@ router.post('/signin', async (req, res, next) => {
 router.post('/addsession', async (req, res, next) => {
   const con = await db.awaitGetConnection();
   await con.awaitBeginTransaction();
-  const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = ?";
+  const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = BINARY ?";
   const addSession = "INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)";
 
   var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
@@ -143,8 +143,8 @@ router.post('/addsession', async (req, res, next) => {
 router.post('/signout', async (req, res, next) => {
   const con = await db.awaitGetConnection();
   await con.awaitBeginTransaction();
-  const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = ?";
-  const signOut = "UPDATE users SET signedIn = 0 WHERE password = ?";
+  const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = BINARY ?";
+  const signOut = "UPDATE users SET signedIn = 0 WHERE password = BINARY ?";
   const addSession = "INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)";
 
   var user = await db.awaitQuery(mysql.format(getUser, [req.body.password]));
@@ -189,7 +189,7 @@ router.post('/changeSessionTime', async (req, res, next) => {
 });
 
 router.get('/getusersessions', async (req, res, next) => {
-  const getUser = "SELECT name FROM users WHERE password = ?";
+  const getUser = "SELECT name FROM users WHERE password = BINARY ?";
 
   var user = await db.awaitQuery(mysql.format(getUser, [req.query.password]));
   if( user.length === 0 ){
@@ -197,7 +197,7 @@ router.get('/getusersessions', async (req, res, next) => {
     return;
   }
 
-  const getUserSessions = "SELECT id, startTime, endTime FROM sessions WHERE password = ?";
+  const getUserSessions = "SELECT id, startTime, endTime FROM sessions WHERE password = BINARY ?";
   db.query(mysql.format(getUserSessions, [req.query.password]), function (error, response) {
     if (error) {
       console.log(error);
@@ -218,14 +218,14 @@ router.get('/getusersessions', async (req, res, next) => {
 });
 
 router.get('/getuserdata', async (req, res, next) => {
-  const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = ?";
+  const getUser = "SELECT name, signedIn, lastTime FROM users WHERE password = BINARY ?";
   var user = await db.awaitQuery(mysql.format(getUser, [req.query.password]));
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
   }
 
-  const getUserSessions = "SELECT startTime, endTime FROM sessions WHERE password = ?";
+  const getUserSessions = "SELECT startTime, endTime FROM sessions WHERE password = BINARY ?";
   db.query(mysql.format(getUserSessions, [req.query.password]), function (error, response) {
     if (error) {
       console.log(error);
@@ -237,7 +237,7 @@ router.get('/getuserdata', async (req, res, next) => {
     for( const session of response ){
       if(session['endTime'] - session['startTime'] < parseInt(process.env.MAX_TIME)){
         totalTime += session['endTime'] - session['startTime'];
-        if(new Date(session['startTime']).getDay() === parseInt(process.env.MEETING_DAY))
+        if(new Date(new Date(session['startTime']).toLocaleString("en-US", {timeZone: "America/Los_Angeles"})).getDay() === parseInt(process.env.MEETING_DAY))
           meetings ++;
       }
     }
@@ -255,19 +255,18 @@ router.get('/getusers', async (req, res, next) => {
   const getUsers = "SELECT id, name, password, signedIn, lastTime FROM users";
   const getSessions = "SELECT password, startTime, endTime FROM sessions";
   var users = [];
-  var userData = new Map();
+  var userData = {};
 
   var sessions = await db.awaitQuery(getSessions);
   for( const session of sessions ){
     if(session['endTime'] - session['startTime'] < parseInt(process.env.MAX_TIME)){
-      if(!userData.has(session['password']))
-        userData.set(session['password'], {"totalTime": 0, "meetings": 0});
-      userData.set(session['password'], {
-        "totalTime": userData.get(session['password'])['totalTime'] + session['endTime'] - session['startTime'],
-        "meetings": new Date(session['startTime']).getDay() === parseInt(process.env.MEETING_DAY) 
-          ? userData.get(session['password'])['meetings'] + 1
-          : userData.get(session['password'])['meetings']
-      });
+      userData[session['password']] = userData[session['password']] || {'totalTime': 0, 'meetings': 0};
+      userData[session['password']]['totalTime'] += session['endTime'] - session['startTime'];
+      userData[session['password']]['meetings'] +=
+        new Date(new Date(session['startTime']).toLocaleString("en-US", {
+        timeZone: "America/Los_Angeles"
+      })).getDay() === parseInt(process.env.MEETING_DAY) ? 1 : 0
+
     }
   }
 
@@ -283,8 +282,8 @@ router.get('/getusers', async (req, res, next) => {
         "name": user['name'],
         "signedIn": user['signedIn'],
         "timeIn": user['signedIn'] === 1 ? Date.now() - user['lastTime'] : 0,
-        "totalTime": userData.has(user['password']) ? userData.get(user['password'])['totalTime'] : 0,
-        "meetings": userData.has(user['password']) ? userData.get(user['password'])['meetings'] : 0
+        "totalTime": userData[user['password']]?.totalTime || 0,
+        "meetings": userData[user['password']]?.meetings || 0,
       })
     });
 
