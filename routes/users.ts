@@ -113,7 +113,7 @@ router.post('/addsession', async (req, res, next) => {
   const con = await db.getConnection();
   const addSession = "INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)";
 
-  var user = (await db.query(mysql.format(getUser, [req.query.password]), {hash: "getUser"}))[0];
+  var user = (await db.query(mysql.format(getUser, [req.query.password]), {hash: "getUser " + req.body.password}))[0];
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
@@ -174,13 +174,13 @@ router.post('/signout', async (req, res, next) => {
 });
 
 function refreshUserCache(password){
-  db.query(mysql.format(getUser, [password]), {hash: "getUser", caching: Caching.REFRESH})
+  db.query(mysql.format(getUser, [password]), {hash: "getUser " + password, caching: Caching.REFRESH})
     .catch(error => {
       console.log(error);
       return;
     });
 
-  db.query(mysql.format(getUserSessions, [password]), {hash: "getUserSessions", caching: Caching.REFRESH})
+  db.query(mysql.format(getUserSessions, [password]), {hash: "getUserSessions " + password, caching: Caching.REFRESH})
     .catch(error => {
       console.log(error);
       return;
@@ -194,6 +194,7 @@ function refreshUsersCache(){
       return;
     });
 }
+
 function refreshSessionsCache(){
   db.query(getSessions, {hash: "getSessions", caching: Caching.REFRESH})
     .catch(error => {
@@ -214,13 +215,13 @@ router.get('/test', async (req, res, next) => {
 });
 
 router.get('/getusersessions', async (req, res, next) => {
-  var user = (await db.query(mysql.format(getUser, [req.query.password]), {hash: "getUser"}))[0];
+  var user = (await db.query(mysql.format(getUser, [req.query.password]), {hash: "getUser " + req.query.password}))[0];
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
   }
 
-  db.query(mysql.format(getUserSessions, [req.query.password]), {hash: "getUserSessions"})
+  db.query(mysql.format(getUserSessions, [req.query.password]), {hash: "getUserSessions " + req.query.password})
     .then(response => {
       var formatted = [];
       response[0].forEach( session => {
@@ -241,14 +242,14 @@ router.get('/getusersessions', async (req, res, next) => {
 });
 
 router.get('/getuserdata', async (req, res, next) => {
-  var user = (await db.query(mysql.format(getUser, [req.query.password]), {hash: "getUser"}))[0];
+  var user = (await db.query(mysql.format(getUser, [req.query.password]), {hash: "getUser " + req.query.password}))[0];
 
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
   }
 
-  db.query(mysql.format(getUserSessions, [req.query.password]), {hash: "getUserSessions"})
+  db.query(mysql.format(getUserSessions, [req.query.password]), {hash: "getUserSessions " + req.query.password})
     .then(response => {
       var totalTime = 0;
       var meetings = 0;
