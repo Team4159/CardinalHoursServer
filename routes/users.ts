@@ -286,7 +286,7 @@ router.get('/getusers', async (req, res, next) => {
       if(userTimes.has(session['password']))
         userTimes.set(session['password'], userTimes.get(session['password']) + session['endTime'] - session['startTime']);
       else
-        userTimes.set(session['password'], 0);
+        userTimes.set(session['password'], session['endTime'] - session['startTime']);
 
       if(userMeetings.has(session['password'])){
         if(((Math.floor((session['startTime'] + parseInt(process.env.OFFSET))/86400000)) - 1 & 7) === parseInt(process.env.MEETING_DAY))
@@ -308,7 +308,7 @@ router.get('/getusers', async (req, res, next) => {
           "meetings": userMeetings.has(user['password']) ? userMeetings.get(user['password']) : 0,
         })
       });
-    res.json(users);
+      res.json(users);
     })
     .catch(error => {
       console.log(error);
