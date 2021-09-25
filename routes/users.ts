@@ -62,8 +62,8 @@ router.post('/adduser', async (req, res, next) => {
 
   const addUser: string = "INSERT INTO users(name, password, signedIn, lastTime) VALUES(?, ?, ?, ?)";
   db.query(mysql.format(addUser, [username, password, 0, Date.now()]), {caching: Caching.SKIP})
-    .then(error => {
-      refreshCache();
+    .then(response => {
+      refreshUsersCache();
       console.log(`Added new user: ${username}, ${password}`);
       res.status(200).send(`Added new user: ${username}, password: ${password}`);
       return;
@@ -84,7 +84,7 @@ router.post('/adduser', async (req, res, next) => {
 router.post('/signin', async (req, res, next) => {
   const signIn = "UPDATE users SET lastTime = ?, signedIn = 1 WHERE password = BINARY ?";
 
-  var user = (await db.query(mysql.format(getUser, [req.body.password]), {hash: "getUser"}))[0];
+  var user = (await db.query(mysql.format(getUser, [req.body.password]), {caching: Caching.SKIP}))[0];
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
@@ -98,6 +98,7 @@ router.post('/signin', async (req, res, next) => {
   db.query(mysql.format(signIn, [Date.now(), req.body.password]), {caching: Caching.SKIP})
     .then(response => {
       refreshUserCache(req.body.password);
+      refreshUsersCache();
       res.status(200).send(`Signed in user: ${user[0]['name']}`);
       return;
     })
@@ -121,7 +122,7 @@ router.post('/addsession', async (req, res, next) => {
   con.query(mysql.format(addSession, [req.body.password, req.body.startTime, req.body.endTime]), {caching: Caching.SKIP})
     .then(response => {
       refreshUserCache(req.body.password);
-      refreshCache();
+      refreshSessionsCache();
       res.status(200).send(`Added session for user: ${user[0]['name']}`);
       return;
     })
@@ -136,7 +137,7 @@ router.post('/signout', async (req, res, next) => {
   const signOut = "UPDATE users SET signedIn = 0 WHERE password = BINARY ?";
   const addSession = "INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)";
 
-  var user = (await db.query(mysql.format(getUser, [req.body.password]), {hash: "getUser"}))[0];
+  var user = (await db.query(mysql.format(getUser, [req.body.password]), {caching: Caching.SKIP}))[0];
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
@@ -150,6 +151,7 @@ router.post('/signout', async (req, res, next) => {
   db.query(mysql.format(signOut, [req.body.password]), {caching: Caching.SKIP})
     .then(response => {
       refreshUserCache(req.body.password);
+      refreshUsersCache();
       return;
     })
     .catch(error => {
@@ -160,7 +162,7 @@ router.post('/signout', async (req, res, next) => {
 
   db.query(mysql.format(addSession, [req.body.password, user[0]['lastTime'], Date.now()]), {caching: Caching.SKIP})
     .then(response => {
-      refreshCache();
+      refreshSessionsCache();
       res.status(200).send(`Signed out user: ${user[0]['name']}`);
       return;
     })
@@ -185,13 +187,14 @@ function refreshUserCache(password){
     });
 }
 
-function refreshCache(){
+function refreshUsersCache(){
   db.query(getUsers, {hash: "getUsers", caching: Caching.REFRESH})
     .catch(error => {
       console.log(error);
       return;
     });
-
+}
+function refreshSessionsCache(){
   db.query(getSessions, {hash: "getSessions", caching: Caching.REFRESH})
     .catch(error => {
       console.log(error);
