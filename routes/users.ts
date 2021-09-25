@@ -31,6 +31,9 @@ const getUserSessions = "SELECT id, startTime, endTime FROM sessions WHERE passw
 const getUsers = "SELECT id, name, password, signedIn, lastTime FROM users";
 const getSessions = "SELECT password, startTime, endTime FROM sessions";
 
+refreshUsersCache();
+refreshSessionsCache();
+
 db.query(createUserTable, {caching: Caching.SKIP}, function (err, res) {
   if (err) throw err;
   if(res.warningCount !== 0)
