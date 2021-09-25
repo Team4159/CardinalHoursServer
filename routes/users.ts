@@ -31,7 +31,7 @@ const getUserSessions = "SELECT id, startTime, endTime FROM sessions WHERE passw
 const getUsers = "SELECT id, name, password, signedIn, lastTime FROM users";
 const getSessions = "SELECT password, startTime, endTime FROM sessions";
 
-db.query(createUserTable, function (err, res) {
+db.query(createUserTable, {caching: Caching.SKIP}, function (err, res) {
   if (err) throw err;
   if(res.warningCount !== 0)
     console.log("User table already exists");
@@ -39,7 +39,7 @@ db.query(createUserTable, function (err, res) {
     console.log("Created new user table");
 });
 
-db.query(createSessionTable, function (err, res) {
+db.query(createSessionTable, {caching: Caching.SKIP}, function (err, res) {
   if (err) throw err;
   if(res.warningCount !== 0)
     console.log("Session table already exists");
