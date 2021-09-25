@@ -205,6 +205,12 @@ router.post('/changeSessionTime', async (req, res, next) => {
 
 });
 
+router.get('/refreshcache', async (req, res, next) => {
+  refreshUsersCache();
+  refreshSessionsCache();
+  res.status(200).send('Refreshed user and sessions cache');
+});
+
 router.get('/getusersessions', async (req, res, next) => {
   var user = (await db.query(mysql.format(getUser, [req.query.password]), {hash: "getUser " + req.query.password}))[0];
   if( user.length === 0 ){
@@ -286,8 +292,6 @@ router.get('/getusers', async (req, res, next) => {
         userMeetings.set(session['password'], 0);
     }
   }
-
-  console.log(JSON.stringify(Array.from(userTimes.entries())));
 
   db.query(getUsers, {hash: "getUsers"})
     .then(response => {
