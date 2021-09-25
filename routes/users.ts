@@ -83,8 +83,7 @@ router.post('/adduser', async (req, res, next) => {
 
 router.post('/signin', async (req, res, next) => {
   const signIn = "UPDATE users SET lastTime = ?, signedIn = 1 WHERE password = BINARY ?";
-
-  var user = (await db.query(mysql.format(getUser, [req.body.password]), {caching: Caching.SKIP}))[0];
+  var user = (await db.query(mysql.format(getUser, [req.body.password]), {hash: "getUser " + req.body.password}))[0];
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
@@ -113,7 +112,7 @@ router.post('/addsession', async (req, res, next) => {
   const con = await db.getConnection();
   const addSession = "INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)";
 
-  var user = (await db.query(mysql.format(getUser, [req.query.password]), {hash: "getUser " + req.body.password}))[0];
+  var user = (await db.query(mysql.format(getUser, [req.body.password]), {hash: "getUser " + req.body.password}))[0];
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
@@ -137,7 +136,7 @@ router.post('/signout', async (req, res, next) => {
   const signOut = "UPDATE users SET signedIn = 0 WHERE password = BINARY ?";
   const addSession = "INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)";
 
-  var user = (await db.query(mysql.format(getUser, [req.body.password]), {caching: Caching.SKIP}))[0];
+  var user = (await db.query(mysql.format(getUser, [req.body.password]), {hash: "getUser " + req.body.password}))[0];
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
     return;
@@ -207,13 +206,6 @@ router.post('/changeSessionTime', async (req, res, next) => {
 
 });
 
-router.get('/test', async (req, res, next) => {
-  db.query(mysql.format(getUser, [req.query.password]), {caching: Caching.REFRESH})
-    .then(response => {
-      res.json(response);
-    })
-});
-
 router.get('/getusersessions', async (req, res, next) => {
   var user = (await db.query(mysql.format(getUser, [req.query.password]), {hash: "getUser " + req.query.password}))[0];
   if( user.length === 0 ){
@@ -276,12 +268,10 @@ router.get('/getuserdata', async (req, res, next) => {
 
 router.get('/getusers', async (req, res, next) => {
   var users = [];
-  //var userData = {};
   var userTimes = new Map();
   var userMeetings = new Map();
   var currentDate = Date.now();
 
-  // First element in array is totalTime, second is sessions
   var sessions = (await db.query(getSessions, {hash: "getSessions"}))[0];
   for( const session of sessions ){
     if(session['endTime'] - session['startTime'] < parseInt(process.env.MAX_TIME)){
