@@ -109,7 +109,6 @@ router.post('/signin', async (req, res, next) => {
 });
 
 router.post('/addsession', async (req, res, next) => {
-  const con = await db.getConnection();
   const addSession = "INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)";
 
   var user = (await db.query(mysql.format(getUser, [req.body.password]), {hash: "getUser " + req.body.password}))[0];
@@ -118,7 +117,7 @@ router.post('/addsession', async (req, res, next) => {
     return;
   }
 
-  con.query(mysql.format(addSession, [req.body.password, req.body.startTime, req.body.endTime]), {caching: Caching.SKIP})
+  db.query(mysql.format(addSession, [req.body.password, req.body.startTime, req.body.endTime]), {caching: Caching.SKIP})
     .then(response => {
       refreshUserCache(req.body.password);
       refreshSessionsCache();
