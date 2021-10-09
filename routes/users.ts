@@ -301,7 +301,7 @@ router.get('/getusers', async (req, res, next) => {
       response[0].forEach( user => {
         users.push({
           "id": user['id'],
-          "name": user[0]['firstName'] + " " + user[0]['lastName'],
+          "name": user['firstName'] + " " + user['lastName'],
           "signedIn": user['signedIn'],
           "timeIn": user['signedIn'] === 1 ? currentDate - user['lastTime'] : 0,
           "totalTime": userTimes.has(user['password']) ? userTimes.get(user['password']) : 0,
