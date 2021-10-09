@@ -5,11 +5,13 @@ require('dotenv').config();
 
 const TOKEN_PATH = 'token.json';
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
+var credentials;
 
 fs.readFile('credentials.json', async (err, content) => {
   if (err) return console.log('Error loading client secret file:', err);
-  authorize(JSON.parse(content.toString()), async (auth) => {
-    console.log("Connected to spreadsheet: " + await getSheetName(auth));
+  credentials = JSON.parse(content.toString());
+  authorize(credentials, async (res) => {
+    console.log("Connected to spreadsheet: " + await getSheetName());
   });
 });
 
@@ -50,7 +52,16 @@ function getNewToken(oAuth2Client, callback) {
   });
 }
 
-async function getSheetName(auth){
+async function getAuth(credentials){
+  return new Promise(function(resolve, reject) {
+    authorize(credentials, res => {
+      resolve(res);
+    });
+  });
+}
+
+async function getSheetName(){
+  var auth: any = await getAuth(credentials);
   const sheets = google.sheets({version: 'v4', auth});
   return new Promise(function(resolve, reject) {
     sheets.spreadsheets.get({
@@ -62,8 +73,54 @@ async function getSheetName(auth){
   });
 }
 
-async function syncUser(auth, username, data) {
-  
+async function getUserRow(firstName, lastName){
+  const names : any = await getNames();
+  for(let i = 0; i < names.length; i++){
+    if(names[i][0] === firstName && names[i][1] === lastName)
+      return ++i;
+  }
+  return -1;
+}
+
+async function getNames(){
+  var auth: any = await getAuth(credentials);
+  const sheets = google.sheets({version: 'v4', auth});
+  return new Promise(function(resolve, reject) {
+    sheets.spreadsheets.values.get({
+      spreadsheetId: process.env.SHEET_ID,
+      range: `${process.env.SHEET_NAME}!A:B`,
+    }, (err, res) => {
+      if (err) return console.log('The API returned an error: ' + err);
+      resolve(res.data.values);
+    });
+  });
+}
+
+async function syncUser(firstName, lastName, data) {
+  var auth: any = await getAuth(credentials);
+  const sheets = google.sheets({version: 'v4', auth});
+  const row = await getUserRow(firstName, lastName);
+  if(row === -1){
+    console.log(`User not found. Adding user ${firstName} ${lastName}`);
+    sheets.spreadsheets.values.append({
+      spreadsheetId: process.env.SHEET_ID,
+      range: process.env.SHEET_NAME,
+      valueInputOption: "RAW",
+      insertDataOption: "INSERT_ROWS",
+      requestBody: {values: [[firstName, lastName, data[0][0], data[0][1]]]},
+    }, (err, result) => {
+      if (err) return console.log('The API returned an error: ' + err);
+    });
+  } else {
+    sheets.spreadsheets.values.update({
+      spreadsheetId: process.env.SHEET_ID,
+      range: `${process.env.SHEET_NAME}!C${row}:D${row}`,
+      valueInputOption: "RAW",
+      requestBody: {values: data},
+    }, (err, result) => {
+      if (err) return console.log('The API returned an error: ' + err);
+    });
+  }
 }
 
 export default {

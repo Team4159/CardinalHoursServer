@@ -1,7 +1,7 @@
 import mysql from 'mysql2';
 import Router from 'express-promise-router';
 import database from '../dbManager';
-var sheets = require('../spreadsheet');
+import sheets from '../spreadsheet';
 const router = Router();
 
 const {db, hashTypes, caching} = database;
@@ -162,9 +162,11 @@ router.post('/signout', async (req, res, next) => {
     });
 
   db.query(mysql.format(addSession, [req.body.password, user[0]['lastTime'], Date.now()]), {caching: caching.SKIP})
-    .then(response => {
-      refreshSessionsCache();
+    .then(async response => {
       res.status(200).send(`Signed out user: ${user[0]['firstName']} ${user[0]['lastName']}`);
+      refreshSessionsCache();
+      let userData: any = await getUserData(req.body.password);
+      sheets.syncUser(user[0]['firstName'], user[0]['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
       return;
     })
     .catch(error => {
@@ -173,6 +175,31 @@ router.post('/signout', async (req, res, next) => {
       return;
   });
 });
+
+async function getUserData(password){
+  return new Promise(function(resolve, reject) {
+    db.query(mysql.format(getUserSessions, [password]), {hash: "getUserSessions " + password})
+      .then(response => {
+        var totalTime = 0;
+        var meetings = 0;
+        for( const session of response[0] ){
+          if(session['endTime'] - session['startTime'] < parseInt(process.env.MAX_TIME)){
+            totalTime += session['endTime'] - session['startTime'];
+            if(((Math.floor((session['startTime'] + parseInt(process.env.OFFSET))/86400000)) - 1 & 7) === parseInt(process.env.MEETING_DAY))
+              meetings ++;
+          }
+        }
+        resolve ({
+          "totalTime": totalTime,
+          "meetings": meetings,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+        reject();
+      })
+  });
+}
 
 function refreshUserCache(password){
   db.query(mysql.format(getUser, [password]), {hash: "getUser " + password, caching: caching.REFRESH})
@@ -188,20 +215,30 @@ function refreshUserCache(password){
     });
 }
 
-function refreshUsersCache(){
-  db.query(getUsers, {hash: "getUsers", caching: caching.REFRESH})
+async function refreshUsersCache(){
+  return new Promise<void>(function(resolve, reject) {
+  db.query(getSessions, {hash: "getUsers", caching: caching.REFRESH})
+    .then(res => {
+      resolve();
+    })
     .catch(error => {
       console.log(error);
-      return;
+      reject();
     });
+  });
 }
 
-function refreshSessionsCache(){
+async function refreshSessionsCache(){
+  return new Promise<void>(function(resolve, reject) {
   db.query(getSessions, {hash: "getSessions", caching: caching.REFRESH})
+    .then(res => {
+      resolve();
+    })
     .catch(error => {
       console.log(error);
-      return;
+      reject();
     });
+  });
 }
 
 router.post('/changeSessionTime', async (req, res, next) => {
@@ -249,29 +286,19 @@ router.get('/getuserdata', async (req, res, next) => {
     return;
   }
 
-  db.query(mysql.format(getUserSessions, [req.query.password]), {hash: "getUserSessions " + req.query.password})
-    .then(response => {
-      var totalTime = 0;
-      var meetings = 0;
-      for( const session of response[0] ){
-        if(session['endTime'] - session['startTime'] < parseInt(process.env.MAX_TIME)){
-          totalTime += session['endTime'] - session['startTime'];
-          if(((Math.floor((session['startTime'] + parseInt(process.env.OFFSET))/86400000)) - 1 & 7) === parseInt(process.env.MEETING_DAY))
-            meetings ++;
-        }
-      }
-      res.json({
-        "name": user[0]['firstName'] + " " + user[0]['lastName'],
-        "signedIn": user[0]['signedIn'],
-        "totalTime": totalTime,
-        "meetings": meetings
-      });
-    })
+  const userData: any = await getUserData(req.query.password)
     .catch(error => {
       console.log(error);
       res.status(500).send('Something went wrong');
       return;
-    })
+    });
+
+  res.json({
+    "name": user[0]['firstName'] + " " + user[0]['lastName'],
+    "signedIn": user[0]['signedIn'],
+    "totalTime": userData.totalTime,
+    "meetings": userData.meetings
+  });
 });
 
 router.get('/getusers', async (req, res, next) => {
