@@ -9,7 +9,8 @@ const {db, hashTypes, caching} = database;
 const createUserTable: string = `
   CREATE TABLE IF NOT EXISTS users(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name TEXT NOT NULL,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
     password VARCHAR(300) NOT NULL UNIQUE,
     signedIn BOOL DEFAULT false,
     lastTime BIGINT NOT NULL
@@ -25,9 +26,9 @@ const createSessionTable: string = `
   )
 `;
 
-const getUser = "SELECT id, name, signedIn, lastTime FROM users WHERE password = BINARY ?";
+const getUser = "SELECT id, firstName, lastName, signedIn, lastTime FROM users WHERE password = BINARY ?";
 const getUserSessions = "SELECT id, startTime, endTime FROM sessions WHERE password = BINARY ?";
-const getUsers = "SELECT id, name, password, signedIn, lastTime FROM users";
+const getUsers = "SELECT id, firstName, lastName, password, signedIn, lastTime FROM users";
 const getSessions = "SELECT password, startTime, endTime FROM sessions";
 
 refreshUsersCache();
@@ -55,19 +56,19 @@ router.get('/', (req, res) => {
 });
 
 router.post('/adduser', async (req, res, next) => {
-  const { username, password }: { username: string, password: string } = req.body;
+  const { firstName, lastName, password }: { firstName: string, lastName: string, password: string } = req.body;
 
-  if( username === undefined || password === undefined || username == "" || password == "" ){
+  if( firstName === undefined || lastName === undefined || password === undefined || firstName == "" || lastName == "" || password == "" ){
     res.status(400).send("Username or password cannot be empty"); 
     return;
   }
 
-  const addUser: string = "INSERT INTO users(name, password, signedIn, lastTime) VALUES(?, ?, ?, ?)";
-  db.query(mysql.format(addUser, [username, password, 0, Date.now()]), {caching: caching.Caching.SKIP})
+  const addUser: string = "INSERT INTO users(firstName, lastName, password, signedIn, lastTime) VALUES(?, ?, ?, ?)";
+  db.query(mysql.format(addUser, [firstName, lastName, password, 0, Date.now()]), {caching: caching.Caching.SKIP})
     .then(response => {
       refreshUsersCache();
-      console.log(`Added new user: ${username}, ${password}`);
-      res.status(200).send(`Added new user: ${username}, password: ${password}`);
+      console.log(`Added new user: ${firstName} ${lastName}, ${password}`);
+      res.status(200).send(`Added new user: ${firstName} ${lastName}, password: ${password}`);
       return;
     })
     .catch(error => {
@@ -100,7 +101,7 @@ router.post('/signin', async (req, res, next) => {
     .then(response => {
       refreshUserCache(req.body.password);
       refreshUsersCache();
-      res.status(200).send(`Signed in user: ${user[0]['name']}`);
+      res.status(200).send(`Signed in user: ${user[0]['firstName']} ${user[0]['lastName']}`);
       return;
     })
     .catch(error => {
@@ -123,7 +124,7 @@ router.post('/addsession', async (req, res, next) => {
     .then(response => {
       refreshUserCache(req.body.password);
       refreshSessionsCache();
-      res.status(200).send(`Added session for user: ${user[0]['name']}`);
+      res.status(200).send(`Added session for user: ${user[0]['firstName']} ${user[0]['lastName']}`);
       return;
     })
     .catch(error => {
@@ -163,7 +164,7 @@ router.post('/signout', async (req, res, next) => {
   db.query(mysql.format(addSession, [req.body.password, user[0]['lastTime'], Date.now()]), {caching: caching.SKIP})
     .then(response => {
       refreshSessionsCache();
-      res.status(200).send(`Signed out user: ${user[0]['name']}`);
+      res.status(200).send(`Signed out user: ${user[0]['firstName']} ${user[0]['lastName']}`);
       return;
     })
     .catch(error => {
@@ -260,7 +261,7 @@ router.get('/getuserdata', async (req, res, next) => {
         }
       }
       res.json({
-        "name": user[0]['name'],
+        "name": user[0]['firstName'] + " " + user[0]['lastName'],
         "signedIn": user[0]['signedIn'],
         "totalTime": totalTime,
         "meetings": meetings
@@ -300,7 +301,7 @@ router.get('/getusers', async (req, res, next) => {
       response[0].forEach( user => {
         users.push({
           "id": user['id'],
-          "name": user['name'],
+          "name": user[0]['firstName'] + " " + user[0]['lastName'],
           "signedIn": user['signedIn'],
           "timeIn": user['signedIn'] === 1 ? currentDate - user['lastTime'] : 0,
           "totalTime": userTimes.has(user['password']) ? userTimes.get(user['password']) : 0,

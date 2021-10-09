@@ -41,7 +41,6 @@ function getNewToken(oAuth2Client, callback) {
     oAuth2Client.getToken(code, (err, token) => {
       if (err) return console.error('Error while trying to retrieve access token', err);
       oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
         if (err) return console.error(err);
         console.log('Token stored to', TOKEN_PATH);
@@ -63,8 +62,8 @@ async function getSheetName(auth){
   });
 }
 
-async function syncUser(auth) {
-
+async function syncUser(auth, username, data) {
+  
 }
 
 export default {
