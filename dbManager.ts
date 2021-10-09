@@ -5,13 +5,13 @@ require('dotenv').config();
 const { MysqlRedisAsync, HashTypes, Caching } = require("mysql-redis");
 
 const cacheOptions = {
-    expire: 2629746,// seconds, defaults to 30 days
-    keyPrefix: "sql.", // default
-    hashType: HashTypes.md5, //default
-    caching: Caching.CACHE //default
+    expire: 2629746,
+    keyPrefix: "sql.",
+    hashType: HashTypes.md5,
+    caching: Caching.CACHE
 };
 
-const redis = asyncRedis.createClient();
+const redis = asyncRedis.createClient(cacheOptions);
 
 const poolPromise = mysql.createPool({
   host: process.env.DB_HOST,
@@ -25,6 +25,8 @@ const mysqlRedis = new MysqlRedisAsync(
     redis
 );
 
-exports.Caching = Caching;
-exports.HashTypes = HashTypes;
-exports.db = mysqlRedis;
+export default {
+  hashTypes: HashTypes,
+  caching: Caching,
+  db: mysqlRedis,
+}

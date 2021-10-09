@@ -2,19 +2,18 @@ import express from 'express';
 import cors from 'cors';
 const app = express();
 require('dotenv').config();
-const port = process.env.PORT; // default port to listen
+const port = process.env.PORT;
 
 app.use(cors());
 app.options('*', cors());
-// define a route handler for the default home page
-app.get( "/", ( req, res ) => {
-    res.send( "Hello world!" );
-} );
 
-// start the Express server
+app.get( "/", ( req, res ) => {
+    res.send( "Welcome to the Cardinalbotics login API!" );
+});
+
 app.listen( port, () => {
     console.log( `server started at http://localhost:${ port }` );
-} );
+});
 
 var usersRouter = require('./routes/users');
 //var adminRouter = require('./routes/admin');

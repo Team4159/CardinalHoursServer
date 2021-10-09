@@ -1,11 +1,10 @@
 import mysql from 'mysql2';
 import Router from 'express-promise-router';
-var database = require('../db');
+import database from '../dbManager';
+var sheets = require('../spreadsheet');
 const router = Router();
 
-const {Caching, HashTypes} = require('../db');
-
-const db = database.db;
+const {db, hashTypes, caching} = database;
 
 const createUserTable: string = `
   CREATE TABLE IF NOT EXISTS users(
@@ -34,7 +33,7 @@ const getSessions = "SELECT password, startTime, endTime FROM sessions";
 refreshUsersCache();
 refreshSessionsCache();
 
-db.query(createUserTable, {caching: Caching.SKIP}, function (err, res) {
+db.query(createUserTable, {caching: caching.SKIP}, function (err, res) {
   if (err) throw err;
   if(res.warningCount !== 0)
     console.log("User table already exists");
@@ -42,7 +41,7 @@ db.query(createUserTable, {caching: Caching.SKIP}, function (err, res) {
     console.log("Created new user table");
 });
 
-db.query(createSessionTable, {caching: Caching.SKIP}, function (err, res) {
+db.query(createSessionTable, {caching: caching.SKIP}, function (err, res) {
   if (err) throw err;
   if(res.warningCount !== 0)
     console.log("Session table already exists");
@@ -64,7 +63,7 @@ router.post('/adduser', async (req, res, next) => {
   }
 
   const addUser: string = "INSERT INTO users(name, password, signedIn, lastTime) VALUES(?, ?, ?, ?)";
-  db.query(mysql.format(addUser, [username, password, 0, Date.now()]), {caching: Caching.SKIP})
+  db.query(mysql.format(addUser, [username, password, 0, Date.now()]), {caching: caching.Caching.SKIP})
     .then(response => {
       refreshUsersCache();
       console.log(`Added new user: ${username}, ${password}`);
@@ -97,7 +96,7 @@ router.post('/signin', async (req, res, next) => {
     return;
   }
 
-  db.query(mysql.format(signIn, [Date.now(), req.body.password]), {caching: Caching.SKIP})
+  db.query(mysql.format(signIn, [Date.now(), req.body.password]), {caching: caching.SKIP})
     .then(response => {
       refreshUserCache(req.body.password);
       refreshUsersCache();
@@ -120,7 +119,7 @@ router.post('/addsession', async (req, res, next) => {
     return;
   }
 
-  db.query(mysql.format(addSession, [req.body.password, req.body.startTime, req.body.endTime]), {caching: Caching.SKIP})
+  db.query(mysql.format(addSession, [req.body.password, req.body.startTime, req.body.endTime]), {caching: caching.SKIP})
     .then(response => {
       refreshUserCache(req.body.password);
       refreshSessionsCache();
@@ -149,7 +148,7 @@ router.post('/signout', async (req, res, next) => {
     return;
   }
 
-  db.query(mysql.format(signOut, [req.body.password]), {caching: Caching.SKIP})
+  db.query(mysql.format(signOut, [req.body.password]), {caching: caching.SKIP})
     .then(response => {
       refreshUserCache(req.body.password);
       refreshUsersCache();
@@ -161,7 +160,7 @@ router.post('/signout', async (req, res, next) => {
       return;
     });
 
-  db.query(mysql.format(addSession, [req.body.password, user[0]['lastTime'], Date.now()]), {caching: Caching.SKIP})
+  db.query(mysql.format(addSession, [req.body.password, user[0]['lastTime'], Date.now()]), {caching: caching.SKIP})
     .then(response => {
       refreshSessionsCache();
       res.status(200).send(`Signed out user: ${user[0]['name']}`);
@@ -175,13 +174,13 @@ router.post('/signout', async (req, res, next) => {
 });
 
 function refreshUserCache(password){
-  db.query(mysql.format(getUser, [password]), {hash: "getUser " + password, caching: Caching.REFRESH})
+  db.query(mysql.format(getUser, [password]), {hash: "getUser " + password, caching: caching.REFRESH})
     .catch(error => {
       console.log(error);
       return;
     });
 
-  db.query(mysql.format(getUserSessions, [password]), {hash: "getUserSessions " + password, caching: Caching.REFRESH})
+  db.query(mysql.format(getUserSessions, [password]), {hash: "getUserSessions " + password, caching: caching.REFRESH})
     .catch(error => {
       console.log(error);
       return;
@@ -189,7 +188,7 @@ function refreshUserCache(password){
 }
 
 function refreshUsersCache(){
-  db.query(getUsers, {hash: "getUsers", caching: Caching.REFRESH})
+  db.query(getUsers, {hash: "getUsers", caching: caching.REFRESH})
     .catch(error => {
       console.log(error);
       return;
@@ -197,7 +196,7 @@ function refreshUsersCache(){
 }
 
 function refreshSessionsCache(){
-  db.query(getSessions, {hash: "getSessions", caching: Caching.REFRESH})
+  db.query(getSessions, {hash: "getSessions", caching: caching.REFRESH})
     .catch(error => {
       console.log(error);
       return;
