@@ -215,30 +215,20 @@ function refreshUserCache(password){
     });
 }
 
-async function refreshUsersCache(){
-  return new Promise<void>(function(resolve, reject) {
-  db.query(getSessions, {hash: "getUsers", caching: caching.REFRESH})
-    .then(res => {
-      resolve();
-    })
+function refreshUsersCache(){
+  db.query(getUsers, {hash: "getUsers", caching: caching.REFRESH})
     .catch(error => {
       console.log(error);
-      reject();
+      return;
     });
-  });
 }
 
-async function refreshSessionsCache(){
-  return new Promise<void>(function(resolve, reject) {
+function refreshSessionsCache(){
   db.query(getSessions, {hash: "getSessions", caching: caching.REFRESH})
-    .then(res => {
-      resolve();
-    })
     .catch(error => {
       console.log(error);
-      reject();
+      return;
     });
-  });
 }
 
 router.post('/changeSessionTime', async (req, res, next) => {
