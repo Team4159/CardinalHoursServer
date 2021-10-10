@@ -185,7 +185,7 @@ async function getUserData(password){
         for( const session of response[0] ){
           if(session['endTime'] - session['startTime'] < parseInt(process.env.MAX_TIME)){
             totalTime += session['endTime'] - session['startTime'];
-            if(((Math.floor((session['startTime'] + parseInt(process.env.OFFSET))/86400000)) - 1 & 7) === parseInt(process.env.MEETING_DAY))
+            if(((Math.floor((session['startTime'] + parseInt(process.env.OFFSET))/86400000)) + 1 & 7) === parseInt(process.env.MEETING_DAY))
               meetings ++;
           }
         }
@@ -306,7 +306,7 @@ router.get('/getusers', async (req, res, next) => {
         userTimes.set(session['password'], session['endTime'] - session['startTime']);
 
       if(userMeetings.has(session['password'])){
-        if(((Math.floor((session['startTime'] + parseInt(process.env.OFFSET))/86400000)) - 1 & 7) === parseInt(process.env.MEETING_DAY))
+        if(((Math.floor((session['startTime'] + parseInt(process.env.OFFSET))/86400000)) + 1 & 7) === parseInt(process.env.MEETING_DAY))
           userMeetings.set(session['password'], userMeetings.get(session['password']) + 1);
       } else
         userMeetings.set(session['password'], 0);
