@@ -57,14 +57,15 @@ router.get('/', (req, res) => {
 
 router.post('/adduser', async (req, res, next) => {
   const { firstName, lastName, password }: { firstName: string, lastName: string, password: string } = req.body;
+  console.log(password);
 
-  if( firstName === undefined || lastName === undefined || password === undefined || firstName == "" || lastName == "" || password == "" ){
+  if( !(firstName && lastName && password) ){
     res.status(400).send("Username or password cannot be empty"); 
     return;
   }
 
-  const addUser: string = "INSERT INTO users(firstName, lastName, password, signedIn, lastTime) VALUES(?, ?, ?, ?)";
-  db.query(mysql.format(addUser, [firstName, lastName, password, 0, Date.now()]), {caching: caching.Caching.SKIP})
+  const addUser: string = "INSERT INTO users(firstName, lastName, password, signedIn, lastTime) VALUES(?, ?, ?, ?, ?)";
+  db.query(mysql.format(addUser, [firstName, lastName, password, 0, Date.now()]), {caching: caching.SKIP})
     .then(response => {
       refreshUsersCache();
       console.log(`Added new user: ${firstName} ${lastName}, ${password}`);
