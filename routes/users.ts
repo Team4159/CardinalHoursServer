@@ -232,9 +232,41 @@ function refreshSessionsCache(){
     });
 }
 
-router.post('/changeSessionTime', async (req, res, next) => {
+// Endpoint to change a sessions's end time using the start time and the new end time, and the password of the user
+router.post('/changesession', async (req, res, next) => {
+  const changeSession = "UPDATE sessions SET endTime = ? WHERE password = BINARY ? AND startTime = ?";
 
+  var user = (await db.query(mysql.format(getUser, [req.body.password]), {hash: "getUser " + req.body.password}))[0];
+  if( user.length === 0 ){
+    res.status(404).send(`User not found`);
+    return;
+  }
+
+  db.query(mysql.format(changeSession, [req.body.endTime, req.body.password, req.body.startTime]), {caching: caching.SKIP})
+    .then(response => {
+      refreshUserCache(req.body.password);
+      refreshSessionsCache();
+      res.status(200).send(`Changed session for user: ${user[0]['firstName']} ${user[0]['lastName']}`);
+      return;
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).send('Something went wrong');
+      return;
+    });
 });
+
+// Endpoint to delete a session using the password of the user and the start time of the session
+router.post('/deletesession', async (req, res, next) => {
+  const deleteSession = "DELETE FROM sessions WHERE password = BINARY ? AND startTime = ?";
+
+  var user = (await db.query(mysql.format(getUser, [req.body.password]), {hash: "getUser " + req.body.password}))[0];
+  if( user.length === 0 ){
+    res.status(404).send(`User not found`);
+    return;
+  }
+
+
 
 router.get('/refreshcache', async (req, res, next) => {
   refreshUsersCache();
