@@ -256,7 +256,8 @@ router.post('/changesession', async (req, res, next) => {
     });
 });
 
-// Endpoint to delete a session using the password of the user and the start time of the session
+/* Needs admin auth
+// Endpoint to delete a session using the start time and the password of the user
 router.post('/deletesession', async (req, res, next) => {
   const deleteSession = "DELETE FROM sessions WHERE password = BINARY ? AND startTime = ?";
 
@@ -266,7 +267,60 @@ router.post('/deletesession', async (req, res, next) => {
     return;
   }
 
+  db.query(mysql.format(deleteSession, [req.body.password, req.body.startTime]), {caching: caching.SKIP})
+    .then(response => {
+      refreshUserCache(req.body.password);
+      refreshSessionsCache();
+      res.status(200).send(`Deleted session for user: ${user[0]['firstName']} ${user[0]['lastName']}`);
+      return;
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).send('Something went wrong');
+      return;
+    });
+});
 
+// Endpoint to delete a user using the password of the user
+router.post('/deleteuser', async (req, res, next) => {
+  const deleteUser = "DELETE FROM users WHERE password = BINARY ?";
+
+  var user = (await db.query(mysql.format(getUser, [req.body.password]), {hash: "getUser " + req.body.password}))[0];
+  if( user.length === 0 ){
+    res.status(404).send(`User not found`);
+    return;
+  }
+
+  db.query(mysql.format(deleteUser, [req.body.password]), {caching: caching.SKIP})
+    .then(response => {
+      refreshUsersCache();
+      res.status(200).send(`Deleted user: ${user[0]['firstName']} ${user[0]['lastName']}`);
+      return;
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).send('Something went wrong');
+      return;
+    });
+});
+
+*/
+
+// Endpoint to get all the users
+router.get('/users', async (req, res, next) => {
+  const getUsers = "SELECT * FROM users";
+
+  db.query(getUsers, {hash: "getUsers"})
+    .then(response => {
+      res.status(200).send(response[0]);
+      return;
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).send('Something went wrong');
+      return;
+    });
+});
 
 router.get('/refreshcache', async (req, res, next) => {
   refreshUsersCache();
