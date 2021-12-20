@@ -101,7 +101,8 @@ async function syncUser(firstName, lastName, data) {
   const sheets = google.sheets({version: 'v4', auth});
   const row = await getUserRow(firstName, lastName);
   if(row === -1){
-    console.log(`User not found. Adding user ${firstName} ${lastName}`);
+    console.log(`User ${firstName} ${lastName} not found in spreadsheet ${process.env.SHEET_NAME}`);
+    /*
     sheets.spreadsheets.values.append({
       spreadsheetId: process.env.SHEET_ID,
       range: process.env.SHEET_NAME,
@@ -111,10 +112,11 @@ async function syncUser(firstName, lastName, data) {
     }, (err, result) => {
       if (err) return console.log('The API returned an error: ' + err);
     });
+    */
   } else {
     sheets.spreadsheets.values.update({
       spreadsheetId: process.env.SHEET_ID,
-      range: `${process.env.SHEET_NAME}!C${row}:D${row}`,
+      range: `${process.env.SHEET_NAME}!D${row}:E${row}`,
       valueInputOption: "RAW",
       requestBody: {values: data},
     }, (err, result) => {
