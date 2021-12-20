@@ -4,3 +4,4 @@
 /.env
 /token.json
 /credentials.json
+/dist
