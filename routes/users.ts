@@ -2,7 +2,10 @@ import mysql from 'mysql2';
 import Router from 'express-promise-router';
 import database from '../dbManager';
 import sheets from '../spreadsheet';
+import WebSocket from 'ws';
+
 const router = Router();
+const wss = new WebSocket.Server({ port: process.env.WS_PORT }); // Todo: no
 
 const {db, hashTypes, caching} = database;
 
@@ -103,6 +106,7 @@ router.post('/signin', async (req, res, next) => {
       refreshUserCache(req.body.password);
       refreshUsersCache();
       res.status(200).send(`Signed in user: ${user[0]['firstName']} ${user[0]['lastName']}`);
+      broadcastUpdate("Sign in update");
       return;
     })
     .catch(error => {
@@ -168,6 +172,7 @@ router.post('/signout', async (req, res, next) => {
       refreshSessionsCache();
       let userData: any = await getUserData(req.body.password);
       sheets.syncUser(user[0]['firstName'], user[0]['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
+      broadcastUpdate("Sign out update");
       return;
     })
     .catch(error => {
@@ -230,6 +235,14 @@ function refreshSessionsCache(){
       console.log(error);
       return;
     });
+}
+
+function broadcastUpdate(message){
+  wss.clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
 }
 
 // Endpoint to change a sessions's end time using the start time and the new end time, and the password of the user
