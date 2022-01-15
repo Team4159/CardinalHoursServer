@@ -71,6 +71,7 @@ router.post('/adduser', async (req, res, next) => {
   db.query(mysql.format(addUser, [firstName, lastName, password, 0, Date.now()]), {caching: caching.SKIP})
     .then(response => {
       refreshUsersCache();
+      refreshUserCache(password);
       console.log(`Added new user: ${firstName} ${lastName}, ${password}`);
       res.status(200).send(`Added new user: ${firstName} ${lastName}, password: ${password}`);
       return;
