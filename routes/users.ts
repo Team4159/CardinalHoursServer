@@ -344,9 +344,15 @@ router.get('/refreshcache', async (req, res, next) => {
 
 
 router.get('/getsessions', async (req, res, next) => {
-  const getSessions = "SELECT * FROM sessions WHERE startTime > ?";
+  const getAllUserSessions = `
+    SELECT sessions.startTime, sessions.endTime, sessions.password, users.firstName, users.lastName
+    FROM sessions
+    INNER JOIN users
+    ON sessions.password = users.password
+    WHERE sessions.startTime > ?
+  `;
 
-  db.query(mysql.format(getSessions, [req.query.time]), {hash: "getSessions " + req.query.time})
+  db.query(mysql.format(getAllUserSessions, [req.query.time]), {hash: "getAllUserSessions " + req.query.time})
     .then(response => {
       res.status(200).send(response[0]);
       return;
