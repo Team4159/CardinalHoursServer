@@ -342,6 +342,23 @@ router.get('/refreshcache', async (req, res, next) => {
   res.status(200).send('Refreshed user and sessions cache');
 });
 
+
+router.get('/getsessions', async (req, res, next) => {
+  const getSessions = "SELECT * FROM sessions WHERE startTime > ?";
+
+  db.query(mysql.format(getSessions, [req.query.time]), {hash: "getSessions " + req.query.time})
+    .then(response => {
+      res.status(200).send(response[0]);
+      return;
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).send('Something went wrong');
+      return;
+    });
+});
+
+
 router.get('/getusersessions', async (req, res, next) => {
   var user = (await db.query(mysql.format(getUser, [req.query.password]), {hash: "getUser " + req.query.password}))[0];
   if( user.length === 0 ){
