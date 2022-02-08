@@ -462,10 +462,44 @@ router.post('/syncusers', async (req, res, next) => {
   for( const user of users ){
     let userData: any = await getUserData(user['password']);
     sheets.syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
   res.status(200).send('Synced all users');
 });
 
+// Change user password
+router.post('/changepassword', async (req, res, next) => {
+  const changePassword = `
+    UPDATE users
+    SET password = ?
+    WHERE password = ?
+  `;
+    // Update previous sessions
+  const updateSessions = `
+    UPDATE sessions
+    SET password = ?
+    WHERE password = ?
+  `;
+
+  db.query(mysql.format(changePassword, [req.body.newPassword, req.body.oldPassword]), {hash: "changePassword " + req.body.oldPassword})
+    .then(response => {
+      db.query(mysql.format(updateSessions, [req.body.newPassword, req.body.oldPassword]), {hash: "updateSessions " + req.body.oldPassword})
+        .then(response => {
+          refreshUserCache(req.body.newPassword);
+          refreshUsersCache();
+          res.status(200).send('Password changed');
+          return;
+        })
+        .catch(error => {
+          console.log(error);
+          res.status(500).send('Something went wrong');
+          return;
+        });
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).send('Something went wrong');
+    })
+});
 
 module.exports = router;
