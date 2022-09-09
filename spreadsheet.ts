@@ -116,7 +116,7 @@ async function syncUser(firstName, lastName, data) {
   } else {
     sheets.spreadsheets.values.update({
       spreadsheetId: process.env.SHEET_ID,
-      range: `${process.env.SHEET_NAME}!${process.env.COLUMN_ID_START}${row}:${process.env.COLUMN_ID_END}${row}`,
+      range: `${process.env.SHEET_NAME}!${process.env.COLUMN_ID_START}${row}:${process.env.COLUMN_ID_START}${row}`,
       valueInputOption: "RAW",
       requestBody: {values: data},
     }, (err, result) => {

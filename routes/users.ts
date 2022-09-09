@@ -461,7 +461,7 @@ router.post('/syncusers', async (req, res, next) => {
   var users = (await db.query(getUsers, {hash: "getUsers"}))[0];
   for( const user of users ){
     let userData: any = await getUserData(user['password']);
-    sheets.syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
+    sheets.syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100]])//, userData.meetings]]);
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
   res.status(200).send('Synced all users');
