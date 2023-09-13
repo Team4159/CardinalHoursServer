@@ -3,6 +3,7 @@ import Router from 'express-promise-router';
 import database from '../dbManager';
 import sheets from '../spreadsheet';
 import WebSocket from 'ws';
+import logger from '../logger';
 
 const router = Router();
 const wss = new WebSocket.Server({ port: process.env.WS_PORT }); // Todo: no
@@ -82,7 +83,7 @@ router.post('/adduser', async (req, res, next) => {
         return;
       }
       else {
-        console.log(error);
+        logger.error(error);
         res.status(500).send('Something went wrong');
         return;
       }
@@ -111,7 +112,7 @@ router.post('/signin', async (req, res, next) => {
       return;
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
       return;
     });
@@ -134,7 +135,7 @@ router.post('/addsession', async (req, res, next) => {
       return;
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
       return;
     });
@@ -162,7 +163,7 @@ router.post('/signout', async (req, res, next) => {
       return;
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
       return;
     });
@@ -177,7 +178,7 @@ router.post('/signout', async (req, res, next) => {
       return;
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
       return;
   });
@@ -202,7 +203,7 @@ async function getUserData(password){
         });
       })
       .catch(error => {
-        console.log(error);
+        logger.error(error);
         reject();
       })
   });
@@ -211,13 +212,13 @@ async function getUserData(password){
 function refreshUserCache(password){
   db.query(mysql.format(getUser, [password]), {hash: "getUser " + password, caching: caching.REFRESH})
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       return;
     });
 
   db.query(mysql.format(getUserSessions, [password]), {hash: "getUserSessions " + password, caching: caching.REFRESH})
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       return;
     });
 }
@@ -225,7 +226,7 @@ function refreshUserCache(password){
 function refreshUsersCache(){
   db.query(getUsers, {hash: "getUsers", caching: caching.REFRESH})
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       return;
     });
 }
@@ -233,7 +234,7 @@ function refreshUsersCache(){
 function refreshSessionsCache(){
   db.query(getSessions, {hash: "getSessions", caching: caching.REFRESH})
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       return;
     });
 }
@@ -264,7 +265,7 @@ router.post('/changesession', async (req, res, next) => {
       return;
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
       return;
     });
@@ -289,7 +290,7 @@ router.post('/deletesession', async (req, res, next) => {
       return;
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
       return;
     });
@@ -312,7 +313,7 @@ router.post('/deleteuser', async (req, res, next) => {
       return;
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
       return;
     });
@@ -330,7 +331,7 @@ router.get('/users', async (req, res, next) => {
       return;
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
       return;
     });
@@ -358,7 +359,7 @@ router.get('/getsessions', async (req, res, next) => {
       return;
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
       return;
     });
@@ -387,7 +388,7 @@ router.get('/getusersessions', async (req, res, next) => {
        res.json(formatted);
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
     })
 });
@@ -402,7 +403,7 @@ router.get('/getuserdata', async (req, res, next) => {
 
   const userData: any = await getUserData(req.query.password)
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
       return;
     });
@@ -452,7 +453,7 @@ router.get('/getusers', async (req, res, next) => {
       res.json(users);
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
     })
 });
@@ -491,13 +492,13 @@ router.post('/changepassword', async (req, res, next) => {
           return;
         })
         .catch(error => {
-          console.log(error);
+          logger.error(error);
           res.status(500).send('Something went wrong');
           return;
         });
     })
     .catch(error => {
-      console.log(error);
+      logger.error(error);
       res.status(500).send('Something went wrong');
     })
 });

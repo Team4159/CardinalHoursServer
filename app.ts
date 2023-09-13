@@ -20,6 +20,9 @@ var usersRouter = require('./routes/users');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+    
+});
 
 app.use('/users', usersRouter);
 //app.use('/admin', adminRouter);
