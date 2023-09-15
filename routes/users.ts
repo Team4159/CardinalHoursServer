@@ -41,17 +41,17 @@ refreshSessionsCache();
 db.query(createUserTable, {caching: caching.SKIP}, function (err, res) {
   if (err) throw err;
   if(res.warningCount !== 0)
-    console.log("User table already exists");
+    logger.debug("User table already exists");
   else
-    console.log("Created new user table");
+  logger.debug("Created new user table");
 });
 
 db.query(createSessionTable, {caching: caching.SKIP}, function (err, res) {
   if (err) throw err;
   if(res.warningCount !== 0)
-    console.log("Session table already exists");
+    logger.debug("Session table already exists");
   else
-    console.log("Created new session table");
+  logger.debug("Created new session table");
 });
 
 /* GET users listing. */
@@ -61,7 +61,7 @@ router.get('/', (req, res) => {
 
 router.post('/adduser', async (req, res, next) => {
   const { firstName, lastName, password }: { firstName: string, lastName: string, password: string } = req.body;
-  console.log(password);
+  logger.debug(password);
 
   if( !(firstName && lastName && password) ){
     res.status(400).send("Username or password cannot be empty"); 
@@ -73,7 +73,7 @@ router.post('/adduser', async (req, res, next) => {
     .then(response => {
       refreshUsersCache();
       refreshUserCache(password);
-      console.log(`Added new user: ${firstName} ${lastName}, ${password}`);
+      logger.info(`Added new user: ${firstName} ${lastName}, ${password}`);
       res.status(200).send(`Added new user: ${firstName} ${lastName}, password: ${password}`);
       return;
     })

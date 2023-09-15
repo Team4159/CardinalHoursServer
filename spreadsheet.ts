@@ -1,6 +1,7 @@
 import fs from 'fs';
 import readline from 'readline';
 import {google} from 'googleapis';
+import logger from "./logger";
 require('dotenv').config();
 
 const TOKEN_PATH = 'token.json';
@@ -8,10 +9,10 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 var credentials;
 
 fs.readFile('credentials.json', async (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
+  if (err) return logger.error('Error loading client secret file:', err);
   credentials = JSON.parse(content.toString());
   authorize(credentials, async (res) => {
-    console.log("Connected to spreadsheet: " + await getSheetName());
+    logger.debug("Connected to spreadsheet: " + await getSheetName());
   });
 });
 
@@ -33,7 +34,7 @@ function getNewToken(oAuth2Client, callback) {
     access_type: 'offline',
     scope: SCOPES,
   });
-  console.log('Authorize this app by visiting this url:', authUrl);
+  logger.info('Authorize this app by visiting this url:', authUrl);
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -45,7 +46,7 @@ function getNewToken(oAuth2Client, callback) {
       oAuth2Client.setCredentials(token);
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
         if (err) return console.error(err);
-        console.log('Token stored to', TOKEN_PATH);
+        logger.info('Token stored to', TOKEN_PATH);
       });
       callback(oAuth2Client);
     });
@@ -67,7 +68,7 @@ async function getSheetName(){
     sheets.spreadsheets.get({
       spreadsheetId: process.env.SHEET_ID
     }, (err, res) => {
-      if (err) return console.log('The API returned an error: ' + err);
+      if (err) return logger.error('The API returned an error: ' + err);
       resolve(res.data.properties.title);
     });
   });
@@ -90,7 +91,7 @@ async function getNames(){
       spreadsheetId: process.env.SHEET_ID,
       range: `${process.env.SHEET_NAME}!A:B`,
     }, (err, res) => {
-      if (err) return console.log('The API returned an error: ' + err);
+      if (err) return logger.error('The API returned an error: ' + err);
       resolve(res.data.values);
     });
   });
@@ -101,7 +102,7 @@ async function syncUser(firstName, lastName, data) {
   const sheets = google.sheets({version: 'v4', auth});
   const row = await getUserRow(firstName, lastName);
   if(row === -1){
-    console.log(`User ${firstName} ${lastName} not found in spreadsheet ${process.env.SHEET_NAME}`);
+    logger.debug(`User ${firstName} ${lastName} not found in spreadsheet ${process.env.SHEET_NAME}`);
     /*
     sheets.spreadsheets.values.append({
       spreadsheetId: process.env.SHEET_ID,
@@ -110,7 +111,7 @@ async function syncUser(firstName, lastName, data) {
       insertDataOption: "INSERT_ROWS",
       requestBody: {values: [[firstName, lastName, data[0][0], data[0][1]]]},
     }, (err, result) => {
-      if (err) return console.log('The API returned an error: ' + err);
+      if (err) return logger.error('The API returned an error: ' + err);
     });
     */
   } else {
@@ -120,7 +121,7 @@ async function syncUser(firstName, lastName, data) {
       valueInputOption: "RAW",
       requestBody: {values: data},
     }, (err, result) => {
-      if (err) return console.log('The API returned an error: ' + err);
+      if (err) return logger.info('The API returned an error: ' + err);
     });
   }
 }

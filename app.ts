@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import logger from "./logger";
 const app = express();
 require('dotenv').config();
 const port = process.env.PORT;
@@ -12,7 +13,7 @@ app.get( "/", ( req, res ) => {
 });
 
 app.listen( port, () => {
-    console.log( `server started at http://localhost:${ port }` );
+    logger.debug( `server started at port: ${ port }` );
 });
 
 var usersRouter = require('./routes/users');
@@ -20,9 +21,6 @@ var usersRouter = require('./routes/users');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use((req, res, next) => {
-    
-});
 
 app.use('/users', usersRouter);
 //app.use('/admin', adminRouter);
