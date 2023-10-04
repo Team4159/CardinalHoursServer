@@ -145,9 +145,6 @@ router.post('/signout', async (req, res, next) => {
   const signOut = "UPDATE users SET signedIn = 0 WHERE password = BINARY ?";
   const addSession = "INSERT INTO sessions(password, startTime, endTime) VALUES(?, ?, ?)";
 
-  logger.debug("Signing out");
-  await updateRequiredMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(), Math.trunc((Date.now() - user[0]["lastTime"]) / 36000) / 100);
-
   var user = (await db.query(mysql.format(getUser, [req.body.password]), {hash: "getUser " + req.body.password}))[0];
   if( user.length === 0 ){
     res.status(404).send(`User not found`);
@@ -185,6 +182,8 @@ router.post('/signout', async (req, res, next) => {
       res.status(500).send('Something went wrong');
       return;
   });
+
+  await updateRequiredMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(), Math.trunc((Date.now() - user[0]["lastTime"]) / 36000) / 100);
 });
 
 async function getUserData(password){
