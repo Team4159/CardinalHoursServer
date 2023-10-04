@@ -2,6 +2,7 @@ import fs from 'fs';
 import readline from 'readline';
 import {google} from 'googleapis';
 import logger from "./logger";
+import { columnToLetter, getColumnIndexFromColumnTitle, getName, getNamesList, getNextColumnIndex } from "./utils";
 require('dotenv').config();
 
 const TOKEN_PATH = 'token.json';
@@ -121,11 +122,120 @@ async function syncUser(firstName, lastName, data) {
       valueInputOption: "RAW",
       requestBody: {values: data},
     }, (err, result) => {
-      if (err) return logger.info('The API returned an error: ' + err);
+      if (err) return logger.error('The API returned an error: ' + err);
     });
   }
 }
 
-export default {
-  syncUser: syncUser,
+
+let requiredMeetingDays: number[] = process.env.REQUIRED_MEETING_DAYS.split(",").map((item) => parseInt(item));
+
+async function updateRequiredMeetingHours(
+  firstName: string,
+  lastName: string,
+  date: Date,
+  addHoursThatDate: number
+) {
+  if (requiredMeetingDays.indexOf(date.getDay()) === -1) {
+      logger.debug("Today is not a meeting day");
+      return; // Not a required meeting day, so no need to continue
+  }
+
+  const dateString = (date.getMonth() + 1) + "/" + date.getDate();
+
+  const auth: any = await getAuth(credentials);
+  const sheets = google.sheets({ version: "v4", auth });
+
+  let names = await getNamesList(sheets, process.env.SHEET_ID);
+  let nameRowIndex = getName(names, firstName, lastName);
+
+  if (nameRowIndex === -1) {
+      await sheets.spreadsheets.batchUpdate({ // Add new row
+          spreadsheetId: process.env.SHEET_ID,
+          requestBody: {
+              requests: [
+                  {
+                      appendDimension: {
+                          sheetId: 1613576534,
+                          dimension: "ROWS",
+                          length: 1,
+                      }
+                  }
+              ]
+          }
+      });
+
+      // Update newly created row with first name and last name
+      await sheets.spreadsheets.values.update({
+          spreadsheetId: process.env.SHEET_ID,
+          range: `RequiredMeetings!A${names.length + 1}:B`,
+          valueInputOption: "RAW",
+          requestBody: {
+              majorDimension: "COLUMNS",
+              values: [[ firstName ], [ lastName ]]
+          }
+      });
+
+      names = await getNamesList(sheets, process.env.SHEET_ID);
+      nameRowIndex = names.length - 1;
+  }
+
+  let dateColumnIndex = await getColumnIndexFromColumnTitle(sheets, process.env.SHEET_ID, `${dateString} Hours`);
+  let dateHours = addHoursThatDate;
+  
+  if (dateColumnIndex === -1) {
+      dateColumnIndex = await getNextColumnIndex(sheets, process.env.SHEET_ID);
+      
+      await sheets.spreadsheets.batchUpdate({
+          spreadsheetId: process.env.SHEET_ID,
+          requestBody: {
+              requests: [
+                  {
+                      appendDimension: {
+                          sheetId: 1613576534,
+                          dimension: "COLUMNS",
+                          length: 1,
+                      }
+                  }
+              ]
+          }
+      });
+
+      // Update column title of newly created row
+      await sheets.spreadsheets.values.update({
+          spreadsheetId: process.env.SHEET_ID,
+          range: `RequiredMeetings!${columnToLetter(dateColumnIndex)}1`,
+          valueInputOption: "RAW",
+          requestBody: {
+              majorDimension: "ROWS",
+              values: [[ `${dateString} Hours` ]]
+          }
+      });
+  } else {
+      // Get dateHours
+      const cell = (await sheets.spreadsheets.values.get({
+          spreadsheetId: process.env.SHEET_ID,
+          range: `RequiredMeetings!${columnToLetter(dateColumnIndex)}${nameRowIndex + 1}`,
+      })).data.values;
+
+      if (cell && cell.length > 0 && cell[0] && cell[0].length > 0 && cell[0][0]) {
+          dateHours += parseInt(cell[0][0]);
+      }
+  }
+
+  // Update cell
+  await sheets.spreadsheets.values.update({
+      spreadsheetId: process.env.SHEET_ID,
+      range: `RequiredMeetings!${columnToLetter(dateColumnIndex)}${nameRowIndex + 1}`,
+      valueInputOption: "RAW",
+      requestBody: {
+          majorDimension: "COLUMNS",
+          values: [[ dateHours ]]
+      }
+  });
+}
+
+export {
+  syncUser,
+  updateRequiredMeetingHours,
 }

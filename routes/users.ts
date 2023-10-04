@@ -1,7 +1,7 @@
 import mysql from 'mysql2';
 import Router from 'express-promise-router';
 import database from '../dbManager';
-import sheets from '../spreadsheet';
+import { syncUser, updateRequiredMeetingHours } from '../spreadsheet';
 import WebSocket from 'ws';
 import logger from '../logger';
 
@@ -168,12 +168,14 @@ router.post('/signout', async (req, res, next) => {
       return;
     });
 
+  updateRequiredMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(), Math.trunc((Date.now() - user[0]["lastTime"]) / 36000) / 100);
+
   db.query(mysql.format(addSession, [req.body.password, user[0]['lastTime'], Date.now()]), {caching: caching.SKIP})
     .then(async response => {
       res.status(200).send(`Signed out user: ${user[0]['firstName']} ${user[0]['lastName']}`);
       refreshSessionsCache();
       let userData: any = await getUserData(req.body.password);
-      sheets.syncUser(user[0]['firstName'], user[0]['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
+      syncUser(user[0]['firstName'], user[0]['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
       broadcastUpdate("Sign out update");
       return;
     })
@@ -462,7 +464,7 @@ router.post('/syncusers', async (req, res, next) => {
   var users = (await db.query(getUsers, {hash: "getUsers"}))[0];
   for( const user of users ){
     let userData: any = await getUserData(user['password']);
-    sheets.syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
+    syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
   res.status(200).send('Synced all users');
