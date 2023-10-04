@@ -156,7 +156,7 @@ async function updateRequiredMeetingHours(
               requests: [
                   {
                       appendDimension: {
-                          sheetId: 1613576534,
+                          sheetId: parseInt(process.env.REQUIRED_MEETING_SHEET_ID),
                           dimension: "ROWS",
                           length: 1,
                       }
@@ -192,7 +192,7 @@ async function updateRequiredMeetingHours(
               requests: [
                   {
                       appendDimension: {
-                          sheetId: 1613576534,
+                          sheetId: parseInt(process.env.REQUIRED_MEETING_SHEET_ID),
                           dimension: "COLUMNS",
                           length: 1,
                       }
