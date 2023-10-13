@@ -183,11 +183,7 @@ router.post('/signout', async (req, res, next) => {
       return;
   });
 
-  const newHours = Math.trunc((Date.now() - user[0]["lastTime"]) / 36000) / 100;
-
-  if (newHours < 10) {
-    updateRequiredMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(), newHours);
-  }
+  updateRequiredMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(user[0]["lastTime"]), new Date());
 });
 
 async function getUserData(password){

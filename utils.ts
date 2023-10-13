@@ -78,6 +78,10 @@ async function getColumnIndexFromColumnTitle(sheets: sheets_v4.Sheets, spreadshe
     return columnTitles.flat().indexOf(columnTitle);
 }
 
+function datesToHours(startDate: Date, endDate: Date): number {
+    return Math.trunc((endDate.valueOf() - startDate.valueOf()) / 36000) / 100
+}
+
 export {
     columnToLetter,
     letterToColumn,
@@ -85,4 +89,5 @@ export {
     getName,
     getNextColumnIndex,
     getColumnIndexFromColumnTitle,
+    datesToHours,
 }

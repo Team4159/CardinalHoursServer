@@ -4,6 +4,7 @@ import { google } from "googleapis";
 import logger from "./logger";
 import {
     columnToLetter,
+    datesToHours,
     getColumnIndexFromColumnTitle,
     getName,
     getNamesList,
@@ -153,22 +154,28 @@ async function syncUser(firstName, lastName, data) {
     }
 }
 
-let requiredMeetingDays: number[] = process.env.REQUIRED_MEETING_DAYS.split(
+const requiredMeetingDays: number[] = process.env.REQUIRED_MEETING_DAYS.split(
     ","
 ).map((item) => parseInt(item));
 
 async function updateRequiredMeetingHours(
     firstName: string,
     lastName: string,
-    date: Date,
-    addHoursThatDate: number
+    startDate: Date,
+    endDate: Date
 ) {
-    if (requiredMeetingDays.indexOf(date.getDay()) === -1) {
+    if (startDate.toDateString() !== endDate.toDateString() || requiredMeetingDays.indexOf(startDate.getDay()) === -1) {
         logger.debug("Today is not a meeting day");
         return; // Not a required meeting day, so no need to continue
     }
 
-    const dateString = date.getMonth() + 1 + "/" + date.getDate();
+    let dateHours = datesToHours(startDate, endDate);
+
+    if (dateHours > 10) {
+        return; // Can't log too many hours
+    }
+
+    const dateString = endDate.getMonth() + 1 + "/" + endDate.getDate();
 
     const auth: any = await getAuth(credentials);
     const sheets = google.sheets({ version: "v4", auth });
@@ -216,7 +223,6 @@ async function updateRequiredMeetingHours(
         process.env.SHEET_ID,
         `${dateString} Hours`
     );
-    let dateHours = addHoursThatDate;
 
     if (dateColumnIndex === -1) {
         logger.debug("Adding new column for date");
@@ -274,7 +280,7 @@ async function updateRequiredMeetingHours(
         }
     }
 
-    logger.debug(`Update ${firstName} ${lastName} hours on ${date.getDate()} from ${dateHours - addHoursThatDate} to ${dateHours}`)
+    logger.debug(`Update ${firstName} ${lastName} hours on ${endDate.getDate()} to ${dateHours}`)
 
     // Update cell
     await sheets.spreadsheets.values.update({
