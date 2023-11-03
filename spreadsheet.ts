@@ -164,10 +164,11 @@ async function updateRequiredMeetingHours(
     startDate: Date,
     endDate: Date
 ) {
-    if (startDate.toDateString() !== endDate.toDateString() || requiredMeetingDays.indexOf(startDate.getDay()) === -1) {
-        logger.debug("Today is not a meeting day");
-        return; // Not a required meeting day, so no need to continue
-    }
+    // Log every day
+    // if (startDate.toDateString() !== endDate.toDateString() || requiredMeetingDays.indexOf(startDate.getDay()) === -1) {
+    //     logger.debug("Today is not a meeting day");
+    //     return; // Not a required meeting day, so no need to continue
+    // }
 
     let dateHours = datesToHours(startDate, endDate);
 
