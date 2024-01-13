@@ -471,7 +471,7 @@ async function syncUsers(users: any[]) {
   for( const user of users ){
     let userData: any = await getUserData(user['password']);
     syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1500));
   }
 }
 
