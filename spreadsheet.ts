@@ -281,7 +281,7 @@ async function updateRequiredMeetingHours(
         }
     }
 
-    logger.debug(`Update ${firstName} ${lastName} hours on ${endDate.getDate()} to ${dateHours}`)
+    logger.debug(`Update ${firstName} ${lastName} hours on ${endDate.getMonth()}/${endDate.getDate()} to ${dateHours}`)
 
     // Update cell
     await sheets.spreadsheets.values.update({
