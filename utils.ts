@@ -82,6 +82,26 @@ function datesToHours(startDate: Date, endDate: Date): number {
     return Math.trunc((endDate.valueOf() - startDate.valueOf()) / 36000) / 100
 }
 
+async function asyncExponentialBackoff(f: Function, maxAttempts = 100) {
+    let succeeded = false;
+    let attempts = 0;
+    let backoffTime = 0; // In seconds
+
+    while (!succeeded) {
+        try {
+            return await f();
+        } catch (err) {
+            backoffTime = Math.min(Math.pow(2, attempts) + Math.random(), 64);
+            await new Promise(resolve => setTimeout(resolve, backoffTime * 1000));
+            attempts++;
+
+            if (attempts > maxAttempts) {
+                throw err;
+            }
+        }
+    }
+}
+
 export {
     columnToLetter,
     letterToColumn,
@@ -90,4 +110,5 @@ export {
     getNextColumnIndex,
     getColumnIndexFromColumnTitle,
     datesToHours,
+    asyncExponentialBackoff,
 }

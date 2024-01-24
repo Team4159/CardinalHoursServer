@@ -3,6 +3,7 @@ import readline from "readline";
 import { google } from "googleapis";
 import logger from "./logger";
 import {
+    asyncExponentialBackoff,
     columnToLetter,
     datesToHours,
     getColumnIndexFromColumnTitle,
@@ -28,11 +29,7 @@ fs.readFile("credentials.json", async (err, content) => {
 
 function authorize(credentials, callback) {
     const { client_secret, client_id, redirect_uris } = credentials.installed;
-    const oAuth2Client = new google.auth.OAuth2(
-        client_id,
-        client_secret,
-        redirect_uris[0]
-    );
+    const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
     // Check if we have previously stored a token.
     fs.readFile(TOKEN_PATH, (err, token) => {
@@ -55,11 +52,7 @@ function getNewToken(oAuth2Client, callback) {
     rl.question("Enter the code from that page here: ", (code) => {
         rl.close();
         oAuth2Client.getToken(code, (err, token) => {
-            if (err)
-                return console.error(
-                    "Error while trying to retrieve access token",
-                    err
-                );
+            if (err) return console.error("Error while trying to retrieve access token", err);
             oAuth2Client.setCredentials(token);
             fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
                 if (err) return console.error(err);
@@ -87,8 +80,7 @@ async function getSheetName() {
                 spreadsheetId: process.env.SHEET_ID,
             },
             (err, res) => {
-                if (err)
-                    return logger.error("The API returned an error: " + err);
+                if (err) return logger.error("The API returned an error: " + err);
                 resolve(res.data.properties.title);
             }
         );
@@ -113,8 +105,7 @@ async function getNames() {
                 range: `${process.env.SHEET_NAME}!A:B`,
             },
             (err, res) => {
-                if (err)
-                    return logger.error("The API returned an error: " + err);
+                if (err) return logger.error("The API returned an error: " + err);
                 resolve(res.data.values);
             }
         );
@@ -126,9 +117,7 @@ async function syncUser(firstName, lastName, data) {
     const sheets = google.sheets({ version: "v4", auth });
     const row = await getUserRow(firstName, lastName);
     if (row === -1) {
-        logger.debug(
-            `User ${firstName} ${lastName} not found in spreadsheet ${process.env.SHEET_NAME}`
-        );
+        logger.debug(`User ${firstName} ${lastName} not found in spreadsheet ${process.env.SHEET_NAME}`);
         /*
     sheets.spreadsheets.values.append({
       spreadsheetId: process.env.SHEET_ID,
@@ -149,8 +138,7 @@ async function syncUser(firstName, lastName, data) {
                 requestBody: { values: data },
             },
             (err, result) => {
-                if (err)
-                    return logger.error("The API returned an error: " + err);
+                if (err) return logger.error("The API returned an error: " + err);
             }
         );
     }
@@ -162,45 +150,43 @@ async function syncUsersTotalHours() {
     const sheets = google.sheets({ version: "v4", auth });
 
     logger.debug("Clearing TotalHours");
-    await sheets.spreadsheets.batchUpdate({ // Clear TotalHours sheet
-        spreadsheetId: process.env.SHEET_ID,
-        requestBody: {
-            requests: [
-                {
-                    deleteDimension: {
-                        range: {
-                            sheetId: parseInt(process.env.REQUIRED_MEETING_SHEET_ID),
-                            dimension: "COLUMNS",
-                            startIndex: 2, // From C
-                        }
-                    }
-                }
-            ]
-        }
+    await asyncExponentialBackoff(async () => {
+        await sheets.spreadsheets.batchUpdate({
+            // Clear TotalHours sheet
+            spreadsheetId: process.env.SHEET_ID,
+            requestBody: {
+                requests: [
+                    {
+                        deleteDimension: {
+                            range: {
+                                sheetId: parseInt(process.env.REQUIRED_MEETING_SHEET_ID),
+                                dimension: "COLUMNS",
+                                startIndex: 2, // From C
+                            },
+                        },
+                    },
+                ],
+            },
+        });
     });
 
     const earliestDate = new Date(new Date().getFullYear(), Math.floor(new Date().getMonth() / 6) * 6, 1).valueOf();
-    const [sessions] = await database.db.query(mysql.format("SELECT * FROM sessions WHERE startTime > ? ORDER BY startTime", [earliestDate.valueOf()]));
+    const [sessions] = await database.db.query(
+        mysql.format("SELECT * FROM sessions WHERE startTime > ? ORDER BY startTime", [earliestDate.valueOf()])
+    );
 
     for (const session of sessions) {
-        logger.debug(`Adding session with startTime: ${session["startTime"]} to TotalHours`)
+        logger.debug(`Adding session with startTime: ${session["startTime"]} to TotalHours`);
         const [user] = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session["password"]]));
 
         await updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(session["startTime"]), new Date(session["endTime"]));
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
     }
 }
 
-const requiredMeetingDays: number[] = process.env.REQUIRED_MEETING_DAYS.split(
-    ","
-).map((item) => parseInt(item));
+const requiredMeetingDays: number[] = process.env.REQUIRED_MEETING_DAYS.split(",").map((item) => parseInt(item));
 
-async function updateTotalMeetingHours(
-    firstName: string,
-    lastName: string,
-    startDate: Date,
-    endDate: Date
-) {
+async function updateTotalMeetingHours(firstName: string, lastName: string, startDate: Date, endDate: Date) {
     // Log every day
     // if (startDate.toDateString() !== endDate.toDateString() || requiredMeetingDays.indexOf(startDate.getDay()) === -1) {
     //     logger.debug("Today is not a meeting day");
@@ -223,114 +209,86 @@ async function updateTotalMeetingHours(
 
     if (nameRowIndex === -1) {
         logger.debug("Adding new row for name");
-        await sheets.spreadsheets.batchUpdate({
-            // Add new row
-            spreadsheetId: process.env.SHEET_ID,
-            requestBody: {
-                requests: [
-                    {
-                        appendDimension: {
-                            sheetId: parseInt(
-                                process.env.REQUIRED_MEETING_SHEET_ID
-                            ),
-                            dimension: "ROWS",
-                            length: 1,
+        await asyncExponentialBackoff(async () => {
+            await sheets.spreadsheets.batchUpdate({
+                // Add new row
+                spreadsheetId: process.env.SHEET_ID,
+                requestBody: {
+                    requests: [
+                        {
+                            appendDimension: {
+                                sheetId: parseInt(process.env.REQUIRED_MEETING_SHEET_ID),
+                                dimension: "ROWS",
+                                length: 1,
+                            },
                         },
-                    },
-                ],
-            },
+                    ],
+                },
+            });
         });
 
         // Update newly created row with first name and last name
-        await sheets.spreadsheets.values.update({
-            spreadsheetId: process.env.SHEET_ID,
-            range: `TotalHours!A${names.length + 1}:B`,
-            valueInputOption: "RAW",
-            requestBody: {
-                majorDimension: "COLUMNS",
-                values: [[firstName], [lastName]],
-            },
+        await asyncExponentialBackoff(async () => {
+            await sheets.spreadsheets.values.update({
+                spreadsheetId: process.env.SHEET_ID,
+                range: `TotalHours!A${names.length + 1}:B`,
+                valueInputOption: "RAW",
+                requestBody: {
+                    majorDimension: "COLUMNS",
+                    values: [[firstName], [lastName]],
+                },
+            });
         });
 
-        names = await getNamesList(sheets, process.env.SHEET_ID);
+        names = await asyncExponentialBackoff(async () => await getNamesList(sheets, process.env.SHEET_ID));
         nameRowIndex = names.length - 1;
     }
 
-    let dateColumnIndex = await getColumnIndexFromColumnTitle(
-        sheets,
-        process.env.SHEET_ID,
-        `${dateString} Hours`
-    );
+    let dateColumnIndex = await asyncExponentialBackoff(async () => await getColumnIndexFromColumnTitle(sheets, process.env.SHEET_ID, `${dateString} Hours`));
 
     if (dateColumnIndex === -1) {
         logger.debug("Adding new column for date");
-        dateColumnIndex = await getNextColumnIndex(
-            sheets,
-            process.env.SHEET_ID
-        );
-
-        await sheets.spreadsheets.batchUpdate({
-            spreadsheetId: process.env.SHEET_ID,
-            requestBody: {
-                requests: [
-                    {
-                        appendDimension: {
-                            sheetId: parseInt(
-                                process.env.REQUIRED_MEETING_SHEET_ID
-                            ),
-                            dimension: "COLUMNS",
-                            length: 1,
-                        },
-                    },
-                ],
-            },
-        });
+        dateColumnIndex = await asyncExponentialBackoff(async () => await getNextColumnIndex(sheets, process.env.SHEET_ID));
 
         // Update column title of newly created row
-        await sheets.spreadsheets.values.update({
-            spreadsheetId: process.env.SHEET_ID,
-            range: `TotalHours!${columnToLetter(dateColumnIndex)}1`,
-            valueInputOption: "RAW",
-            requestBody: {
-                majorDimension: "ROWS",
-                values: [[`${dateString} Hours`]],
-            },
+        await asyncExponentialBackoff(async () => {
+            await sheets.spreadsheets.values.update({
+                spreadsheetId: process.env.SHEET_ID,
+                range: `TotalHours!${columnToLetter(dateColumnIndex)}1`,
+                valueInputOption: "RAW",
+                requestBody: {
+                    majorDimension: "ROWS",
+                    values: [[`${dateString} Hours`]],
+                },
+            });
         });
     } else {
         // Get dateHours
         const cell = (
-            await sheets.spreadsheets.values.get({
+            await asyncExponentialBackoff(async () => await sheets.spreadsheets.values.get({
                 spreadsheetId: process.env.SHEET_ID,
-                range: `TotalHours!${columnToLetter(dateColumnIndex)}${
-                    nameRowIndex + 1
-                }`,
-            })
+                range: `TotalHours!${columnToLetter(dateColumnIndex)}${nameRowIndex + 1}`,
+            }))
         ).data.values;
 
-        if (
-            cell &&
-            cell.length > 0 &&
-            cell[0] &&
-            cell[0].length > 0 &&
-            cell[0][0]
-        ) {
+        if (cell && cell.length > 0 && cell[0] && cell[0].length > 0 && cell[0][0]) {
             dateHours += parseInt(cell[0][0]);
         }
     }
 
-    logger.debug(`Update ${firstName} ${lastName} hours on ${dateString} to ${dateHours}`)
+    logger.debug(`Update ${firstName} ${lastName} hours on ${dateString} to ${dateHours}`);
 
     // Update cell
-    await sheets.spreadsheets.values.update({
-        spreadsheetId: process.env.SHEET_ID,
-        range: `TotalHours!${columnToLetter(dateColumnIndex)}${
-            nameRowIndex + 1
-        }`,
-        valueInputOption: "RAW",
-        requestBody: {
-            majorDimension: "COLUMNS",
-            values: [[dateHours]],
-        },
+    await asyncExponentialBackoff(async () => {
+        await sheets.spreadsheets.values.update({
+            spreadsheetId: process.env.SHEET_ID,
+            range: `TotalHours!${columnToLetter(dateColumnIndex)}${nameRowIndex + 1}`,
+            valueInputOption: "RAW",
+            requestBody: {
+                majorDimension: "COLUMNS",
+                values: [[dateHours]],
+            },
+        });
     });
 }
 
