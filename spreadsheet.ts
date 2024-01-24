@@ -179,7 +179,7 @@ async function syncUsersTotalHours() {
         }
     });
 
-    const sessions = await database.db.query(mysql.format("SELECT * FROM sessions SORT BY startTime"));
+    const sessions = await database.db.query(mysql.format("SELECT * FROM sessions ORDER BY startTime"));
 
     for (const session of sessions) {
         logger.debug(`Adding session with startTime: ${session["startTime"]} to TotalHours`)
