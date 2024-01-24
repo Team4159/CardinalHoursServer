@@ -187,7 +187,7 @@ async function syncUsersTotalHours() {
         logger.debug(user[0]);
 
         await updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(session["startTime"]), new Date(session["endTime"]));
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 2000));
     }
 }
 
