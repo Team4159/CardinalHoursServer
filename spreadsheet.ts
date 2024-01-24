@@ -161,8 +161,6 @@ async function syncUsersTotalHours() {
     var auth: any = await getAuth(credentials);
     const sheets = google.sheets({ version: "v4", auth });
 
-    const lastColumnIndex = await getNextColumnIndex(sheets, process.env.REQUIRED_MEETING_SHEET_ID) - 1;
-
     logger.debug("Clearing TotalHours");
     await sheets.spreadsheets.batchUpdate({ // Clear TotalHours sheet
         spreadsheetId: process.env.SHEET_ID,
@@ -174,7 +172,6 @@ async function syncUsersTotalHours() {
                             sheetId: parseInt(process.env.REQUIRED_MEETING_SHEET_ID),
                             dimension: "COLUMNS",
                             startIndex: 2, // From C
-                            endIndex: lastColumnIndex,
                         }
                     }
                 }
