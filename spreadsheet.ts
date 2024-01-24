@@ -179,7 +179,8 @@ async function syncUsersTotalHours() {
         }
     });
 
-    const [sessions] = await database.db.query(mysql.format("SELECT * FROM sessions ORDER BY startTime WHERE startTime > ?", [ new Date(new Date().getFullYear(), 0, 1).valueOf()]));
+    const earliestDate = new Date(new Date().getFullYear(), Math.floor(new Date().getMonth() / 6) * 6, 1).valueOf();
+    const [sessions] = await database.db.query(mysql.format("SELECT * FROM sessions WHERE startTime > ? ORDER BY startTime", [  ]));
 
     for (const session of sessions) {
         logger.debug(`Adding session with startTime: ${session["startTime"]} to TotalHours`)
