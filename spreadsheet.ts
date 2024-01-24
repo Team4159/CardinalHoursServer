@@ -179,12 +179,11 @@ async function syncUsersTotalHours() {
         }
     });
 
-    const [sessions] = await database.db.query(mysql.format("SELECT * FROM sessions ORDER BY startTime"));
+    const [sessions] = await database.db.query(mysql.format("SELECT * FROM sessions ORDER BY startTime WHERE startTime > ?", [ new Date(new Date().getFullYear(), 0, 1).valueOf()]));
 
     for (const session of sessions) {
         logger.debug(`Adding session with startTime: ${session["startTime"]} to TotalHours`)
         const [user] = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session["password"]]));
-        logger.debug(user[0]);
 
         await updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(session["startTime"]), new Date(session["endTime"]));
         await new Promise(resolve => setTimeout(resolve, 2000));
