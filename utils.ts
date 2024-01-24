@@ -25,7 +25,7 @@ function letterToColumn(letter: string) {
 async function getNamesList(sheets: sheets_v4.Sheets, spreadsheetId: string) {
     const names = (await sheets.spreadsheets.values.get({
         spreadsheetId: spreadsheetId,
-        range: "RequiredMeetings!A:B",
+        range: "TotalHours!A:B",
         majorDimension: "ROWS",
     })).data.values;
 
@@ -52,7 +52,7 @@ function getName(names: string[][], firstName: string, lastName: string): number
 async function getNextColumnIndex(sheets: sheets_v4.Sheets, spreadsheetId: string) {
     const columnTitles = (await sheets.spreadsheets.values.get({
         spreadsheetId: spreadsheetId,
-        range: "RequiredMeetings!A1:1",
+        range: "TotalHours!A1:1",
         majorDimension: "COLUMNS",
     })).data.values;
 
@@ -67,7 +67,7 @@ async function getNextColumnIndex(sheets: sheets_v4.Sheets, spreadsheetId: strin
 async function getColumnIndexFromColumnTitle(sheets: sheets_v4.Sheets, spreadsheetId: string, columnTitle: string): Promise<number> {
     const columnTitles = (await sheets.spreadsheets.values.get({
         spreadsheetId: spreadsheetId,
-        range: "RequiredMeetings!A1:1",
+        range: "TotalHours!A1:1",
         majorDimension: "COLUMNS",
     })).data.values;
 

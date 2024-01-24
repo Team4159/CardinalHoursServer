@@ -10,6 +10,8 @@ import {
     getNamesList,
     getNextColumnIndex,
 } from "./utils";
+import database from "./dbManager";
+import mysql from "mysql2";
 require("dotenv").config();
 
 const TOKEN_PATH = "token.json";
@@ -154,11 +156,46 @@ async function syncUser(firstName, lastName, data) {
     }
 }
 
+// Prereq: sessions are sorted from earliest to latest
+async function syncUsersTotalHours() {
+    var auth: any = await getAuth(credentials);
+    const sheets = google.sheets({ version: "v4", auth });
+
+    const lastColumnIndex = await getNextColumnIndex(sheets, process.env.REQUIRED_MEETING_SHEET_ID) - 1;
+
+    await sheets.spreadsheets.batchUpdate({ // Clear TotalHours sheet
+        spreadsheetId: process.env.SHEET_ID,
+        requestBody: {
+            requests: [
+                {
+                    deleteDimension: {
+                        range: {
+                            sheetId: parseInt(process.env.REQUIRED_MEETING_SHEET_ID),
+                            dimension: "COLUMNS",
+                            startIndex: 2, // From C
+                            endIndex: lastColumnIndex,
+                        }
+                    }
+                }
+            ]
+        }
+    });
+
+    const sessions = await database.db.query(mysql.format("SELECT * FROM sessions"));
+
+    for (const session of sessions) {
+        const user = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session[0]["password"]]));
+
+        await updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(session[0]["startTime"]), new Date(session[0]["endTime"]));
+        await new Promise(resolve => setTimeout(resolve, 500));
+    }
+}
+
 const requiredMeetingDays: number[] = process.env.REQUIRED_MEETING_DAYS.split(
     ","
 ).map((item) => parseInt(item));
 
-async function updateRequiredMeetingHours(
+async function updateTotalMeetingHours(
     firstName: string,
     lastName: string,
     startDate: Date,
@@ -207,7 +244,7 @@ async function updateRequiredMeetingHours(
         // Update newly created row with first name and last name
         await sheets.spreadsheets.values.update({
             spreadsheetId: process.env.SHEET_ID,
-            range: `RequiredMeetings!A${names.length + 1}:B`,
+            range: `TotalHours!A${names.length + 1}:B`,
             valueInputOption: "RAW",
             requestBody: {
                 majorDimension: "COLUMNS",
@@ -252,7 +289,7 @@ async function updateRequiredMeetingHours(
         // Update column title of newly created row
         await sheets.spreadsheets.values.update({
             spreadsheetId: process.env.SHEET_ID,
-            range: `RequiredMeetings!${columnToLetter(dateColumnIndex)}1`,
+            range: `TotalHours!${columnToLetter(dateColumnIndex)}1`,
             valueInputOption: "RAW",
             requestBody: {
                 majorDimension: "ROWS",
@@ -264,7 +301,7 @@ async function updateRequiredMeetingHours(
         const cell = (
             await sheets.spreadsheets.values.get({
                 spreadsheetId: process.env.SHEET_ID,
-                range: `RequiredMeetings!${columnToLetter(dateColumnIndex)}${
+                range: `TotalHours!${columnToLetter(dateColumnIndex)}${
                     nameRowIndex + 1
                 }`,
             })
@@ -286,7 +323,7 @@ async function updateRequiredMeetingHours(
     // Update cell
     await sheets.spreadsheets.values.update({
         spreadsheetId: process.env.SHEET_ID,
-        range: `RequiredMeetings!${columnToLetter(dateColumnIndex)}${
+        range: `TotalHours!${columnToLetter(dateColumnIndex)}${
             nameRowIndex + 1
         }`,
         valueInputOption: "RAW",
@@ -297,4 +334,4 @@ async function updateRequiredMeetingHours(
     });
 }
 
-export { syncUser, updateRequiredMeetingHours };
+export { syncUser, updateTotalMeetingHours, syncUsersTotalHours };

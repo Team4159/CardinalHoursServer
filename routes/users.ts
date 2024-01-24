@@ -1,7 +1,7 @@
 import mysql from 'mysql2';
 import Router from 'express-promise-router';
 import database from '../dbManager';
-import { syncUser, updateRequiredMeetingHours } from '../spreadsheet';
+import { syncUser, syncUsersTotalHours, updateTotalMeetingHours } from '../spreadsheet';
 import WebSocket from 'ws';
 import logger from '../logger';
 
@@ -139,6 +139,8 @@ router.post('/addsession', async (req, res, next) => {
       res.status(500).send('Something went wrong');
       return;
     });
+
+  updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(user[0]["lastTime"]), new Date());
 });
 
 router.post('/signout', async (req, res, next) => {
@@ -183,7 +185,7 @@ router.post('/signout', async (req, res, next) => {
       return;
   });
 
-  updateRequiredMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(user[0]["lastTime"]), new Date());
+  updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(user[0]["lastTime"]), new Date());
 });
 
 async function getUserData(password){
@@ -470,9 +472,10 @@ router.post('/syncusers', async (req, res, next) => {
 async function syncUsers(users: any[]) {
   for( const user of users ){
     let userData: any = await getUserData(user['password']);
-    syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
+    await new Promise(resolve => setTimeout(resolve, 500));
   }
+  await syncUsersTotalHours();
 }
 
 // Change user password
