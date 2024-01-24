@@ -31,7 +31,7 @@ async function getNamesList(sheets: sheets_v4.Sheets, spreadsheetId: string) {
     })).data.values;
 
     if (!names || names.length === 0) {
-        console.error("Empty names list"); // ERROR!
+        logger.error("Empty names list"); // ERROR!
         return [];
     }
 
@@ -83,7 +83,7 @@ function datesToHours(startDate: Date, endDate: Date): number {
     return Math.trunc((endDate.valueOf() - startDate.valueOf()) / 36000) / 100
 }
 
-async function asyncExponentialBackoff(f: Function, maxAttempts = 100) {
+async function asyncExponentialBackoff(f: Function, maxAttempts = 15) {
     let succeeded = false;
     let attempts = 0;
     let backoffTime = 0; // In seconds

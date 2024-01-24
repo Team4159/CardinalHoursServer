@@ -250,7 +250,27 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
         logger.debug("Adding new column for date");
         dateColumnIndex = await asyncExponentialBackoff(async () => await getNextColumnIndex(sheets, process.env.SHEET_ID));
 
-        // Update column title of newly created row
+        // Update column title of newly created column
+        await asyncExponentialBackoff(async () => {
+            await sheets.spreadsheets.batchUpdate({
+                spreadsheetId: process.env.SHEET_ID,
+                requestBody: {
+                    requests: [
+                        {
+                            insertDimension: {
+                                range: {
+                                    sheetId: parseInt(process.env.REQUIRED_MEETING_SHEET_ID),
+                                    dimension: "COLUMNS",
+                                    startIndex: dateColumnIndex,
+                                    endIndex: dateColumnIndex + 1,
+                                }
+                            }
+                        }
+                    ]
+                }
+            });
+        });
+
         await asyncExponentialBackoff(async () => {
             await sheets.spreadsheets.values.update({
                 spreadsheetId: process.env.SHEET_ID,
