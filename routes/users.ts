@@ -466,7 +466,7 @@ router.post('/syncusers', async (req, res, next) => {
   var users = (await db.query(getUsers, {hash: "getUsers"}))[0];
   syncUsers(users); // This is prevent HTTP 504 Gateway Timeout
 
-  res.status(200).send('Syncing all users');
+  res.status(202).send('Syncing all users');
 });
 
 async function syncUsers(users: any[]) {

@@ -182,7 +182,8 @@ async function syncUsersTotalHours() {
     const sessions = await database.db.query(mysql.format("SELECT * FROM sessions ORDER BY startTime"));
 
     for (const session of sessions) {
-        logger.debug(`Adding session with startTime: ${session["startTime"]} to TotalHours`)
+        logger.log(session);
+        logger.debug(`Adding session with startTime: ${session[0]["startTime"]} to TotalHours`)
         const user = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session[0]["password"]]));
 
         await updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(session[0]["startTime"]), new Date(session[0]["endTime"]));
