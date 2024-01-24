@@ -187,7 +187,7 @@ async function syncUsersTotalHours() {
         const user = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session[0]["password"]]));
 
         await updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(session[0]["startTime"]), new Date(session[0]["endTime"]));
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 1500));
     }
 }
 
