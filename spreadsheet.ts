@@ -163,6 +163,7 @@ async function syncUsersTotalHours() {
 
     const lastColumnIndex = await getNextColumnIndex(sheets, process.env.REQUIRED_MEETING_SHEET_ID) - 1;
 
+    logger.debug("Clearing TotalHours");
     await sheets.spreadsheets.batchUpdate({ // Clear TotalHours sheet
         spreadsheetId: process.env.SHEET_ID,
         requestBody: {
@@ -181,9 +182,10 @@ async function syncUsersTotalHours() {
         }
     });
 
-    const sessions = await database.db.query(mysql.format("SELECT * FROM sessions"));
+    const sessions = await database.db.query(mysql.format("SELECT * FROM sessions SORT BY startTime"));
 
     for (const session of sessions) {
+        logger.debug(`Adding session with startTime: ${session["startTime"]} to TotalHours`)
         const user = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session[0]["password"]]));
 
         await updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(session[0]["startTime"]), new Date(session[0]["endTime"]));
