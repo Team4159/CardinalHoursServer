@@ -258,6 +258,7 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
                     requests: [
                         {
                             insertDimension: {
+                                inheritFromBefore: true,
                                 range: {
                                     sheetId: parseInt(process.env.REQUIRED_MEETING_SHEET_ID),
                                     dimension: "COLUMNS",
