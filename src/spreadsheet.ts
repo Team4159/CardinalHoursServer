@@ -13,7 +13,9 @@ import {
 } from "./utils";
 import database from "./dbManager";
 import mysql from "mysql2";
-require("dotenv").config();
+
+import dotenv from "dotenv";
+dotenv.config();
 
 const TOKEN_PATH = "token.json";
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
@@ -173,7 +175,7 @@ async function syncUsersTotalHours() {
 
     const earliestDate = new Date(new Date().getFullYear(), Math.floor(new Date().getMonth() / 6) * 6, 1).valueOf();
     const [sessions] = await database.db.query(
-        mysql.format("SELECT * FROM sessions WHERE endTime > ? ORDER BY endTime", [earliestDate.valueOf()])
+        mysql.format("SELECT * FROM sessions WHERE startTime > ? ORDER BY startTime", [earliestDate.valueOf()])
     );
 
     for (const session of sessions) {
@@ -181,7 +183,11 @@ async function syncUsersTotalHours() {
         const sessionEndDate = new Date(session["endTime"]);
         const [[user]] = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session["password"]]));
 
-        logger.debug(`Adding ${user["firstName"]} ${user["lastName"]}'s session on ${sessionEndDate.toDateString()} at ${sessionEndDate.toTimeString()} to TotalHours`);
+        logger.debug(
+            `Adding ${user["firstName"]} ${user["lastName"]}'s session on ${
+                sessionEndDate.toDateString
+            } at ${sessionEndDate.toTimeString()} to TotalHours`
+        );
 
         await updateTotalMeetingHours(user["firstName"], user["lastName"], sessionStartDate, sessionEndDate);
     }
@@ -247,7 +253,9 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
         nameRowIndex = names.length - 1;
     }
 
-    let dateColumnIndex = await asyncExponentialBackoff(async () => await getColumnIndexFromColumnTitle(sheets, process.env.SHEET_ID, `${dateString} Hours`));
+    let dateColumnIndex = await asyncExponentialBackoff(
+        async () => await getColumnIndexFromColumnTitle(sheets, process.env.SHEET_ID, `${dateString} Hours`)
+    );
 
     if (dateColumnIndex === -1) {
         logger.debug("Adding new column for date");
@@ -267,11 +275,11 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
                                     dimension: "COLUMNS",
                                     startIndex: dateColumnIndex,
                                     endIndex: dateColumnIndex + 1,
-                                }
-                            }
-                        }
-                    ]
-                }
+                                },
+                            },
+                        },
+                    ],
+                },
             });
         });
 
@@ -289,10 +297,13 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
     } else {
         // Get dateHours
         const cell = (
-            await asyncExponentialBackoff(async () => await sheets.spreadsheets.values.get({
-                spreadsheetId: process.env.SHEET_ID,
-                range: `TotalHours!${columnToLetter(dateColumnIndex)}${nameRowIndex + 1}`,
-            }))
+            await asyncExponentialBackoff(
+                async () =>
+                    await sheets.spreadsheets.values.get({
+                        spreadsheetId: process.env.SHEET_ID,
+                        range: `TotalHours!${columnToLetter(dateColumnIndex)}${nameRowIndex + 1}`,
+                    })
+            )
         ).data.values;
 
         if (cell && cell.length > 0 && cell[0] && cell[0].length > 0 && cell[0][0]) {
