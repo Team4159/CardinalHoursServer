@@ -146,7 +146,6 @@ async function syncUser(firstName, lastName, data) {
     }
 }
 
-// Prereq: sessions are sorted from earliest to latest
 async function syncUsersTotalHours() {
     var auth: any = await getAuth(credentials);
     const sheets = google.sheets({ version: "v4", auth });
