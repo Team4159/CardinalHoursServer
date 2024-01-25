@@ -466,6 +466,10 @@ router.post('/syncusers', async (req, res, next) => {
   var users = (await db.query(getUsers, {hash: "getUsers"}))[0];
   syncUsers(users); // This is prevent HTTP 504 Gateway Timeout
 
+  logger.debug("Syncing hours on Total Hours");
+  syncUsersTotalHours();
+  logger.debug("Done syncing hours on Total Hours");
+
   res.status(202).send('Syncing all users');
 });
 
@@ -476,9 +480,6 @@ async function syncUsers(users: any[]) {
     let userData: any = await getUserData(user['password']);
     syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
   }
-  logger.debug("Syncing hours on Total Hours");
-  syncUsersTotalHours();
-  logger.debug("Done syncing hours on Total Hours");
 }
 
 // Change user password
