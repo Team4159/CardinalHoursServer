@@ -470,13 +470,13 @@ router.post('/syncusers', async (req, res, next) => {
 });
 
 async function syncUsers(users: any[]) {
-  // logger.debug("Syncing users");
-  // for( const user of users ){
-  //   logger.debug(`Syncing ${user["firstName"]} ${user["lastName"]} on Hours`);
-  //   let userData: any = await getUserData(user['password']);
-  //   await syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
-  //   await new Promise(resolve => setTimeout(resolve, 1500));
-  // }
+  logger.debug("Syncing users");
+  for( const user of users ){
+    logger.debug(`Syncing ${user["firstName"]} ${user["lastName"]} on Hours`);
+    let userData: any = await getUserData(user['password']);
+    await syncUser(user['firstName'], user['lastName'], [[Math.trunc(userData.totalTime / 36000) / 100, userData.meetings]]);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+  }
   logger.debug("Syncing hours on Total Hours");
   await syncUsersTotalHours();
   logger.debug("Done syncing hours on Total Hours");

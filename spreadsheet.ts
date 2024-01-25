@@ -115,7 +115,7 @@ async function getNames() {
 async function syncUser(firstName, lastName, data) {
     var auth: any = await getAuth(credentials);
     const sheets = google.sheets({ version: "v4", auth });
-    const row = await getUserRow(firstName, lastName);
+    const row = await asyncExponentialBackoff(async () => await getUserRow(firstName, lastName));
     if (row === -1) {
         logger.debug(`User ${firstName} ${lastName} not found in spreadsheet ${process.env.SHEET_NAME}`);
         /*
@@ -130,17 +130,19 @@ async function syncUser(firstName, lastName, data) {
     });
     */
     } else {
-        sheets.spreadsheets.values.update(
-            {
-                spreadsheetId: process.env.SHEET_ID,
-                range: `${process.env.SHEET_NAME}!${process.env.COLUMN_ID_START}${row}:${process.env.COLUMN_ID_END}${row}`,
-                valueInputOption: "RAW",
-                requestBody: { values: data },
-            },
-            (err, result) => {
-                if (err) return logger.error("The API returned an error: " + err);
-            }
-        );
+        await asyncExponentialBackoff(async () => {
+            await sheets.spreadsheets.values.update(
+                {
+                    spreadsheetId: process.env.SHEET_ID,
+                    range: `${process.env.SHEET_NAME}!${process.env.COLUMN_ID_START}${row}:${process.env.COLUMN_ID_END}${row}`,
+                    valueInputOption: "RAW",
+                    requestBody: { values: data },
+                },
+                (err, result) => {
+                    if (err) return logger.error("The API returned an error: " + err);
+                }
+            );
+        });
     }
 }
 
@@ -195,9 +197,9 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
 
     let dateHours = datesToHours(startDate, endDate);
 
-    if (dateHours > 10) {
-        return; // Can't log too many hours
-    }
+    // if (dateHours > 10) {
+    //     return; // Can't log too many hours
+    // }
 
     const dateString = endDate.getMonth() + 1 + "/" + endDate.getDate();
 
