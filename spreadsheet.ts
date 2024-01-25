@@ -177,11 +177,13 @@ async function syncUsersTotalHours() {
     );
 
     for (const session of sessions) {
-        logger.debug(`Adding session with startTime: ${session["startTime"]} to TotalHours`);
-        const [user] = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session["password"]]));
+        const sessionStartDate = new Date(session["startTime"]);
+        const sessionEndDate = new Date(session["endTime"]);
+        const [[user]] = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session["password"]]));
 
-        await updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(session["startTime"]), new Date(session["endTime"]));
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        logger.debug(`Adding ${user["firstName"]} ${user["lastName"]}'s session on ${sessionEndDate.toDateString} at ${sessionEndDate.toTimeString()} to TotalHours`);
+
+        await updateTotalMeetingHours(user["firstName"], user["lastName"], sessionStartDate, sessionEndDate);
     }
 }
 
