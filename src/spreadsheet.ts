@@ -183,11 +183,7 @@ async function syncUsersTotalHours() {
         const sessionEndDate = new Date(session["endTime"]);
         const [[user]] = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session["password"]]));
 
-        logger.debug(
-            `Adding ${user["firstName"]} ${user["lastName"]}'s session on ${
-                sessionEndDate.toDateString
-            } at ${sessionEndDate.toTimeString()} to TotalHours`
-        );
+        logger.debug(`Adding ${user["firstName"]} ${user["lastName"]}'s session on ${sessionEndDate.toDateString} at ${sessionEndDate.toTimeString()} to TotalHours`);
 
         await updateTotalMeetingHours(user["firstName"], user["lastName"], sessionStartDate, sessionEndDate);
     }
@@ -308,9 +304,7 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
 
         if (cell && cell.length > 0 && cell[0] && cell[0].length > 0 && cell[0][0]) {
             dateHours += parseInt(cell[0][0]);
-            logger.warn("Prev: " + cell[0][0]);
         }
-        logger.warn("Now: " + dateHours);
     }
 
     logger.debug(`Update ${firstName} ${lastName} hours on ${dateString} to ${dateHours}`);
@@ -326,7 +320,6 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
                 values: [[dateHours]],
             },
         });
-        logger.warn(`UPDATED ${firstName} ${lastName} hours on ${dateString} to ${dateHours}`);
     });
 }
 
