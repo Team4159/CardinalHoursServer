@@ -13,9 +13,7 @@ import {
 } from "./utils";
 import database from "./dbManager";
 import mysql from "mysql2";
-
-import dotenv from "dotenv";
-dotenv.config();
+require("dotenv").config();
 
 const TOKEN_PATH = "token.json";
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
@@ -249,9 +247,7 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
         nameRowIndex = names.length - 1;
     }
 
-    let dateColumnIndex = await asyncExponentialBackoff(
-        async () => await getColumnIndexFromColumnTitle(sheets, process.env.SHEET_ID, `${dateString} Hours`)
-    );
+    let dateColumnIndex = await asyncExponentialBackoff(async () => await getColumnIndexFromColumnTitle(sheets, process.env.SHEET_ID, `${dateString} Hours`));
 
     if (dateColumnIndex === -1) {
         logger.debug("Adding new column for date");
