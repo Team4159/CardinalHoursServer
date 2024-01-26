@@ -213,7 +213,7 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
     const auth: any = await getAuth(credentials);
     const sheets = google.sheets({ version: "v4", auth });
 
-    let names = await getNamesList(sheets, process.env.SHEET_ID);
+    let names = await asyncExponentialBackoff(async () => await getNamesList(sheets, process.env.SHEET_ID));
     let nameRowIndex = getName(names, firstName, lastName);
 
     if (nameRowIndex === -1) {
