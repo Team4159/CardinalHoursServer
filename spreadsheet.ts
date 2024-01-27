@@ -299,7 +299,9 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
         ).data.values;
 
         if (cell && cell.length > 0 && cell[0] && cell[0].length > 0 && cell[0][0]) {
+            logger.warn(cell[0][0]);
             dateHours += parseInt(cell[0][0]);
+            logger.warn(dateHours);
         }
     }
 
