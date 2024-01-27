@@ -80,7 +80,7 @@ async function getColumnIndexFromColumnTitle(sheets: sheets_v4.Sheets, spreadshe
 }
 
 function datesToHours(startDate: Date, endDate: Date): number {
-    return Math.trunc((endDate.valueOf() - startDate.valueOf()) / 36000) / 100
+    return Math.trunc((endDate.valueOf() - startDate.valueOf()) / 36000) / 100;
 }
 
 async function asyncExponentialBackoff(f: Function, maxAttempts = 15) {

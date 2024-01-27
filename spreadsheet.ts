@@ -197,6 +197,7 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
     // }
 
     let dateHours = datesToHours(startDate, endDate);
+    logger.warn("DH INIT: " + dateHours);
 
     // if (dateHours > 10) {
     //     return; // Can't log too many hours
