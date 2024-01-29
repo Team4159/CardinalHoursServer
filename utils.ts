@@ -92,12 +92,11 @@ async function asyncExponentialBackoff(f: Function, maxAttempts = 15) {
         try {
             return await f();
         } catch (err) {
-            logger.error("Exponential backoff error caught!");
-            logger.error(err);
+            logger.warn("Exponential backoff error caught!");
 
             backoffTime = Math.min(Math.pow(2, attempts) + Math.random(), 64);
 
-            logger.error(`Attempt: ${attempts} Backoff Time: ${backoffTime}`);
+            logger.warn(`Attempt: ${attempts} Backoff Time: ${backoffTime}`);
             await new Promise(resolve => setTimeout(resolve, backoffTime * 1000));
             attempts++;
 

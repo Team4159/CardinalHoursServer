@@ -74,17 +74,12 @@ async function getAuth(credentials) {
 async function getSheetName() {
     var auth: any = await getAuth(credentials);
     const sheets = google.sheets({ version: "v4", auth });
-    return new Promise(function (resolve, reject) {
-        sheets.spreadsheets.get(
+    return await asyncExponentialBackoff(async () =>
+        await sheets.spreadsheets.get(
             {
                 spreadsheetId: process.env.SHEET_ID,
-            },
-            (err, res) => {
-                if (err) return logger.error("The API returned an error: " + err);
-                resolve(res.data.properties.title);
             }
-        );
-    });
+        ));
 }
 
 async function getUserRow(firstName, lastName) {
@@ -98,18 +93,12 @@ async function getUserRow(firstName, lastName) {
 async function getNames() {
     var auth: any = await getAuth(credentials);
     const sheets = google.sheets({ version: "v4", auth });
-    return new Promise(function (resolve, reject) {
-        sheets.spreadsheets.values.get(
-            {
-                spreadsheetId: process.env.SHEET_ID,
-                range: `${process.env.SHEET_NAME}!A:B`,
-            },
-            (err, res) => {
-                if (err) return logger.error("The API returned an error: " + err);
-                resolve(res.data.values);
-            }
-        );
-    });
+    return await asyncExponentialBackoff(async () => await sheets.spreadsheets.values.get(
+        {
+            spreadsheetId: process.env.SHEET_ID,
+            range: `${process.env.SHEET_NAME}!A:B`,
+        }
+    ));
 }
 
 async function syncUser(firstName, lastName, data) {
@@ -181,7 +170,7 @@ async function syncUsersTotalHours() {
         const sessionEndDate = new Date(session["endTime"]);
         const [[user]] = await database.db.query(mysql.format("SELECT * FROM users WHERE password = BINARY ?", [session["password"]]));
 
-        logger.debug(`Adding ${user["firstName"]} ${user["lastName"]}'s session on ${sessionEndDate.toDateString} at ${sessionEndDate.toTimeString()} to TotalHours`);
+        logger.debug(`Adding ${user["firstName"]} ${user["lastName"]}'s session on ${sessionEndDate.toDateString()} at ${sessionEndDate.toTimeString()} to TotalHours`);
 
         await updateTotalMeetingHours(user["firstName"], user["lastName"], sessionStartDate, sessionEndDate);
     }
@@ -197,11 +186,10 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
     // }
 
     let dateHours = datesToHours(startDate, endDate);
-    logger.warn("DH INIT: " + dateHours);
 
-    // if (dateHours > 10) {
-    //     return; // Can't log too many hours
-    // }
+    if (endDate.valueOf() - startDate.valueOf() > parseInt(process.env.MAX_TIME)) {
+        return; // Can't log too many hours
+    }
 
     const dateString = endDate.getMonth() + 1 + "/" + endDate.getDate();
 
@@ -300,9 +288,7 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
         ).data.values;
 
         if (cell && cell.length > 0 && cell[0] && cell[0].length > 0 && cell[0][0]) {
-            logger.warn(cell[0][0]);
             dateHours += parseInt(cell[0][0]);
-            logger.warn(dateHours);
         }
     }
 

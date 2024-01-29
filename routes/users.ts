@@ -140,7 +140,7 @@ router.post('/addsession', async (req, res, next) => {
       return;
     });
 
-  updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(user[0]["lastTime"]), new Date());
+  updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(req.body.startTime), new Date(req.body.endTime));
 });
 
 router.post('/signout', async (req, res, next) => {
