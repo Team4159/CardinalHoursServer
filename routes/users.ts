@@ -116,6 +116,8 @@ router.post('/signin', async (req, res, next) => {
       res.status(500).send('Something went wrong');
       return;
     });
+
+  logger.debug(`Signing in ${user[0]['firstName']} ${user[0]['lastName']}`);
 });
 
 router.post('/addsession', async (req, res, next) => {
@@ -139,7 +141,8 @@ router.post('/addsession', async (req, res, next) => {
       res.status(500).send('Something went wrong');
       return;
     });
-
+  
+  logger.debug(`Amending hours (${req.body.startTime} - ${req.body.endTime}) for ${user[0]["firstName"]} ${user[0]["lastName"]}`)
   updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(req.body.startTime), new Date(req.body.endTime));
 });
 
@@ -185,6 +188,7 @@ router.post('/signout', async (req, res, next) => {
       return;
   });
 
+  logger.debug(`Signing out ${user[0]["firstName"]} ${user[0]["lastName"]}`);
   updateTotalMeetingHours(user[0]["firstName"], user[0]["lastName"], new Date(user[0]["lastTime"]), new Date());
 });
 

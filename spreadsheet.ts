@@ -93,12 +93,10 @@ async function getUserRow(firstName, lastName) {
 async function getNames() {
     var auth: any = await getAuth(credentials);
     const sheets = google.sheets({ version: "v4", auth });
-    return await asyncExponentialBackoff(async () => await sheets.spreadsheets.values.get(
-        {
-            spreadsheetId: process.env.SHEET_ID,
-            range: `${process.env.SHEET_NAME}!A:B`,
-        }
-    ));
+    return (await asyncExponentialBackoff(async () => await sheets.spreadsheets.values.get({
+        spreadsheetId: process.env.SHEET_ID,
+        range: `${process.env.SHEET_NAME}!A:B`,
+    }))).data.values;
 }
 
 async function syncUser(firstName, lastName, data) {
@@ -120,17 +118,12 @@ async function syncUser(firstName, lastName, data) {
     */
     } else {
         await asyncExponentialBackoff(async () => {
-            await sheets.spreadsheets.values.update(
-                {
-                    spreadsheetId: process.env.SHEET_ID,
-                    range: `${process.env.SHEET_NAME}!${process.env.COLUMN_ID_START}${row}:${process.env.COLUMN_ID_END}${row}`,
-                    valueInputOption: "RAW",
-                    requestBody: { values: data },
-                },
-                (err, result) => {
-                    if (err) return logger.error("The API returned an error: " + err);
-                }
-            );
+            await sheets.spreadsheets.values.update({
+                spreadsheetId: process.env.SHEET_ID,
+                range: `${process.env.SHEET_NAME}!${process.env.COLUMN_ID_START}${row}:${process.env.COLUMN_ID_END}${row}`,
+                valueInputOption: "RAW",
+                requestBody: { values: data },
+            });
         });
     }
 }
@@ -160,10 +153,11 @@ async function syncUsersTotalHours() {
         });
     });
 
-    const earliestDate = new Date(new Date().getFullYear(), Math.floor(new Date().getMonth() / 6) * 6, 1).valueOf();
+    const earliestDate = new Date(new Date().getFullYear(), Math.floor(new Date().getMonth() / 6) * 6, 1);
     const [sessions] = await database.db.query(
-        mysql.format("SELECT * FROM sessions WHERE startTime > ? ORDER BY startTime", [earliestDate.valueOf()])
+        mysql.format("SELECT * FROM sessions WHERE endTime > ? ORDER BY endTime", [earliestDate.valueOf()])
     );
+    logger.warn(sessions[sessions.length - 1]);
 
     for (const session of sessions) {
         const sessionStartDate = new Date(session["startTime"]);
@@ -188,6 +182,7 @@ async function updateTotalMeetingHours(firstName: string, lastName: string, star
     let dateHours = datesToHours(startDate, endDate);
 
     if (endDate.valueOf() - startDate.valueOf() > parseInt(process.env.MAX_TIME)) {
+        logger.warn("Too many hours! Skipping this session");
         return; // Can't log too many hours
     }
 
